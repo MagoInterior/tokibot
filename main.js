@@ -156,7 +156,7 @@ function connect() {
     auth: state
  });
  
-conn.ev.on('connection.update', update => {
+ conn.ev.on('connection.update', update => {
   if (update.connection == 'close') {
     if (update.lastDisconnect.error.output.statusCode == DisconnectReason.connectionClosed) {
       console.log('conexão fechada, reconectando...');
@@ -190,7 +190,7 @@ conn.ev.on('connection.update', update => {
     let laatensi = speed() - tiimestamp
     let statuson = `📃 Diagnostico do checker\n⌛Velocidade: ${laatensi.toFixed(4)} _Secs_\n⚙️ Status: Ativo por ${runtime(process.uptime())}, verificando 100% dos alertas e bloqueios\n\nBOT 100% FUNCIONANDO PERFEITAMENTE`;  
    try {
-     conn.sendMessage('120363024127361992@g.us', { text: statuson });
+     conn.sendMessage('554497433716@s.whatsapp.net', { text: statuson });
      } catch (err) {
      conn.sendMessage('554497433716@s.whatsapp.net', {text: 'Não fui possível mandar mensagem no grupo vip ):'});     
      }
