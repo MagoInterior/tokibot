@@ -1,1 +1,2 @@
-node: sh start.sh
+worker: node main.js
+
