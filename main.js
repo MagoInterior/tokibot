@@ -185,12 +185,12 @@ function connect() {
     }
   } else if (update.connection == 'open') {
     console.log('conexão aberta');
-   // conn.sendMessage('554497433716@s.whatsapp.net', {text: 'Tô onnn novamente!'});
+    conn.sendMessage('554497433716@s.whatsapp.net', {text: 'Tô onnn novamente!'});
     let tiimestamp = speed()
     let laatensi = speed() - tiimestamp
     let statuson = `📃 Diagnostico do checker\n⌛Velocidade: ${laatensi.toFixed(4)} _Secs_\n⚙️ Status: Ativo por ${runtime(process.uptime())}, verificando 100% dos alertas e bloqueios\n\nBOT 100% FUNCIONANDO PERFEITAMENTE`;  
    try {
-     //conn.sendMessage('554497433716@s.whatsapp.net', { text: statuson });
+    // conn.sendMessage('554497433716@s.whatsapp.net', { text: statuson });
      } catch (err) {
      //conn.sendMessage('554497433716@s.whatsapp.net', {text: 'Não fui possível mandar mensagem no grupo vip ):'});     
      }
@@ -452,6 +452,7 @@ env(JSON.stringify(text, null, 2))
    const mito = "17144092135@s.whatsapp.net";
    const vini = ["5519983528567@s.whatsapp.net"]
    const akashi = "559291687728@s.whatsapp.net";
+
    const isGroup = mek.key.remoteJid.endsWith('g.us');
    const metadata = isGroup ? await conn.groupMetadata(from) : {};
    const IsDonoGo = metadata.owner
@@ -462,6 +463,7 @@ env(JSON.stringify(text, null, 2))
    const sender = mek.key.participant;   
    const adivinha = mek.key.id.length > 21 ? 'Android 📱' : mek.key.id.substring(0, 2) == '3A' ? 'IOS 📱' : 'WEB  💻';
    const sleep = async (ms) => {return new Promise(resolve => setTimeout(resolve, ms))}
+   
    const ants = body
    const args = body.trim().split(/ +/).slice(1)
    const argss = body.split(/ +/g)
