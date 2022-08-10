@@ -185,12 +185,12 @@ function connect() {
     }
   } else if (update.connection == 'open') {
     console.log('conexão aberta');
-    conn.sendMessage('554497433716@s.whatsapp.net', {text: 'Tô onnn novamente!'});
+   // conn.sendMessage('554497433716@s.whatsapp.net', {text: 'Tô onnn novamente!'});
     let tiimestamp = speed()
     let laatensi = speed() - tiimestamp
     let statuson = `📃 Diagnostico do checker\n⌛Velocidade: ${laatensi.toFixed(4)} _Secs_\n⚙️ Status: Ativo por ${runtime(process.uptime())}, verificando 100% dos alertas e bloqueios\n\nBOT 100% FUNCIONANDO PERFEITAMENTE`;  
    try {
-     conn.sendMessage('554497433716@s.whatsapp.net', { text: statuson });
+     //conn.sendMessage('554497433716@s.whatsapp.net', { text: statuson });
      } catch (err) {
      conn.sendMessage('554497433716@s.whatsapp.net', {text: 'Não fui possível mandar mensagem no grupo vip ):'});     
      }
