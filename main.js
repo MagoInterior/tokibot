@@ -1209,8 +1209,7 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
     if(type == 'stickerMessage') return   
     if(mek.key.fromMe) return 
     
-    }*/
-
+    }
 
     if (from.endsWith('@s.whatsapp.net') && !isCmd) {
       try {
@@ -1220,6 +1219,7 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
         conn.sendMessage(owner, { text: `erro no simi ↓\n\n${a.stack}` });
       }
     }
+    */
 
     switch (argsButton[0]) {
       case 'finaki':
@@ -1281,7 +1281,7 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
       //MENUS
 
 
-      /* $eval dados = ("+55 11 9667-49-1483")
+      /* $eval dados = ("")
  numero = dados.replace('-', '')
  number = numero.replace(' ', '')
  num = number.replace(' ', '')
@@ -4171,17 +4171,13 @@ NÃO GARANTIMOS SALDO!.
       if (!texto) return env(`Cade o link?\Exemplo de como ser usar: ${prefixobot + command} https://www.instagram.com/reel/CbNPcCFFrV0/?utm_source=ig_web_copy_link`);
       if (!isUrl(args[0]) && !args[0].includes('https://www.instagram')) return env('Cadê o url do vídeo do Instagram?');
       break*/
-
       case 'igstalk':
         if (!texto) return env('Onde está o nome do usuário?')
-
         ig.fetchUser(texto).then((res) => {
           //envJson(res);
           let inffoinsta = `*Nome:* ${res.username}\n*Apelidos:* ${res.fullname}\n*ID do Perfil:* ${res.id}\n*Biografia:* ${res.biography}\n*Privado:* ${res.is_private}\n*Verificado:* ${res.is_verified}\n*Seguidores:* ${res.followers}\n*Seguido:* ${res.following}\n*Postagens:* ${res.post_count}\n*IGTV:* ${res.total_igtv_videos}\n*Conta comercial:* ${res.is_business}\n*Email:* ${res.public_email || 'Não possui'}\n*Número:* ${res.contact_phone_number || 'Não possui'}`
           conn.sendMessage(from, { image: { url: res.hd_profile_pic_url_info.url }, caption: inffoinsta, footer: 'Link do perfil no botão abaixo:', templateButtons: [{ index: 1, urlButton: { displayText: 'Link do Perfil', url: `https://www.instagram.com/${res.username}/` } }] }, { quoted: mek });
-
         });
-
         break
       case 'celular':
         if (!texto) return env(`Coloque na frente do comando o celular que você desejar buscar.\nExemplo: ${prefixobot + command} Moto G 100`)
