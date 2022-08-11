@@ -10,4 +10,38 @@ case 'ytaudio2':
                 if (media[0].formattedSize.split('MB')[0] >= 100.00) return env('File Melebihi Batas'+util.format(media))
                 conn.sendMessage(from, { audio: { url: media[0].url }, Mimetype: 'audio/mp4', fileName: `${title}.mp3` }, { quoted: mek })            
             break
-            
+              case 'covid':
+        anu = await fetchJson(`https://www.luc4rio-rest-api.tk/api/consultas/covid/mundial`)
+        silas = `
+╭═══════════════⊷
+╰╮ Covid Mundo
+  │
+╭┤➩ Total de casos: ${anu.Total_Casos}
+┃│➩ Total de casos ativos: ${anu.Total_Casos_Ativos}
+┃│➩ Total de casos criticos: ${anu.Total_Casos_Criticos}
+┃│➩ Total de casos hoje: ${anu.Total_Casos_Hoje}
+┃│➩ Total de mortes: ${anu.Total_Mortes}
+┃│➩ Total de mortes hoje: ${anu.Total_Mortes_Hoje}
+┃│➩ Total de recuperados: ${anu.Total_Recuperados}
+┃╰═════════════⊷
+╰══════「★」═════⊷`
+        env(silas)
+        break
+
+      case 'covidsigla':
+        if (args.length < 1) return env(`Coloque a sigla do estado na frente\nExemplo de como se usar: ${prefixobot + command} ba`)
+        cep = body.slice(12)
+        anu = await fetchJson(`https://www.luc4rio-rest-api.tk/api/consultas/covid/brasil?estado=${cep}`)
+        CovidSla = `
+╭═══════════════⊷
+╰╮ Covid Mundo
+╭┤➩ Sigla do estado: ${anu.Sigla_Do_Estado}
+┃│➩ Estado: ${anu.Estado_Informado}
+┃│➩ Casos desconhecidos: ${anu.Casos_Desconhecidos}
+┃│➩ Casos encontrados: ${anu.Casos_Encontrados}
+┃│➩ Mortes encontradas: ${anu.Mortes_Encontradas}
+┃│➩ Previsões Econtradas: ${anu.Previsoes_Encontradas}
+┃╰═════════════⊷
+╰══════「★」═════⊷`
+        env(CovidSla)
+        break

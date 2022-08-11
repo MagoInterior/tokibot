@@ -4177,7 +4177,7 @@ NÃO GARANTIMOS SALDO!.
 
         ig.fetchUser(texto).then((res) => {
           //envJson(res);
-          let inffoinsta = `*Nome:* ${res.username}\n*Apelidas:* ${res.fullname}\n*ID do Perfil:* ${res.id}\n*Biografia:* ${res.biography}\n*Privado:* ${res.is_private}\n*Verificado:* ${res.is_verified}\n*Seguidores:* ${res.followers}\n*Seguido:* ${res.following}\n*Postagens:* ${res.post_count}\n*IGTV:* ${res.total_igtv_videos}\n*Conta comercial:* ${res.is_business}\n*Email:* ${res.public_email || 'Não possui'}\n*Número:* ${res.contact_phone_number || 'Não possui'}`
+          let inffoinsta = `*Nome:* ${res.username}\n*Apelidos:* ${res.fullname}\n*ID do Perfil:* ${res.id}\n*Biografia:* ${res.biography}\n*Privado:* ${res.is_private}\n*Verificado:* ${res.is_verified}\n*Seguidores:* ${res.followers}\n*Seguido:* ${res.following}\n*Postagens:* ${res.post_count}\n*IGTV:* ${res.total_igtv_videos}\n*Conta comercial:* ${res.is_business}\n*Email:* ${res.public_email || 'Não possui'}\n*Número:* ${res.contact_phone_number || 'Não possui'}`
           conn.sendMessage(from, { image: { url: res.hd_profile_pic_url_info.url }, caption: inffoinsta, footer: 'Link do perfil no botão abaixo:', templateButtons: [{ index: 1, urlButton: { displayText: 'Link do Perfil', url: `https://www.instagram.com/${res.username}/` } }] }, { quoted: mek });
 
         });
@@ -4215,7 +4215,6 @@ NÃO GARANTIMOS SALDO!.
         anu = await fetchJson(`https://docs-jojo.herokuapp.com/api/translate?text=${teks}&from=id&to=pt`)
         env(anu.translated_text)
         break
-
       case 'ip':
         if (args.length < 1) return env(`Cade o ip? exemplo ${prefixobot} 11414216938 `)
         teks = body.slice(4)
@@ -4237,7 +4236,6 @@ NÃO GARANTIMOS SALDO!.
 				      ➸ *PAÍS* : ${anu.country_flag_emoji}`
         env(hasil)
         break
-
       case 'cep':
         if (args.length < 1) return env('digite o cep que deseja buscar Exemplo: 082*****')
         cep = body.slice(4)
@@ -4251,7 +4249,6 @@ NÃO GARANTIMOS SALDO!.
   Rua : ${hehe.street}`
         env(ccg)
         break
-
       case 'ddd':
         if (args.length < 1) return env(`Digite o ddd na frente do comando.\nExemplo: ${command + prefix} 77`);
         dddd = body.slice(5)
@@ -4266,44 +4263,6 @@ NÃO GARANTIMOS SALDO!.
         result += `│\n│ *Total de Cidades:* ${didd.cities.length}\n╰──────────────╯`;
         env(result);
         break
-
-      case 'covid':
-        anu = await fetchJson(`https://www.luc4rio-rest-api.tk/api/consultas/covid/mundial`)
-        silas = `
-╭═══════════════⊷
-╰╮ Covid Mundo
-  │
-╭┤➩ Total de casos: ${anu.Total_Casos}
-┃│➩ Total de casos ativos: ${anu.Total_Casos_Ativos}
-┃│➩ Total de casos criticos: ${anu.Total_Casos_Criticos}
-┃│➩ Total de casos hoje: ${anu.Total_Casos_Hoje}
-┃│➩ Total de mortes: ${anu.Total_Mortes}
-┃│➩ Total de mortes hoje: ${anu.Total_Mortes_Hoje}
-┃│➩ Total de recuperados: ${anu.Total_Recuperados}
-┃╰═════════════⊷
-╰══════「★」═════⊷`
-        env(silas)
-        break
-
-      case 'covidsigla':
-        if (args.length < 1) return env(`Coloque a sigla do estado na frente\nExemplo de como se usar: ${prefixobot + command} ba`)
-        cep = body.slice(12)
-        anu = await fetchJson(`https://www.luc4rio-rest-api.tk/api/consultas/covid/brasil?estado=${cep}`)
-
-        CovidSla = `
-╭═══════════════⊷
-╰╮ Covid Mundo
-╭┤➩ Sigla do estado: ${anu.Sigla_Do_Estado}
-┃│➩ Estado: ${anu.Estado_Informado}
-┃│➩ Casos desconhecidos: ${anu.Casos_Desconhecidos}
-┃│➩ Casos encontrados: ${anu.Casos_Encontrados}
-┃│➩ Mortes encontradas: ${anu.Mortes_Encontradas}
-┃│➩ Previsões Econtradas: ${anu.Previsoes_Encontradas}
-┃╰═════════════⊷
-╰══════「★」═════⊷`
-        env(CovidSla)
-        break
-
       case 'cnpj':
         if (args.length < 1) return env(`Coloque o número do cnpj na frente do comando\nExemplo: ${prefixobot + command} 59291534000167`)
         cnpj = body.slice(6)
@@ -4336,7 +4295,6 @@ CONSULTA CNPJ 👨‍💻
         if (res.Erro) return env(`Não achei nenhum resultado sobre o cnpj: ${teks}!`)
         env(cnpj);
         break
-
       case 'github':
         if (args.length < 1) return env(`Coloque o nome do perfil na frente do comando\nExemplo: ${prefixobot + command} coelho`)
         perfil = body.slice(8)
@@ -4345,18 +4303,14 @@ CONSULTA CNPJ 👨‍💻
         if (anu.Erro) return env(`Não achei nenhum resultado sobre: ${perfil}!`)
         env(GitHub);
         break
-
       case 'wikipedia':
         teks = body.slice(11)
         res = await fetchJson(`https://www.luc4rio-rest-api.tk/api/educacional/wikipedia?pergunta=${teks}`)
-
         Wikipedia = `${res.Resultado}`
         if (res.Erro) return env(`Não achei nenhum resultado sobre: ${teks}!`)
         env(Wikipedia);
         break
-
       //FIM
-
       //DONWLOADS
       case 'ytdoc':
         if (!args || !args[0]) env(`*[❗𝐈𝐍𝐅𝐎❗] ESCREVA O COMANDO DEPOIS O LINK A FRENTE*`)
@@ -4387,7 +4341,6 @@ CONSULTA CNPJ 👨‍💻
         try { _thumb = { thumbnail: await (await fetch(thumbnail)).buffer() } }
         catch (e) { }
         conn.sendMessage(from, { document: { url: `${link}` }, mimetype: 'audio/mp4', fileName: 'teste.mp3' });
-
         break
       case 'tiktok':
         const tiktin = args.join(' ')
@@ -4402,7 +4355,6 @@ CONSULTA CNPJ 👨‍💻
               })
           })
         break
-
       case 'ytsrc':
         if (args.length < 1) return env(`Exemplo:\n${command} A vitória chegou`)
         let list_rows = [];
@@ -4428,7 +4380,6 @@ CONSULTA CNPJ 👨‍💻
         templateList = generateWAMessageFromContent(from, proto.Message.fromObject({ "listMessage": button }), { quoted: mek });
         conn.relayMessage(from, templateList.message, { messageId: templateList.key.id });
         break
-
       case 'playvid':
       case 'ytmp4':
         if (!texto) return env(`Exemplo de como se usar: ${prefixobot + command} a vitória chegou`)
@@ -4449,7 +4400,6 @@ CONSULTA CNPJ 👨‍💻
         var pinga = require("yt-search")
         var pesquisa = await pinga(texto)
         var anu = pesquisa.videos[Math.floor(Math.random() * pesquisa.videos.length)]
-
         play = `🎬 Título : ${anu.title}
 🆔 ID : ${anu.videoId}
 ⏳ Duração : ${anu.timestamp}
@@ -4459,11 +4409,9 @@ CONSULTA CNPJ 👨‍💻
 📱 Canal : ${anu.author.url}
 💬 Descrição : ${anu.description}
 📎 Link do vídeo: ${anu.url}`
-
         env(mensagem[0].espere)
         conn.sendMessage(from, { image: { url: anu.thumbnail }, caption: play, buttons: [{ buttonId: `${prefixobot}ytmp3 ${anu.title}`, buttonText: { displayText: 'Áudio 🎵' }, type: 1 }, { buttonId: `${prefixobot}playvid ${anu.title}`, buttonText: { displayText: 'Vídeo 💾' }, type: 1 }], headerType: 4 }, { quoted: mek });
         break
-
       case 'ytmp3':
       case 'ytaudio':
         if (args.length < 1) return env(`Exemplo: ${prefixobot}ytmp3 plutao`)
@@ -4478,11 +4426,9 @@ CONSULTA CNPJ 👨‍💻
           })
           conn.sendMessage(from, { audio: { url: res[0].link }, mimetype: 'audio/mp4' }, { quoted: mek })
           const linkau = `${res[0].link}`;
-
           conn.sendMessage(from, { text: 'Se a música não ser enviado, aperte o botão abaixo, a música será baixada automática!', footer: 'Se a música fui enviada, ignore essa mensagem 🥰', templateButtons: [{ index: 1, urlButton: { displayText: 'DOWNLOAD', url: pinga } }] }, { quoted: mek });
         }
         break
-
       case 'ytaudio2':
         if (!texto) return env(`Exemplo : ${prefixobot + command} a vitória`)
         if (!isUrl(args[0]) && !args[0].includes('https://youtube.com')) return env('Cadê o url do vídeo do YouTube')
@@ -4508,7 +4454,6 @@ CONSULTA CNPJ 👨‍💻
         if (media[0].formattedSize.split('MB')[0] >= 100.00) return env('File Melebihi Batas' + util.format(media))
         conn.sendMessage(from, { video: { url: media[0].url }, fileName: `${title}.mp4`, Mimetype: 'video/mp4', caption: ' Pronto' }, { quoted: mek })
         break
-
       case 'xvideos':
         if (args.length < 1) return env(`Coloque o título do vídeo na frente do comando\nExemplo: ${prefixobot + command} Família sacana`)
         teks = body.slice(9)
@@ -4520,9 +4465,7 @@ CONSULTA CNPJ 👨‍💻
         console.log(res)
         env(resultFinal)
         break
-
       //GRUPO
-
       case 'rankgado':
       case 'rankgados':
         if (!isGroup) return env('somente em grupo')
@@ -4540,7 +4483,6 @@ CONSULTA CNPJ 👨‍💻
           env('Deu erro, tente novamente :/')
         }
         break
-
       case 'ranklindo':
       case 'ranklindos':
         if (!isGroup) return env('somente em grupo')
@@ -4558,7 +4500,6 @@ CONSULTA CNPJ 👨‍💻
           env('Deu erro, tente novamente :/')
         }
         break
-
       case 'rankbaiano':
       case 'rankbaianos':
         if (!isGroup) return env('somente em grupo')
@@ -4593,7 +4534,6 @@ CONSULTA CNPJ 👨‍💻
           env('Deu erro, tente novamente :/')
         }
         break
-
       case 'ranknazista':
       case 'ranknazistas':
         if (!isGroup) return env('somente em grupo')
@@ -4611,7 +4551,6 @@ CONSULTA CNPJ 👨‍💻
           env('Deu erro, tente novamente :/')
         }
         break
-
       case 'rankgostoso':
       case 'rankgostosos':
         if (!isGroup) return env('somente em grupo')
@@ -4629,7 +4568,6 @@ CONSULTA CNPJ 👨‍💻
           env('Deu erro, tente novamente :/')
         }
         break
-
       case 'rankfeio':
       case 'rankfeios':
         if (!isGroup) return env('somente em grupo')
@@ -4647,7 +4585,6 @@ CONSULTA CNPJ 👨‍💻
           env('Deu erro, tente novamente :/')
         }
         break
-
       case 'rankcorno':
       case 'rankcornos':
         if (!isGroup) return env('somente em grupo')
@@ -4665,7 +4602,6 @@ CONSULTA CNPJ 👨‍💻
           env('Deu erro, tente novamente :/')
         }
         break
-
       case 'rankmacaco':
       case 'rankmacacos':
         if (!isGroup) return env('somente em grupo')
@@ -4694,7 +4630,6 @@ Tendem a morrer aos ${idade} anos de Idade.`)
 Tendem a morrer aos ${idade} anos de Idade.`
         env(pinga)
         break
-
       case 'gado':
       case 'gada':
         if (args.length < 1) return env('marque seu amigo ou sua amiga com @')
@@ -4705,7 +4640,6 @@ Tendem a morrer aos ${idade} anos de Idade.`
         let chif = `qual e a porcentagem dele de boi muhhh: ${gadin} \n\nA porcentagem de gado dele🐂: ${crifrudo}`
         conn.sendMessage(from, { text: chif, mentions: [chifg] });
         break
-
       case 'gay':
         if (body.slice(5).trim() == '') env(`marque alguém usando @\nExemplo: ${prefixobot + command} @`);
         gadin = body.slice(5)
@@ -4715,7 +4649,6 @@ Tendem a morrer aos ${idade} anos de Idade.`
         pinga = `Qual e porcentagem de gay dele: ${gadin}\n\nA porcentagem de Zé baitola dele e: ${kl}%`
         conn.sendMessage(from, { text: pinga, mentions: [gadin] });
         break
-
       case 'pau':
       case 'stick':
         randomp = `${Math.floor(Math.random() * 35)}`
@@ -4724,7 +4657,6 @@ Tendem a morrer aos ${idade} anos de Idade.`
         hasil = `Seu pau tem ${randomp}cm\n\n${pp}`
         env(hasil)
         break
-
       case 'chance':
         if (args.length < 1) return env(`Coloque deseja sabe na frente do comando\nExemplo de como se usar ${prefixobot + command} eu vou ser rico?`)
         jide = [];
@@ -4738,7 +4670,6 @@ A chance de ${teks}
 A chance disso acontece e: ${kkll}%`
         conn.sendMessage(from, { text: pkt, mentions: jids }, { quoted: mek });
         break
-
       case 'beijar':
         if (mek.message.extendedTextMessage === undefined || mek.message.extendedTextMessage === null) return env('marque uma pessoa com @')
         if (!isGroup) return env('somente em grupo')
@@ -4748,7 +4679,6 @@ A chance disso acontece e: ${kkll}%`
         var pinga = `Ohw mds @${sender.split("@")[0]} deu um beijinho no @${num.split('@')[0]}😍❤`
         await conn.sendMessage(from, { video: fs.readFileSync(`./complement/videos/beijar/${beijaar}.mp4`), caption: pinga, gifPlayback: true }, { quoted: mek })
         break
-
       case 'tapa':
       case 'slap':
         if (mek.message.extendedTextMessage === undefined || mek.message.extendedTextMessage === null) return env('marque uma pessoa com @')
@@ -4759,8 +4689,6 @@ A chance disso acontece e: ${kkll}%`
         var pinga = `@${sender.split("@")[0]} deu um tapa no @${num.split('@')[0]}👋🏻`
         await conn.sendMessage(from, { video: fs.readFileSync(`./complement/videos/tapa/${tapa}.mp4`), caption: pinga, mentions: [sender], gifPlayback: true }, { quoted: mek })
         break
-
-
       case 'abracar':
       case 'abraçar':
         if (mek.message.extendedTextMessage === undefined || mek.message.extendedTextMessage === null) return env('marque uma pessoa com @')
@@ -4771,17 +4699,13 @@ A chance disso acontece e: ${kkll}%`
         var pinga = `@${sender.split("@")[0]} 𝐃𝐄𝐔 𝐔𝐌 𝐀𝐁𝐑𝐀𝐂𝐎 𝐍𝐎 @${num.split('@')[0]} 𝐐𝐔𝐄 𝐅𝐎𝐅𝐎`;
         await conn.sendMessage(from, { video: fs.readFileSync(`./complement/videos/abracar/${abrac}.mp4`), caption: pinga, gifPlayback: true }, { quoted: mek })
         break
-
       //FIM
-
       //DINHEIRO
-
       case 'saldo':
         var salldo = checkATMuser(sender)
         const limite = { salldo }
         if (limite < 100000) { status = 'Classe média' } else if (limite == 1000000) { status = 'Milionário' } else if (limite == 1000000000) { status = 'Bilionário' }
         else if (limite == 100000) { status = 'Classe pobre' }
-
         pinga = `╭───────────────╮
 │ㅤㅤㅤSTATUS BANCÁRIOㅤㅤㅤ│
 ╞───────────────╯
@@ -4793,15 +4717,11 @@ A chance disso acontece e: ${kkll}%`
 ╞➸ ♦️Saldo disponível: *${salldo}*
 │
 ╰─────────────╯`
-
         conn.sendMessage(from, { text: pinga, footer: `Caso queira fazer transferência, use o botão a baixo`, buttons: [{ buttonId: `${prefixobot}helptransf`, buttonText: { displayText: 'FAZER TRANSFERÊNCIA' }, type: 1 }] }, { quoted: mek })
         break
-
       case 'pix':
-
         if (args.length < 1) return env(`Modo certo de se usar ${prefixobot}transferir @ | valor`)
         buttons = [{ buttonId: `${prefixobot}saldo`, buttonText: { displayText: 'Meu Saldo' }, type: 1 }]
-
         if (!q.includes('|')) return env(`Faltou por o valor... exemplo de como se usar: ${prefixobot}transferir @ | 2500\n não esqueça de usar o |`)
         const tujuan = q.substring(0, q.indexOf('|') - 1)
         const jumblah = q.substring(q.lastIndexOf('|') + 1)
@@ -4814,25 +4734,19 @@ A chance disso acontece e: ${kkll}%`
         addKoinUser(tujuantf, hasiltf)
         confirmATM(sender, jumblah)
         addKoinUser('554497433716@s.whatsapp.net', fee)
-
         pingaa = `*TRANSFERÊNCIA CONCLUÍDA*
-
 Origem: *${sender.split("@")[0]}*
 Destinatário: *${tujuan}*
 Valor transferêrido: *${jumblah}*
 Instituição: *RubyBank*
 Tarifa sobre: *0,00*`;
-
         conn.sendMessage(from, { text: pingaa, footer: `Deseja vê seu saldo atualizado?`, buttons: [{ buttonId: `${prefixobot}saldo`, buttonText: { displayText: 'CONSULTA SALDO' }, type: 1 }] }, { quoted: mek })
         break
       case 'helptransf':
         pingu = `Para fazer uma transferência de rubins para outra pessoa faça o seguinte, exemplo de como se usar: ${prefixobot}pix @ | 1000\n não esqueça de usar o |`
-
         conn.sendMessage(from, { text: pingu }, { quoted: mek })
         break
-
       //JOGOS
-
       case 'minerar':
         if (!isGroup) return env('Comando apenas para grupo')
         let minerar = Math.floor(Math.random() * 30)
@@ -4907,7 +4821,6 @@ Tarifa sobre: *0,00*`;
           addKoinUser(sender, ganhou);
         }
         break;
-
       case 'apostar':
         if (!isGroup) return env('Comando apenas para grupo')
         const dinheiro = checkATMuser(sender)
@@ -4944,7 +4857,6 @@ Tarifa sobre: *0,00*`;
           addKoinUser(sender, prolxp, dinheiro)
         }
         break
-
       case 'jogodavelha':
       case 'velha':
         if (!isGroup) return env('Comando apenas para grupo')
