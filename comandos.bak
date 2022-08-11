@@ -1,0 +1,13 @@
+case 'ytaudio2':                 		     	
+                if (!texto) return env(`Exemplo : ${prefixobot + command} a vitória`)
+                if (!isUrl(args[0]) && !args[0].includes('https://youtube.com')) return env('Cadê o url do vídeo do YouTube')
+                env('Espere um pouco, comando está em beta')
+		            var { aiovideodl } = require('./lib/scraper')
+                var result = await aiovideodl(isUrl(texto))
+                var { medias } = result
+                var quality = args[1] ? args[1] : '128kbps'                
+                var media = medias.filter(v => v.videoAvailable == false && v.audioAvailable == true && v.quality == quality).map(v => v)
+                if (media[0].formattedSize.split('MB')[0] >= 100.00) return env('File Melebihi Batas'+util.format(media))
+                conn.sendMessage(from, { audio: { url: media[0].url }, Mimetype: 'audio/mp4', fileName: `${title}.mp3` }, { quoted: mek })            
+            break
+            
