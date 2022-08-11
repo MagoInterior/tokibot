@@ -187,7 +187,7 @@
         "currentStep": 0,
         "region": "pt",
         "uri": "https://pt.akinator.com",
-        "urlApiWs": "https://srv13.akinator.com:9360/ws",
+        "urlApiWs": "https://srv11.akinator.com:9401/ws",
         "noUri": "Could not find the uri or UrlApiWs. This most likely means that you have not started the game!",
         "noSession": "Could not find the game session. Please make sure you have started the game!",
         "progress": 0,
@@ -197,7 +197,7 @@
           "softConstraint": "",
           "questionFilter": ""
         },
-        "question": "O seu personagem é uma menina?",
+        "question": "O seu personagem é uma garota?",
         "answers": [
           "Sim",
           "Não",
@@ -206,14 +206,14 @@
           "Provavelmente não"
         ],
         "uriObj": {
-          "uid": "d39e36ee-18b6-11ed-8423-0cc47adc2898",
-          "frontaddr": "MTUxLjgwLjM2LjEzOA=="
+          "uid": "ef979f20-1992-11ed-8e41-0cc47a691511",
+          "frontaddr": "MTQ3LjEzNS4xMjkuOTM="
         },
-        "uid": "d39e36ee-18b6-11ed-8423-0cc47adc2898",
-        "frontaddr": "MTUxLjgwLjM2LjEzOA==",
-        "session": "68",
-        "signature": "1802692634",
-        "challenge_auth": "0678bf9b-3416-40e3-b7e4-91df122a3d1c"
+        "uid": "ef979f20-1992-11ed-8e41-0cc47a691511",
+        "frontaddr": "MTQ3LjEzNS4xMjkuOTM=",
+        "session": "507",
+        "signature": "578610943",
+        "challenge_auth": "4457dce1-5800-41df-950e-fcb91785006e"
       }
     },
     "120363041033204926@g.us": {

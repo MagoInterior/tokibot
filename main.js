@@ -29,7 +29,8 @@
 } = require('@adiwajshing/baileys');
 
 //MÚDULOS
-
+let limit = 50
+const { youtubedl, youtubedlv2, youtubedlv3 } = require('@bochilteam/scraper');
 const fs = require('fs');
 const P = require('pino');
 const fetch = require('node-fetch');
@@ -59,6 +60,7 @@ const os = require('os')
 const { exec } = require('child_process')
 const phaticusthiccy = require("@phaticusthiccy/open-apis");
 const store = makeInMemoryStore({ logger: P().child({ level: 'debug', stream: 'store' }) })
+const link = 'https://';
 
 // LIBS
 
@@ -1504,8 +1506,7 @@ break
 */
 //COMANDOS OWNER
 
-case 'aluguel':
-case 'alugar':
+case 'aluguel': case 'alugar': case 'premium': case 'vip':
 let alugarr = `╭──────────────╮
 │                PREÇOS 
 ╞─────╮ ▽ ╭─────╯
@@ -3259,8 +3260,8 @@ case 's':
 case 'sticker':
  rane = getRandom('.mp4');
 let types;
-if (Object.keys(mek.message.extendedTextMessage.contextInfo.quotedMessage)[0] == 'imageMessage') types = 'image';
-else if (Object.keys(mek.message.extendedTextMessage.contextInfo.quotedMessage)[0] == 'videoMessage') types = 'video';
+if (mek.message.extendedTextMessage.contextInfo.quotedMessage.imageMessage) types = 'image';
+else if (Object.keys(mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage)) types = 'video';
 if (!types) return env('marque uma foto ou um video!');
 buffimg = await getFileBuffer(types == 'image' ? mek.message.extendedTextMessage.contextInfo.quotedMessage.imageMessage : types == 'video' ? mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage : '', types);
 fs.writeFileSync(rane, buffimg)
@@ -3550,7 +3551,7 @@ case 'cc':
 const dbcc = fs.readFileSync('./db/json/db-cc.json');
 var dbjson = JSON.parse(dbcc);
 var pinga = Math.floor(Math.random() * dbjson.length);
-var res = dbjson[pinga];
+
 
 let codee = res.code;
 let mes = res.dateMonth;
@@ -3823,7 +3824,6 @@ case 'placas':
 const plca = fs.readFileSync('./db/js/placas.js');
 var jsonData = JSON.parse(plca);
 var pinga = Math.floor(Math.random() * jsonData.length);
-var res = jsonData[pinga];
 conn.sendMessage(from, {image: { url: res.result, caption: 'Gay' }}, { quoted: imagemek } );
 break
       case 'meme':
@@ -3903,7 +3903,6 @@ case 'couple':
 const metadinha = fs.readFileSync('./db/js/couple.js');
 var jsonData = JSON.parse(metadinha);
 var pinga = Math.floor(Math.random() * jsonData.length);
-var res = jsonData[pinga];
 conn.sendMessage(from, {image: { url: res.male, caption: 'Lado Masculino' }}, { quoted: mek } );
 conn.sendMessage(from, {image: { url: res.female, caption: 'Lado Feminino' }}, {quoted: mek } );
 break
@@ -4343,7 +4342,36 @@ break
 //FIM
 
 //DONWLOADS
-
+case 'ytdoc':
+  if (!args || !args[0]) env(`*[❗𝐈𝐍𝐅𝐎❗] ESCREVA O COMANDO DEPOIS O LINK A FRENTE*`)
+  const isY = /y(es)/gi.test(args[1])
+  if (!isY) return
+  env(`*_⏳𝓮𝓼𝓽𝓪́ 𝓹𝓻𝓸𝓬𝓮𝓼𝓼𝓪𝓷𝓭𝓸 𝓼𝓮𝓾 𝓿𝓲𝓭𝓮𝓸ᴏ...⏳_*\n\n*◉ 𝙨𝙚 𝙨𝙚𝙪 𝙫𝙞𝙙𝙚𝙤 𝙣𝙖𝙤 𝙛𝙤𝙧 𝙚𝙣𝙫𝙞𝙖𝙙𝙤 𝙪𝙨𝙚 𝙚𝙨𝙨𝙚𝙨 𝙤𝙪𝙩𝙧𝙤𝙨 𝙘𝙤𝙢𝙖𝙣𝙙𝙤𝙨 /play`)
+  let { thumbnail, video: _video, title } = await youtubedl(args[0]).catch(async _ => await youtubedlv2(args[0])).catch(async _ => await youtubedlv3(args[0]))
+  const limitedSize = (isPremium || isOwner ? 350 : limit) * 3074
+  let video, source, res, link, lastError, isLimit
+  for (let i in _video) {
+  try {
+  video = _video[i]
+  isLimit = limitedSize < video.fileSizeH
+  if (isLimit) continue
+  link = await video.download()
+  if (link) res = await fetch(link)
+  isLimit = res?.headers.get('content-length') && parseInt(res.headers.get('content-length')) < limitedSize
+  if (isLimit) continue 
+  if (res) source = await res.arrayBuffer()
+  if (source instanceof ArrayBuffer) break
+  } catch (e) {
+  video = source = link = null
+  lastError = e
+  }}
+  if ((!(source instanceof ArrayBuffer) || !link || !res.ok) && !isLimit) throw '*[❗] ERRO: ' + (lastError || 'NÃO FOI POSSIVEL BAIXAR O VIDEO*')
+  let _thumb = {}
+  try { _thumb = { thumbnail: await (await fetch(thumbnail)).buffer() } }
+  catch (e) { }
+  conn.sendMessage(from, { document: {url: `${link}`}, mimetype: 'audio/mp4', fileName: 'teste.mp3'});
+ 
+break
 case 'tiktok':
 const tiktin = args.join(' ')
 env('Estou baixado, aguarde um pouco');
@@ -4442,9 +4470,9 @@ case 'ytaudio2':
                 if (!texto) return env(`Exemplo : ${prefixobot + command} a vitória`)
                 if (!isUrl(args[0]) && !args[0].includes('https://youtube.com')) return env('Cadê o url do vídeo do YouTube')
                 env('Espere um pouco, comando está em beta')
-		var { aiovideodl } = require('./lib/scraper')
+		            var { aiovideodl } = require('./lib/scraper')
                 var result = await aiovideodl(isUrl(texto))
-                var { url, title, thumbnail, duration, medias } = result
+                var { medias } = result
                 var quality = args[1] ? args[1] : '128kbps'                
                 var media = medias.filter(v => v.videoAvailable == false && v.audioAvailable == true && v.quality == quality).map(v => v)
                 if (media[0].formattedSize.split('MB')[0] >= 100.00) return env('File Melebihi Batas'+util.format(media))
@@ -4457,7 +4485,7 @@ case 'ytaudio2':
                 env('Espere um pouco, comando está em beta')
 		var { aiovideodl } = require('./lib/scraper')
                 var result = await aiovideodl(isUrl(texto)[0])
-                var { url, title, thumbnail, duration, medias } = result
+                var { medias } = result
                 var quality = args[1] ? args[1] : '360p'                
                 var media = medias.filter(v => v.videoAvailable == true && v.audioAvailable == false && v.quality == quality).map(v => v)
                 if (media[0].formattedSize.split('MB')[0] >= 100.00) return env('File Melebihi Batas'+util.format(media))
