@@ -1706,7 +1706,7 @@ let textregra = `╭──────────────╮
 │           REGRAS           
 ╞─────╮ ▽ ╭─────╯
 │
-╞➸Telefonar para *Toki*
+╞➸Telefonar para o *TokiBot-MD*
 ╞➸Telefonar para *Proprietário*
 ╞➸ Floodar comandos
 ╞➸ Enviar travar
@@ -3627,6 +3627,7 @@ NÃO GARANTIMOS SALDO!.
 `;
 conn.sendMessage(from, { text: cc2.trim(), mentions: [sender] }, {quoted: mek}) 
 break
+/*
 case 'delete':
 case 'del':
 case 'd':  
@@ -3643,8 +3644,7 @@ try {
 } catch (err) {
 await env('Marque uma mensagem.');
 }
-break
-
+*/
 case 'tempmail':
 if (!isPremium && isOwner) return env('vc nn e Premium;-;')
  const tmmpz = Math.floor(Math.random() * 20+ 8)
@@ -3930,7 +3930,7 @@ env(res.success);
 case 'utaka':
    if (!isNsfw) return env(mensagem[0].nsfw);
    if (!isPremium && isOwner) return env('vc nn e Premium;-;')
-   res = await fetchJson('https://silasnn.herokuapp.com/api/nsfw/cosplay&token=silasnnn')
+   res = await fetchJson('https://slazinnn.herokuapp.com/api/nsfw/cosplay&token=slazinnnn')
    env(mensagem[0].espere)
    conn.sendMessage(from, {image: {url: res[0].result}, caption: '先輩🥵', buttons: [{buttonId: `${prefixobot + command}`, buttonText: {displayText: 'Próxima imagem'}, type: 1}], headerType: 4}, {quoted: whatsapp});
 break
@@ -3938,7 +3938,7 @@ break
 case 'pussy':
    if (!isPremium && isOwner) return env('vc nn e Premium;-;');
    if (!isNsfw) return env(mensagem[0].nsfw);
-   const pussy = await fetchJson('https://silasnn.herokuapp.com/api/nsfw/pussy&token=silasnnn')
+   const pussy = await fetchJson('https://slazinnn.herokuapp.com/api/nsfw/pussy&token=slazinnnn')
    n = JSON.parse(JSON.stringify(pussy));
    nimek = n[Math.floor(Math.random() * n.length)];
    pussyf = await getBuffer(nimek.result)
@@ -3961,7 +3961,7 @@ break;
 case 'malkova':
    if (!isPremium && isOwner) return env('vc nn e Premium;-;')
    if (!isNsfw) return env(mensagem[0].nsfw);
-   const malkova = await fetchJson('https://silasnn.herokuapp.com/api/nsfw/miamalkova&token=silasnnn')
+   const malkova = await fetchJson('https://slazinnn.herokuapp.com/api/nsfw/miamalkova&token=slazinnnn')
    n = JSON.parse(JSON.stringify(malkova));
    miao = n[Math.floor(Math.random() * n.length)];
    malkovap = await getBuffer(miao.result)
@@ -3973,7 +3973,7 @@ case 'belle':
 case 'delphine':
    if (!isPremium && isOwner) return env('vc nn e Premium;-;')
    if (!isNsfw) return env(mensagem[0].nsfw);
-   const belle = await fetchJson('https://silasnn.herokuapp.com/api/nsfw/belle&token=silasnnn')
+   const belle = await fetchJson('https://slazinnn.herokuapp.com/api/nsfw/belle&token=slazinnnn')
    n = JSON.parse(JSON.stringify(belle));
    miao = n[Math.floor(Math.random() * n.length)];
    bellep = await getBuffer(miao.result)
