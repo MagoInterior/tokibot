@@ -468,7 +468,7 @@ env(JSON.stringify(text, null, 2))
 console.log('\n\033[31mENDEREÇO IP: \033[34m' + mek.key.remoteJid + '\n' + '\033[31mID DE MENSAGEM: \033[34m' + mek.key.id + '\n' + '\033[31mUSUÁRIO: \033[34m' + mek.key.participant + '\n' + '\033[31mPUSHNAME: \033[34m' + pushname + '\n' + '\033[31mCOMANDO: \033[34m' + texto + '\n' + '\033[31mData e hora: \033[34m' + data2 + ' ' + 'as' + ' ' + hora() + '\n\n')
 
    //VERIFICADOS
-   const selo = { key: { participant: "0@s.whatsapp.net", remoteJid: "120363024204176988@g.us", }, message: {conversation: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD" }, }
+   const selo = { key: { participant: "0@s.whatsapp.net", remoteJid: "120363023849383476@g.us", }, message: {conversation: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD" }, }
   const whatsapp = { key: { fromMe: false, participant: `0@s.whatsapp.net`}, message: { "extendedTextMessage": {"text": `Toki Bot`,"title": "hmm" }}}
    const imagemek = { key: { fromMe: false, participant: `0@s.whatsapp.net`}, message: { "extendedTextMessage": {"text": `Toki Bot`,"title": "hmm" }}}
    const videomek = { key: { fromMe: false, participant: `0@s.whatsapp.net`}, message: { "extendedTextMessage": {"text": `Toki Bot`,"title": "hmm" }}}
@@ -650,7 +650,7 @@ dbids.push(adeuscara[i].groupId)
 const isAdeusCara = (isGroup && dbids.indexOf(from) >= 0) ? true : false 
 
 //======================================\\
-letcentralrpg = '120363020970382005@g.us';
+letcentralrpg = '120363023849383476@g.us';
 
 //ARMADURA
 const addProfissaoId = (userId, chatId) => { const obj = { grupo: chatId, pessoa: userId, profissao: 'Camisa simples' }; profissao.push(obj); fs.writeFileSync('./db/json/profissao.json', JSON.stringify(profissao))}
@@ -1623,7 +1623,7 @@ break
 case 'chatvip':
 if (isOwner) return env('Você não tem permissão para estar usando esse comando');
 if (!texto) return env('...');
-conn.sendMessage('120363024127361992@g.us', {text: texto, mentions: allMembers}, {quoted: whatsapp});
+conn.sendMessage('120363023849383476@g.us', {text: texto, mentions: allMembers}, {quoted: whatsapp});
 break
 
 case 'chatnet':
@@ -1642,39 +1642,39 @@ var options = {
 sticker: fig,  
 mentions: groupMembers.map(i => i.id)
 }
-conn.sendMessage('120363042830859887@g.us', options)
+conn.sendMessage('120363041425189640@g.us', options)
 } else if ((isMedia && !mek.message.videoMessage || isQuotedImage) && args.length == 0) {
 media = isQuotedImage ? mek.message.extendedTextMessage.contextInfo.quotedMessage.imageMessage : mek.message.imageMessage
 rane = getRandom('.'+await getExtension(media.mimetype))
 img = await getFileBuffer(media, 'image')
 fs.writeFileSync(rane,img)
 buff = fs.readFileSync(rane)
-conn.sendMessage('120363042830859887@g.us', {image: buff, caption: totic, mentions: groupMembers.map(i => i.id)}, {quoted: whatsappv})
+conn.sendMessage('120363041425189640@g.us', {image: buff, caption: totic, mentions: groupMembers.map(i => i.id)}, {quoted: whatsappv})
 } else if ((isMedia && !mek.message.videoMessage || isQuotedVideo) && args.length == 0) {
 media = isQuotedVideo ? mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage : mek.message.videoMessage
 rane = getRandom('.'+await getExtension(media.mimetype))
 vid = await getFileBuffer(media, 'video')
 fs.writeFileSync(rane,vid)
 buff = fs.readFileSync(rane)
-conn.sendMessage('120363042830859887@g.us', {video: buff, caption: toti, mimetype: 'video/mp4',mentions: groupMembers.map(i => i.id)}, {quoted: whatsappv})
+conn.sendMessage('120363041425189640@g.us', {video: buff, caption: toti, mimetype: 'video/mp4',mentions: groupMembers.map(i => i.id)}, {quoted: whatsappv})
 } else if ((isMedia && !mek.message.videoMessage || isQuotedAudio) && args.length == 0) {
 media = isQuotedAudio ? mek.message.extendedTextMessage.contextInfo.quotedMessage.audioMessage : mek.message.audioMessage
 rane = getRandom('.'+await getExtension(media.mimetype))
 aud = await getFileBuffer(media, 'audio')
 fs.writeFileSync(rane,aud)
 buff = fs.readFileSync(rane)
-conn.sendMessage('120363042830859887@g.us', {audio: buff, mimetype: 'audio/mp4', ptt:true,mentions: groupMembers.map(i => i.id)}, {quoted: whatsappv})
+conn.sendMessage('120363041425189640@g.us', {audio: buff, mimetype: 'audio/mp4', ptt:true,mentions: groupMembers.map(i => i.id)}, {quoted: whatsappv})
 } else if ((isMedia && !mek.message.videoMessage || isQuotedDocument) && args.length == 0) {
 media = isQuotedDocument ? mek.message.extendedTextMessage.contextInfo.quotedMessage.documentMessage : mek.message.documentMessage
 rane = getRandom('.'+await getExtension(media.mimetype))
 doc = await getFileBuffer(media, 'document')
 fs.writeFileSync(rane,doc)
 buff = fs.readFileSync(rane)
-conn.sendMessage('120363042830859887@g.us', {document: buff, mimetype : 'text/plain',mentions: groupMembers.map(i => i.id)},{quoted: whatsappv})
+conn.sendMessage('120363041425189640@g.us', {document: buff, mimetype : 'text/plain',mentions: groupMembers.map(i => i.id)},{quoted: whatsappv})
 } else if(budy){
 if(q.length < 1) return env('Citar oq?')
 //if(q.startsWith('/'))return env('sai dae arrombado')
-conn.sendMessage('120363042830859887@g.us', {text: texto, mentions: groupMembers.map(i => i.id)}, {quoted: whatsappv})
+conn.sendMessage('120363041425189640@g.us', {text: texto, mentions: groupMembers.map(i => i.id)}, {quoted: whatsappv})
 } else {
 env(`Responder imagem/documento/gif/adesivo/áudio/vídeo com legenda ${prefixobot + command}`)
 }
@@ -1697,7 +1697,7 @@ case 'menufig':
 │
 ╰──────────────╯`
 
- await conn.sendMessage(from, { video: fs.readFileSync(`./complement/menus/${menufig}`), caption: menufigut, gifPlayback: true }, {quoted: whatsapp})
+ await conn.sendMessage(from, { video: fs.readFileSync(`./complement/menus/${menufig}`), caption: menufigut, gifPlayback: true }, {quoted: selo})
 break
 
 case 'regra':
@@ -2217,7 +2217,7 @@ break
 
 case 'inventário':
 case 'inventario':
-letcentralrpg = '120363020970382005@g.us';
+letcentralrpg = '120363023849383476@g.us';
 let inventariopfg = ` ℹ️ *DADOS SOBRE USUÁRIO* ℹ️
 
 ${getNome(sender, letcentralrpg)}
@@ -2272,7 +2272,7 @@ break
 
 case 'nicknameme10':
 if (!isGroup) return env('Comando apenas para grupo')
-let letcentralrpgg = '120363020970382005@g.us'; 
+let letcentralrpgg = '120363023849383476@g.us'; 
 if(args.length < 1)return env('...')
 addNome(sender, letcentralrpgg, args.join(' '))
 let nicktruel = `✅ *Nome e idade registrando* ✅\n
@@ -2285,7 +2285,7 @@ break
 case 'helmetrpg':
 if (!isGroup) return env('Comando apenas para grupo')
 if(args.length < 1)return env('...')
-let letcentralrpggg = '120363020970382005@g.us'; 
+let letcentralrpggg = '120363023849383476@g.us'; 
 addProfissao(sender, letcentralrpggg, args.join(' '))
 env(`✅ *Ítens comprando com sucesso* ✅*\n
 *Armadura:* ${args.join(' ')}
@@ -2297,7 +2297,7 @@ break
 case 'decentetes10':
 if (!isGroup) return env('Comando apenas para grupo')
 if(args.length < 1)return env('...');
-let letcentrralrpg = '120363020970382005@g.us';
+let letcentrralrpg = '120363023849383476@g.us';
 addRanca(sender, letcentrralrpg, args.join(' '))
 let textran = `✅ Raça e Região registrando ✅*\n
 ${args.join(' ')}
