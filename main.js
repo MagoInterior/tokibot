@@ -453,7 +453,7 @@ env(JSON.stringify(text, null, 2))
    const sender = mek.key.participant;   
    const adivinha = mek.key.id.length > 21 ? 'Android 📱' : mek.key.id.substring(0, 2) == '3A' ? 'IOS 📱' : 'WEB  💻';
    const sleep = async (ms) => {return new Promise(resolve => setTimeout(resolve, ms))}
-   
+   const senderfix = mek.key.fromMe ? tomioka.user.jid : isGroup ? mek.participant : mek.key.remoteJid
    const ants = body
    const args = body.trim().split(/ +/).slice(1)
    const argss = body.split(/ +/g)
@@ -1178,7 +1178,9 @@ Tenho +300 funções disponiveis para você, dentre elas são:
 
 A baixo segue o link do grupo oficial, onde você pode acompanhar as novidades, e dar as suas sugestões!
 
-Undefind
+Obs: 
+-para fazer figurinhas mande a midia para depois comentar com /s para ele identificar!
+se não fizer isso e mandar direto na foto ele não identifica e cai...
 
 ‼️ _*LEIA ATENTAMENTE AS REGRAS PARA EVITAR BANIMENTO*_ ‼` 
         conn.sendMessage(from, {text: menuzin, footer: '✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD', buttons: [{buttonId: `${prefixobot}menu`, buttonText: {displayText: 'MENU PRINCIPAL 📖'}, type: 1}, {buttonId: `${prefixobot}menufigu`, buttonText: {displayText: 'MENU FIGURINHA 🧩'}, type: 1}, {buttonId: `${prefixobot}regras`, buttonText: {displayText: 'REGRAS ⚠️'}, type: 1}]}, {quoted: whatsapp})
@@ -3288,6 +3290,7 @@ conn.sendMessage(from, {sticker: buffer, packname: 'silasn', author: `${BotName}
 .addOutputOptions([`-vcodec`,`libwebp`,`-vf`,`scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`])
 .toFormat('webp')
 .save(ran)
+  
 break
 
 case 'renomear':
@@ -5536,6 +5539,70 @@ switch(ants){
 } 
 
 //=======================================\\
+if (isVideo || isImage) {
+  const encmedia = isQuotedImage ? JSON.parse(JSON.stringify(mek).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : mek
+  const media = await conn.downloadAndSaveMediaMessage(encmedia, `./sticker/${senderfix}`)
+  console.log(color('|FIG|', 'cyan'), color('FIGURINHAAAA', 'yellow'))
+  await ffmpeg(`${media}`)
+      .input(media)
+      .on('start', function (cmd) {
+
+      })
+      .on('error', function (err) {
+          console.log(`Error : ${err}`)
+          fs.unlinkSync(media)
+          enviar('error')
+      })
+      .on('end', async function () {
+          const MatadataFix3 = {
+              type: 'full',
+              pack: `${pack}`,
+              author: `${author}`,
+              categories: [
+                  '🌹'
+              ]
+          }
+          const sticker4s = await createSticker(`./sticker/${senderfix}.webp`, MatadataFix3)
+          conn.sendMessage(from, {sticker: {url: sticker4s}}, {quoted: mek});
+          fs.unlinkSync(media)
+          fs.unlinkSync(`./sticker/${senderfix}.webp`)
+      })
+      .addOutputOptions([`-vcodec`, `libwebp`, `-vf`, `scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`])
+      .toFormat('webp')
+      .save(`./sticker/${senderfix}.webp`)
+} else if ((isImage < 11 || isQuotedVideo < 11) && args.length == 0) {
+  const encmedia = isQuotedVideo ? JSON.parse(JSON.stringify(mek).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : mek
+  const media = await conn.downloadAndSaveMediaMessage(encmedia, `./sticker/${senderfix}`)
+  console.log(color('|FIG|', 'cyan'), color('FIGURINHAAAA', 'yellow'))
+  enviar('ᴘᴏʀ ғᴀᴠᴏʀ, ᴇsᴘᴇʀᴇ..')
+  await ffmpeg(`${media}`)
+      .inputFormat(media.split('.')[4])
+      .on('start', function (cmd) {
+      })
+      .on('error', function (err) {
+          fs.unlinkSync(media)
+          tipe = media.endsWith('.mp4') ? 'video' : 'gif'
+      })
+      .on('end', async function () {
+          const MatadataFix4 = {
+              type: 'full',
+              pack: `${pack}`,
+              author: `${author}`,
+              categories: [
+                  '🌹'
+              ]
+          }
+          const sticker5s = await createSticker(`./sticker/${senderfix}.webp`, MatadataFix4)
+          conn.sendMessage(from, {sticker: {url: sticker5s}}, {quoted: mek});
+          fs.unlinkSync(media)
+          fs.unlinkSync(`./sticker/${senderfix}.webp`)
+      })
+      .addOutputOptions([`-vcodec`, `libwebp`, `-vf`, `scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`])
+      .toFormat('webp')
+      .save(`./sticker/${senderfix}.webp`)
+} else {
+  env(`marque uma foto/imagem/video ou gif de até 10 segundos com o comando: /f`)
+}
 
 if(isAntiLink) { 
 if(type == 'stickerMessage') return 
