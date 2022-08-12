@@ -1345,8 +1345,6 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
 ╞═⟪ *JOGOS* ⟫════
 │
 │➪ *${prefixobot}diga*
-│➪ *${prefixobot}simi*
-│➪ *${prefixobot}
 │
 ╞═⟪ *JOGOS* ⟫════
 │
@@ -1452,8 +1450,6 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
 │➪ *${prefixobot}pinterest*
 │➪ *${prefixobot}cep*
 │➪ *${prefixobot}ddd*
-│➪ *${prefixobot}covid*
-│➪ *${prefixobot}covidsigla*
 │➪ *${prefixobot}cep*
 │
 ╞═⟪ *PREMIUM* ⟫════
@@ -1514,7 +1510,7 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
      */
       //COMANDOS OWNER
 
-      case 'aluguel': case 'alugar': case 'premium': case 'vip':
+      case 'aluguel': case 'alugar': case 'vip':
         let alugarr = `╭──────────────╮
 │                PREÇOS 
 ╞─────╮ ▽ ╭─────╯
@@ -1721,7 +1717,7 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
 ╞➸ Enviar travar
 │
 ╰──────────────╯`
-        conn.sendMessage(from, { text: textregra, buttons: [{ buttonId: `ta`, buttonText: { displayText: 'TERMOS DE RESPONSABILIDADE 📖' }, type: 1 }] }, { quoted: mek })
+        conn.sendMessage(from, { text: textregra, buttons: [{ buttonId: `/termos`, buttonText: { displayText: 'TERMOS DE RESPONSABILIDADE 📖' }, type: 1 }] }, { quoted: mek })
         break
 
       case 'termos':
@@ -1745,7 +1741,7 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
 5) Todos estão sujeito a banimento no bot (caso não siga as regras).
 
 6) Em caso de nossos bots ficar fora de serviço, os clientes terão direito de um aumento no seu prazo de vencimento do vip (relativo ao tempo em que ficou inativo).`
-        conn.sendMessage(from, { image: { url: `./complement/termos/${termof}` }, caption: menuzin, footer: `${BotName}`, templateButtons: [{ index: 3, quickReplyButton: { displayText: 'LI E CONCORDO 📖', id: '$termosaceitoss' } }] }, { quoted: mek })
+        conn.sendMessage(from, { image: { url: `./complement/termos/${termof}` }, caption: menuzin, footer: `${BotName}`, buttons: [{ buttonId: `$termosaceitoss`, buttonText: { displayText: 'LI E CONCORDO 📖' }, type: 1 }] }, { quoted: mek })
         break
 
       case 'termosaceitoss':
@@ -2304,8 +2300,6 @@ ${args.join(' ')}
 *Armadura:* ${args.join(' ')}
 `)
         break
-
-
       //RAÇAS
       case 'decentetes10':
         if (!isGroup) return env('Comando apenas para grupo')
@@ -3107,7 +3101,6 @@ Descrição: ${metadata.desc}`;
         if (!isMemberAdmin && isOwner) return env('voce nao é adm');
         conn.groupLeave(from)
         break
-
       case 'leavegp':
         let textoleave = `Mensagem automática
  
@@ -3246,7 +3239,6 @@ https://wa.me/554497433716`;
         }
         env('Banido com sucesso')
         break
-
       case 'add':
         if (!isGroup) return env('Comando apenas para grupo')
         if (!isMemberAdmin && isOwner) return env('voce nao é adm');
@@ -3262,70 +3254,7 @@ https://wa.me/554497433716`;
         }
         env('Adicionado com sucesso')
         break
-
       //FIM
-
-      case 'figu':
-      case 'fig':
-      case 'figurinha':
-      case 'f':
-      case 's':
-      case 'sticker':
-        rane = getRandom('.mp4');
-        let types;
-        if (mek.message.extendedTextMessage.contextInfo.quotedMessage.imageMessage) types = 'image';
-        else if (Object.keys(mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage)) types = 'video';
-        if (!types) return env('marque uma foto ou um video!');
-        buffimg = await getFileBuffer(types == 'image' ? mek.message.extendedTextMessage.contextInfo.quotedMessage.imageMessage : types == 'video' ? mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage : '', types);
-        fs.writeFileSync(rane, buffimg)
-        mediad = rane
-        ran = getRandom('.webp')
-        await ffmpeg(`./${mediad}`)
-          .input(mediad)
-          .on('start', function (cmd) {
-            //env(`Started : ${cmd}`)
-          })
-          .on('error', function (err) {
-            env(`Error : ${err}`)
-            fs.unlinkSync(media)
-            env('aguarde')
-          })
-          .on('end', function () {
-            console.log('Finish')
-            buffer = fs.readFileSync(ran)
-            conn.sendMessage(from, { sticker: buffer, packname: 'silasn', author: `${BotName}` }, { quoted: mek }).then(res => {
-              fs.unlinkSync(mediad)
-              fs.unlinkSync(ran)
-            });
-          })
-          .addOutputOptions([`-vcodec`, `libwebp`, `-vf`, `scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`])
-          .toFormat('webp')
-          .save(ran)
-
-        break
-
-      case 'renomear':
-      case 'rename':
-      case 'roubar':
-      case 'take':
-        if (!isQuotedSticker) return env('Marque uma figurinha...')
-        encmediats = await getFileBuffer(info.extendedTextMessage.contextInfo.quotedMessage.stickerMessage, 'sticker')
-        let klls = q
-        let packk = klls.split("/")[0];
-        let authorr2 = klls.split("/")[1];
-        if (!q) return env('*E o autor e o nome do pacote?*')
-        if (!packk) return env(`*Por favor escreve o formato certo: ${prefix + command} sad/bla*`)
-        if (!authorr2) return env(`*por favor escreve o formato certo: ${prefixobot + command} Toki/Bot*`)
-        env('perai')
-        bas664 = `data:image/jpeg;base64,${encmediats.toString('base64')}`
-        let maantap = await convertSticker(bas664, `${authorr2}`, `${packk}`)
-        let ssti = new Buffer.from(maantap, 'base64');
-        conn.sendMessage(from, { sticker: stti, contextInfo: { externalAdReply: { title: `${packk}|${authorr2}`, body: "", previewType: "PHOTO", thumbnail: ssti } } }, { quoted: mek })
-          .catch((err) => {
-            env(`❎ Error, tenta mais tarde`);
-          })
-        break
-
       case 'tomp3':
         if (!isQuotedVideo) return env('Marque o video pfv')
         env('perai')
@@ -3343,7 +3272,6 @@ https://wa.me/554497433716`;
           fs.unlinkSync(ran)
         })
         break
-
       case 'togif':
         if (!isQuotedSticker) return env('Marque uma figurinha');
         buff = await getFileBuffer(info.extendedTextMessage.contextInfo.quotedMessage.stickerMessage, 'sticker')
@@ -3353,8 +3281,6 @@ https://wa.me/554497433716`;
         conn.sendMessage(from, { video: mp4, gifPlayback: true, filename: `stick.gif` }, { quoted: mek })
         //fs.unlinkSync(buff)
         break
-        break
-
       case 'toimg':
         if (!isQuotedSticker) return env('Marque uma figurinha')
         buff = await getFileBuffer(mek.message.extendedTextMessage.contextInfo.quotedMessage.stickerMessage, 'sticker')
@@ -3366,7 +3292,6 @@ https://wa.me/554497433716`;
           env('Erro ao converter figurinha para imagem')
         }
         break
-
       case 'packsfigu':
       case 'packfigu':
       case 'figupack':
@@ -3444,21 +3369,15 @@ https://wa.me/554497433716`;
         const annnime = `${Math.floor(Math.random() * 77)}`
         const annnnime = `${Math.floor(Math.random() * 77)}`
         const nnnannime = `${Math.floor(Math.random() * 77)}`
-
         popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figuanime/${annime}.webp`)
         conn.sendMessage(from, { sticker: popopoc })
-
         popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figuanime/${annnime}.webp`)
         conn.sendMessage(from, { sticker: popopoc })
-
         popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figuanime/${annnnime}.webp`)
         conn.sendMessage(from, { sticker: popopoc })
-
         popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figuanime/${nnnannime}.webp`)
         conn.sendMessage(from, { sticker: popopoc })
-
         setTimeout(() => { conn.sendMessage(from, { text: 'Deseja mais figurinhas de anime?', footer: `Escolha uma opção abaixo.`, buttons: [{ buttonId: `${prefixobot}figuanime`, buttonText: { displayText: 'MAIS FIGURINHA' }, type: 1 }] }, { quoted: mek }) }, 2090)
-
         break
 
       case 'figuraiva':
@@ -3828,18 +3747,6 @@ NÃO GARANTIMOS SALDO!.
         const loggo = await conn.sendMessage(from, listMessage, { quoted: whatsapp })
         break
 
-      case 'placameme':
-      case 'placas':
-        const plca = fs.readFileSync('./db/js/placas.js');
-        var jsonData = JSON.parse(plca);
-        var pinga = Math.floor(Math.random() * jsonData.length);
-        conn.sendMessage(from, { image: { url: res.result, caption: 'Gay' } }, { quoted: imagemek });
-        break
-      case 'meme':
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: { url: 'https://bot-apis.herokuapp.com/apis/meme?APIKEY=fillipe' }, caption: 'clique para mais memes!', buttons: [{ buttonId: `${prefixobot}meme`, buttonText: { displayText: 'meme' }, type: 1 }], headerType: 4 }, { quoted: mek });
-        break;
-
       case 'papel':
         if (args.length < 1) return env(`Digite a frase na frente do comando \nExemplo de como se usar: ${prefixobot + command} Toki Bot`)
         teks = body.slice(7)
@@ -3872,13 +3779,6 @@ NÃO GARANTIMOS SALDO!.
         if (args.length < 1) return env(`Digite a frase na frente do comando \nExemplo de como se usar: ${prefixobot + command} Toki Bot`)
         env(mensagem[0].espere)
         conn.sendMessage(from, { image: { url: `https://rsymenti.sirv.com/1626624476633.jpg?text.0.text=${texto}&text.0.position.x=-13%25&text.0.position.y=-52%25&text.0.size=55&text.0.color=000000&text.0.background.opacity=100` }, caption: '✓' }, { quoted: mek });
-        break
-
-      case 'sangue':
-        // if (args.length < 1) return env(`Digite o nome do banner na frente do comando \nExemplo de como se usar: ${prefixobot + command} Toki`)
-        // env(mensagem[0].espere)
-        if (isOwner) return env('api off')
-        conn.sendMessage(from, { image: { url: `https://api-yogipw.herokuapp.com/api/textpro/blood?text=${encodeURIComponent(body.slice(8))}` }, caption: '✓' }, { quoted: mek });
         break
 
       //FIM
@@ -4369,21 +4269,7 @@ CONSULTA CNPJ 👨‍💻
         templateList = generateWAMessageFromContent(from, proto.Message.fromObject({ "listMessage": button }), { quoted: mek });
         conn.relayMessage(from, templateList.message, { messageId: templateList.key.id });
         break
-      case 'playvid':
-      case 'ytmp4':
-        if (!texto) return env(`Exemplo de como se usar: ${prefixobot + command} a vitória chegou`)
-        env('Espere um pouco, comando está em beta')
-        teks = args.join(' ')
-        if (!teks.endsWith("-doc")) {
-          res = await yts(`${teks}`).catch(e => {
-            env('Erro ao mandar mídia')
-          })
-          res = await y2mateV(res.all[0].url).catch(e => {
-            env('Não encontrei nenhum resultado.')
-          })
-          conn.sendMessage(from, { video: { url: res[0].link }, fileName: `silas.mp4`, Mimetype: 'video/mp4', caption: 'Pronto' }, { quoted: mek })
-        }
-        break
+     
       case 'play':
         if (!texto) return env(`Exemplo de como se usar: ${prefixobot + command} a vitória chegou`)
         var pinga = require("yt-search")
@@ -4399,7 +4285,7 @@ CONSULTA CNPJ 👨‍💻
 💬 Descrição : ${anu.description}
 📎 Link do vídeo: ${anu.url}`
         env(mensagem[0].espere)
-        conn.sendMessage(from, { image: { url: anu.thumbnail }, caption: play, buttons: [{ buttonId: `${prefixobot}ytmp3 ${anu.title}`, buttonText: { displayText: 'Áudio 🎵' }, type: 1 }, { buttonId: `${prefixobot}playvid ${anu.title}`, buttonText: { displayText: 'Vídeo 💾' }, type: 1 }], headerType: 4 }, { quoted: mek });
+        conn.sendMessage(from, { image: { url: anu.thumbnail }, caption: play, buttons: [{ buttonId: `${prefixobot}ytmp3 ${anu.title}`, buttonText: { displayText: 'Áudio 🎵' }, type: 1 }], headerType: 4 }, { quoted: mek });
         break
       case 'ytmp3':
       case 'ytaudio':
