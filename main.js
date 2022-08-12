@@ -3367,13 +3367,6 @@ https://wa.me/554497433716`;
         }
         break
 
-      case 'attp':
-        /*if (args.length < 1) return env(`Coloque algo na frente do comando\nExemplo: ${prefixobot + command} Scooby-Doo`)
-        conn.sendMessage(from, { sticker: { url: `https://api.xteam.xyz/attp?file&text=${encodeURIComponent(body.slice(5))}` } }, {quoted: mek } );
-        */
-        env('Api offiline');
-        break
-
       case 'packsfigu':
       case 'packfigu':
       case 'figupack':
