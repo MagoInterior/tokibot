@@ -137,7 +137,7 @@ const { convertSticker } = require('./lib/swm.js')
 
 blocked = []
 BotName = 'Tomioka-MD';
-prefix = ['#', '.', '$', '/', '!', '&', '?'];
+prefix = ['#', '$', '/', '!', '&', '?'];
 prefixobot = ['/']
 
 
@@ -5320,6 +5320,5 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
   });
 
 }
-
 
 connect();

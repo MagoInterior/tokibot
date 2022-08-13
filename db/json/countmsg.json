@@ -1649,12 +1649,12 @@
     "numbers": [
       {
         "jid": "554497433716@s.whatsapp.net",
-        "messages": 9,
-        "cmd_messages": 1
+        "messages": 10,
+        "cmd_messages": 2
       },
       {
         "jid": "14314125759@s.whatsapp.net",
-        "messages": 1,
+        "messages": 2,
         "cmd_messages": 0
       },
       {
