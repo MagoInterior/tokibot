@@ -1,6 +1,5 @@
 const {
-  default:
-  makeWASocket,
+  default: makeWASocket,
   DisconnectReason,
   MessageType,
   Presence,
@@ -25,464 +24,650 @@ const {
   generateMessageID,
   downloadContentFromMessage,
   makeInMemoryStore,
-  jidDecode
-} = require('@adiwajshing/baileys');
+  jidDecode,
+} = require("@adiwajshing/baileys");
 
 //MÚDULOS
-let limit = 50
-const { youtubedl, youtubedlv2, youtubedlv3 } = require('@bochilteam/scraper');
-const fs = require('fs');
-const P = require('pino');
-const fetch = require('node-fetch');
-const chalk = require('chalk')
-const mimetype = require('mime-types')
-const speed = require('performance-now')
-const ffmpeg = require('fluent-ffmpeg')
-const base64 = require('base-64')
-const moment = require('moment-timezone')
-const { Aki } = require('aki-api');
-const axios = require('axios')
-const ms = require('parse-ms')
-const request = require('request-promise');
-const cheerio = require('cheerio');
-const toMs = require('ms')
-const thiccysapi = require('textmaker-thiccy');
-const hx = require('hxz-api')
-const gis = require('g-i-s');
-const googleIt = require('google-it');
-const linkfy = require('linkifyjs');
-const yts = require('yt-search')
+let limit = 50;
+const { youtubedl, youtubedlv2, youtubedlv3, merdeka } = require("@bochilteam/scraper");
+const fs = require("fs");
+const config = require('./config.json')
+const P = require("pino");
+const fetch = require("node-fetch");
+const chalk = require("chalk");
+const mimetype = require("mime-types");
+const speed = require("performance-now");
+const ffmpeg = require("fluent-ffmpeg");
+const base64 = require("base-64");
+const moment = require("moment-timezone");
+const { Aki } = require("aki-api");
+const axios = require("axios");
+const ms = require("parse-ms");
+const request = require("request-promise");
+const cheerio = require("cheerio");
+const { color } = require('./lib/color');
+const toMs = require("ms");
+const thiccysapi = require("textmaker-thiccy");
+const hx = require("hxz-api");
+const gis = require("g-i-s");
+const googleIt = require("google-it");
+const linkfy = require("linkifyjs");
+const yts = require("yt-search");
 const { igApi, getCookie } = require("insta-fetcher");
 const ig = new igApi("oVaYqI8ZPEZUVPLa7V9nw5F8zYP5jPd5");
 const { EmojiAPI } = require("emoji-api");
 const emoji = new EmojiAPI();
-const os = require('os')
-const { exec } = require('child_process')
+const os = require("os");
 const phaticusthiccy = require("@phaticusthiccy/open-apis");
-const store = makeInMemoryStore({ logger: P().child({ level: 'debug', stream: 'store' }) })
-const link = 'https://';
-
+const store = makeInMemoryStore({
+  logger: P().child({ level: "debug", stream: "store" }),
+});
+const { WSF, createSticker } = require("wa-sticker-formatter");
+const { exec } = require('child_process')
+const Downloader = require("nodejs-file-downloader");
 // LIBS
 
-const { validmove, setGame } = require('./db/tictactoe');
+const { validmove, setGame } = require("./db/tictactoe");
 const level = require("./lib/level.js");
 const webp_mp4 = require("./db/js/webp_mp4.js");
-const { getRandom, runtime, formatp, getBuffer } = require('./lib/myfunc');
-const {
-  getAdmins,
-  getMembers
-} = require('./lib/utils');
-const { webp2gifFile } = require("./lib/gif22.js")
-const { y2mateA, y2mateV } = require('./lib/y2mate.js')
-const tiktok = require('./lib/tiktok.js')
-const {
-  data,
-  data2,
-  data3,
-  hora,
-  hora2 } = require('./lib/functions.js')
+const { getRandom, runtime, formatp, getBuffer } = require("./lib/myfunc");
+const { getAdmins, getMembers } = require("./lib/utils");
+const { webp2gifFile } = require("./lib/gif22.js");
+const { y2mateA, y2mateV } = require("./lib/y2mate.js");
+const tiktok = require("./lib/tiktok.js");
+const { data, data2, data3, hora, hora2 } = require("./lib/functions.js");
 const {
   addToken,
   removeToken,
   getAllTokens,
-  getTokenByNumber
-} = require('./lib/fichas.js');
+  getTokenByNumber,
+} = require("./lib/fichas.js");
 
 //ARQUIVOS JSON
 
-const {
-  state,
-  saveState
-} = useSingleFileAuthState('auth-info-multi.json');
-const bemvindo2 = JSON.parse(fs.readFileSync('./db/json/bemvindo2.json'))
-const _level = JSON.parse(fs.readFileSync('./db/json/level.json'))
-const simipv = JSON.parse(fs.readFileSync('./db/json/simipv.json'))
-const countMessage = JSON.parse(fs.readFileSync('./db/json/countmsg.json'));
-const _premium = JSON.parse(fs.readFileSync('./db/json/premium.json'))
-const premium = require('./function/premium.js')
-const mensagem = JSON.parse(fs.readFileSync('./db/json/menssagem.json'))
-const dinheiro = JSON.parse(fs.readFileSync('./db/json/dinheiro.json')) //ONDE FICA ARMAZENADO OS DADOS
-const antifake = JSON.parse(fs.readFileSync('./db/json/antifake.json'));
-const bye_group = JSON.parse(fs.readFileSync('./db/json/byegp.json'));
-const bye_group2 = JSON.parse(fs.readFileSync('./db/json/byegp2.json'));
-const welcome_group2 = JSON.parse(fs.readFileSync('./db/json/welcomegp2.json'));
-const welcome_group = JSON.parse(fs.readFileSync('./db/json/welcomegp.json'));
-const termos = JSON.parse(fs.readFileSync('./db/json/termos.json'));
-const welkom = JSON.parse(fs.readFileSync('./db/json/welkom.json'));
-const welkom2 = JSON.parse(fs.readFileSync('./db/json/vacilo.json'));
-const antilinkgp = JSON.parse(fs.readFileSync('./db/json/antilinkgp.json'))
-const antilink = JSON.parse(fs.readFileSync('./db/json/antilink.json'))
+const { state, saveState } = useSingleFileAuthState("auth-info-multi.json");
+const bemvindo2 = JSON.parse(fs.readFileSync("./db/json/bemvindo2.json"));
+const _level = JSON.parse(fs.readFileSync("./db/json/level.json"));
+const simipv = JSON.parse(fs.readFileSync("./db/json/simipv.json"));
+const countMessage = JSON.parse(fs.readFileSync("./db/json/countmsg.json"));
+const _premium = JSON.parse(fs.readFileSync("./db/json/premium.json"));
+const premium = require("./function/premium.js");
+const mensagem = JSON.parse(fs.readFileSync("./db/json/menssagem.json"));
+const dinheiro = JSON.parse(fs.readFileSync("./db/json/dinheiro.json")); //ONDE FICA ARMAZENADO OS DADOS
+const antifake = JSON.parse(fs.readFileSync("./db/json/antifake.json"));
+const bye_group = JSON.parse(fs.readFileSync("./db/json/byegp.json"));
+const bye_group2 = JSON.parse(fs.readFileSync("./db/json/byegp2.json"));
+const welcome_group2 = JSON.parse(fs.readFileSync("./db/json/welcomegp2.json"));
+const welcome_group = JSON.parse(fs.readFileSync("./db/json/welcomegp.json"));
+const termos = JSON.parse(fs.readFileSync("./db/json/termos.json"));
+const welkom = JSON.parse(fs.readFileSync("./db/json/welkom.json"));
+const welkom2 = JSON.parse(fs.readFileSync("./db/json/vacilo.json"));
+const antilinkgp = JSON.parse(fs.readFileSync("./db/json/antilinkgp.json"));
+const antilink = JSON.parse(fs.readFileSync("./db/json/antilink.json"));
 // const profissao_group = JSON.parse(fs.readFileSync('./db/json/profissão.json'));
-const autostickerimg = JSON.parse(fs.readFileSync('./db/json/autostickerimg.json'))
-const simi = JSON.parse(fs.readFileSync('./db/json/simi.json'));;
-const ban = JSON.parse(fs.readFileSync('./db/json/banned.json'));
-const akinator = JSON.parse(fs.readFileSync('./db/json/akinator.json'));
-const adeuscara = JSON.parse(fs.readFileSync('./db/json/adeuscara.json'));
-const antiviewonce = JSON.parse(fs.readFileSync('./db/json/antiviewonce.json'));
-const game = JSON.parse(fs.readFileSync('./db/json/game.json'))
-const nsfw = JSON.parse(fs.readFileSync('./db/json/nsfw.json'))
-const antipala = JSON.parse(fs.readFileSync('./db/json/antipala.json'))
+const simi = JSON.parse(fs.readFileSync("./db/json/simi.json"));
+const ban = JSON.parse(fs.readFileSync("./db/json/banned.json"));
+const akinator = JSON.parse(fs.readFileSync("./db/json/akinator.json"));
+const adeuscara = JSON.parse(fs.readFileSync("./db/json/adeuscara.json"));
+const antiviewonce = JSON.parse(fs.readFileSync("./db/json/antiviewonce.json"));
+const game = JSON.parse(fs.readFileSync("./db/json/game.json"));
+const nsfw = JSON.parse(fs.readFileSync("./db/json/nsfw.json"));
+const antipala = JSON.parse(fs.readFileSync("./db/json/antipala.json"));
 
 //FIM
 
-//RPG 
+//RPG
 
-const nomerpg = JSON.parse(fs.readFileSync('./db/json/nomerpg.json'))
-const profissao = JSON.parse(fs.readFileSync('./db/json/profissao.json'));
-const rancarpg = JSON.parse(fs.readFileSync('./db/json/rancca.json'))
+const nomerpg = JSON.parse(fs.readFileSync("./db/json/nomerpg.json"));
+const profissao = JSON.parse(fs.readFileSync("./db/json/profissao.json"));
+const rancarpg = JSON.parse(fs.readFileSync("./db/json/rancca.json"));
 
 //PARTE JS
 
-const { convertSticker } = require('./lib/swm.js')
+const { convertSticker } = require("./lib/swm.js");
 
-blocked = []
-BotName = 'Tomioka-MD';
-prefix = ['#', '$', '/', '!', '&', '?'];
-prefixobot = ['/']
+blocked = [];
+BotName = "Tomioka-MD";
+prefix = ["#", "$", "/", "!", "&", "."];
+prefixobot = ["/"];
 
+global.blocked;
 
-global.blocked
+const vcard =
+  "BEGIN:VCARD\n" + // Formato Vcard
+  "VERSION:3.0\n" +
+  "FN:Tio Tomioka\n" + // Nome
+  "ORG:Criador do Tomioka bot hihi;\n" + // ORGANIZAÇÃO
+  "TEL;type=CELL;type=VOICE;waid=554497433716:+55 99743 3716\n" + // NÚMERO
+  "END:VCARD";
 
-const vcard = 'BEGIN:VCARD\n' // Formato Vcard
-  + 'VERSION:3.0\n'
-  + 'FN:Tio Tomioka\n' // Nome
-  + 'ORG:Criador do Tomioka bot hihi;\n' // ORGANIZAÇÃO 
-  + 'TEL;type=CELL;type=VOICE;waid=554497433716:+55 99743 3716\n' // NÚMERO 
-  + 'END:VCARD'
+  const descFig = {
+    type: 'full',
+    pack: `⬔ ۪࣪ 🌼 ׄ₊𝕮𝖗𝖎𝖆𝖉𝖔𝖗:\n⤷   ꪶ͢͢͢𝐓𝐈͢𝚯 𝐓𝚯͢𝐌𝐈͢𝚯𝐊𝜟ꫂ\n\n꒺ ׄ₊👑̷ 𝙁𝙖𝙡𝙖𝙧 𝙘𝙤𝙢 𝙤 𝙩𝙤𝙢𝙞𝙤𝙠𝙖:\n⤷   (44) 99743-3716         `,
+    author: `⬔ ۪࣪ ✨ 𝓼𝓲𝓽𝓮:\nlinktr.ee/Tokibot    ↲\n\n꒺ ׄ₊🤖̷ 𝘽𝙊𝙏:\n(44) 99822-0867    ↲`,
+    categories: [
+    '🌹'
+    ]
+    }
 
 function connect() {
   const conn = makeWASocket({
     printQRInTerminal: true,
-    logger: P({ level: 'silent' }),
+    logger: P({ level: "silent" }),
     defaultQueryTimeoutMs: undefined,
-    auth: state
+    auth: state,
   });
 
-  conn.ev.on('connection.update', update => {
-    if (update.connection == 'close') {
-      if (update.lastDisconnect.error.output.statusCode == DisconnectReason.connectionClosed) {
-        console.log('conexão fechada, reconectando...');
+  conn.ev.on("connection.update", (update) => {
+    if (update.connection == "close") {
+      if (
+        update.lastDisconnect.error.output.statusCode ==
+        DisconnectReason.connectionClosed
+      ) {
+        console.log("conexão fechada, reconectando...");
         connect();
-      } else if (update.lastDisconnect.error.output.statusCode == DisconnectReason.connectionLost) {
-        console.log('conexão com a internet foi perdida, reconectando...');
+      } else if (
+        update.lastDisconnect.error.output.statusCode ==
+        DisconnectReason.connectionLost
+      ) {
+        console.log("conexão com a internet foi perdida, reconectando...");
         connect();
-      } else if (update.lastDisconnect.error.output.statusCode == DisconnectReason.connectionReplaced) {
+      } else if (
+        update.lastDisconnect.error.output.statusCode ==
+        DisconnectReason.connectionReplaced
+      ) {
         console.log("conexão substituida, reconectando...");
         connect();
-      } else if (update.lastDisconnect.error.output.statusCode == DisconnectReason.timedOut) {
-        console.log('tempo de conexão esgotado, reconectando...');
+      } else if (
+        update.lastDisconnect.error.output.statusCode ==
+        DisconnectReason.timedOut
+      ) {
+        console.log("tempo de conexão esgotado, reconectando...");
         connect();
-      } else if (update.lastDisconnect.error.output.statusCode == DisconnectReason.loggedOut) {
-        console.log('usuario desconectado, reconectando...');
+      } else if (
+        update.lastDisconnect.error.output.statusCode ==
+        DisconnectReason.loggedOut
+      ) {
+        console.log("usuario desconectado, reconectando...");
         connect();
-      } else if (update.lastDisconnect.error.output.statusCode == DisconnectReason.badSession) {
-        console.log('sessão ruim, reconectando...');
+      } else if (
+        update.lastDisconnect.error.output.statusCode ==
+        DisconnectReason.badSession
+      ) {
+        console.log("sessão ruim, reconectando...");
         connect();
-      } else if (update.lastDisconnect.error.output.statusCode == DisconnectReason.restartRequired) {
-        console.log('reiniciamento exigido, reiniciando...');
+      } else if (
+        update.lastDisconnect.error.output.statusCode ==
+        DisconnectReason.restartRequired
+      ) {
+        console.log("reiniciamento exigido, reiniciando...");
         connect();
-      } else if (update.lastDisconnect.error.output.statusCode == DisconnectReason.multideviceMismatch) {
-        console.log('icompatibilidade com varios dispositivos, reconectando...');
+      } else if (
+        update.lastDisconnect.error.output.statusCode ==
+        DisconnectReason.multideviceMismatch
+      ) {
+        console.log(
+          "icompatibilidade com varios dispositivos, reconectando..."
+        );
         connect();
       }
     }
-  })
+  });
 
   //===============(BEM VINDO)=============\\
 
-
-  conn.ev.on('group-participants.update', async (ale) => {
-    const isGroup = ale.id.endsWith('@g.us');
-    const mdata = isGroup ? await conn.groupMetadata(ale.id) : {}
+  conn.ev.on("group-participants.update", async (ale) => {
+    const isGroup = ale.id.endsWith("@g.us");
+    const mdata = isGroup ? await conn.groupMetadata(ale.id) : {};
 
     if (Object.keys(mdata).length == 0) return;
 
     // PEGAR DESCRIÇÃO DO GRUPO.
-    const groupDesc = !mdata.desc ? '' : mdata.desc.toString();
+    const groupDesc = !mdata.desc ? "" : mdata.desc.toString();
 
     // CONST DO CMD DE BANIR QUEM ESTIVER NA LISTA N
-    const adeuscara = JSON.parse(fs.readFileSync('./db/json/adeuscara.json'))
-    const dbackid = []
-    for (i = 0; i < adeuscara.length; ++i) dbackid.push(adeuscara[i].groupId)
-    console.log(ale)
+    const adeuscara = JSON.parse(fs.readFileSync("./db/json/adeuscara.json"));
+    const dbackid = [];
+    for (i = 0; i < adeuscara.length; ++i) dbackid.push(adeuscara[i].groupId);
+    console.log(ale);
     if (dbackid.indexOf(ale.id) >= 0) {
-      if (ale.action == 'add') {
-        num = ale.participants[0]
-        var ind = dbackid.indexOf(ale.id)
-        if (adeuscara[ind].actived && adeuscara[ind].number.indexOf(num.split('@')[0]) >= 0) {
-          await conn.sendMessage(mdata.id, { text: '*Olha quem deu as cara por aqui, sente o poder do ban cabaço*' })
-          conn.groupParticipantsUpdate(mdata.id, [ale.participants[0]], 'remove')
-          return
+      if (ale.action == "add") {
+        num = ale.participants[0];
+        var ind = dbackid.indexOf(ale.id);
+        if (
+          adeuscara[ind].actived &&
+          adeuscara[ind].number.indexOf(num.split("@")[0]) >= 0
+        ) {
+          await conn.sendMessage(mdata.id, {
+            text: "*Olha quem deu as cara por aqui, sente o poder do ban cabaço*",
+          });
+          conn.groupParticipantsUpdate(
+            mdata.id,
+            [ale.participants[0]],
+            "remove"
+          );
+          return;
         }
       }
     }
     // FIM LISTANEGRA CONST ^
 
-    // ANTIFAKE QUE ESTÁ JUNTO COM BEM VINDO 
+    // ANTIFAKE QUE ESTÁ JUNTO COM BEM VINDO
     if (antifake.includes(ale.id)) {
-      if (ale.action === 'add' && !ale.participants[0].startsWith(55)) {
-        num = ale.participants[0]
-        conn.sendMessage(mdata.id, { text: 'Bya bya número fake, você não e bem vindo aqui' })
-        await delay(1000)
-        conn.groupParticipantsUpdate(mdata.id, [ale.participants[0]], 'remove')
+      if (ale.action === "add" && !ale.participants[0].startsWith(55)) {
+        num = ale.participants[0];
+        conn.sendMessage(mdata.id, {
+          text: "Bya bya número fake, você não e bem vindo aqui",
+        });
+        await delay(1000);
+        conn.groupParticipantsUpdate(mdata.id, [ale.participants[0]], "remove");
       }
     }
 
     if (antifake.includes(ale.id)) {
-      if (ale.action === 'add' && ale.participants[0].startsWith(55800)) {
-        num = ale.participants[0]
-        conn.sendMessage(mdata.id, { text: 'Suma daqui, você não e bem vindo' })
-        await delay(1000)
-        conn.groupParticipantsUpdate(mdata.id, [ale.participants[0]], 'remove')
+      if (ale.action === "add" && ale.participants[0].startsWith(55800)) {
+        num = ale.participants[0];
+        conn.sendMessage(mdata.id, {
+          text: "Suma daqui, você não e bem vindo",
+        });
+        await delay(1000);
+        conn.groupParticipantsUpdate(mdata.id, [ale.participants[0]], "remove");
       }
     }
     // FIM ANTIFAKE ^
 
-    // BEM VINDO COMPLETO 
+    // BEM VINDO COMPLETO
     if (welkom.includes(ale.id)) {
-      if (antifake.includes(ale.id) && !ale.participants[0].startsWith(55)) return
+      if (antifake.includes(ale.id) && !ale.participants[0].startsWith(55))
+        return;
       try {
         try {
-          ppimg = await conn.profilePictureUrl(ale.participants[0])
+          ppimg = await conn.profilePictureUrl(ale.participants[0]);
         } catch {
-          ppimg = 'https://telegra.ph/file/b5427ea4b8701bc47e751.jpg'
+          ppimg = "https://telegra.ph/file/b5427ea4b8701bc47e751.jpg";
         }
 
         try {
-          ppgp = await conn.profilePictureUrl(mdata.id)
+          ppgp = await conn.profilePictureUrl(mdata.id);
         } catch {
-          ppgp = 'https://image.flaticon.com/icons/png/512/124/124034.png'
+          ppgp = "https://image.flaticon.com/icons/png/512/124/124034.png";
         }
 
-        shortpc = await axios.get(`https://tinyurl.com/api-create.php?url=${ppimg}`)
-        shortgc = await axios.get(`https://tinyurl.com/api-create.php?url=${ppgp}`)
+        shortpc = await axios.get(
+          `https://tinyurl.com/api-create.php?url=${ppimg}`
+        );
+        shortgc = await axios.get(
+          `https://tinyurl.com/api-create.php?url=${ppgp}`
+        );
 
-        const groupIdWelcomed = []
-        const groupIdBye = []
-        for (let obj of welcome_group) groupIdWelcomed.push(obj.jid)
-        for (let obj of bye_group) groupIdBye.push(obj.jid)
+        const groupIdWelcomed = [];
+        const groupIdBye = [];
+        for (let obj of welcome_group) groupIdWelcomed.push(obj.jid);
+        for (let obj of bye_group) groupIdBye.push(obj.jid);
 
+        const isByed = groupIdBye.indexOf(ale.id) >= 0 ? true : false;
 
-        const isByed = groupIdBye.indexOf(ale.id) >= 0 ? true : false
+        const isWelcomed = groupIdWelcomed.indexOf(ale.id) >= 0 ? true : false;
 
-        const isWelcomed = (groupIdWelcomed.indexOf(ale.id) >= 0) ? true : false
-
-        if (ale.action === 'add') {
+        if (ale.action === "add") {
           if (isWelcomed) {
-            var ind = groupIdWelcomed.indexOf(ale.id)
+            var ind = groupIdWelcomed.indexOf(ale.id);
             teks = welcome_group[ind].mek
-              .replace('#hora#', time)
-              .replace('#nomedogp#', mdata.subject)
-              .replace('#numerodele#', '@' + ale.participants[0].split('@')[0])
-              .replace('#numerobot#', conn.user.id)
-              .replace('#prefixo#', prefix)
-              .replace('#descrição#', groupDesc)
+              .replace("#hora#", time)
+              .replace("#nomedogp#", mdata.subject)
+              .replace("#numerodele#", "@" + ale.participants[0].split("@")[0])
+              .replace("#numerobot#", conn.user.id)
+              .replace("#prefixo#", prefix)
+              .replace("#descrição#", groupDesc);
           } else {
-            teks = welcome(ale.participants[0].split('@')[0], mdata.subject)
+            teks = welcome(ale.participants[0].split("@")[0], mdata.subject);
           }
-          let buff = await getBuffer(ppimg)
-          ran = getRandom('.jpg')
-          await fs.writeFileSync(ran, buff)
+          let buff = await getBuffer(ppimg);
+          ran = getRandom(".jpg");
+          await fs.writeFileSync(ran, buff);
 
-          fs.unlinkSync(ran)
-          imgbuff = await getBuffer(`https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdAmc_FJxlY3xYDoLURHHYmJzmQsSzlkmt7AuyYvcrOu_mjPYR5z8IZLO0&s=10`)
+          fs.unlinkSync(ran);
+          imgbuff = await getBuffer(
+            `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdAmc_FJxlY3xYDoLURHHYmJzmQsSzlkmt7AuyYvcrOu_mjPYR5z8IZLO0&s=10`
+          );
           conn.sendMessage(mdata.id, {
             image: imgbuff,
-            mentions: ale.participants, caption: teks
-          })
-
-        } else if (ale.action === 'remove') {
-          mem = ale.participants[0]
+            mentions: ale.participants,
+            caption: teks,
+          });
+        } else if (ale.action === "remove") {
+          mem = ale.participants[0];
 
           try {
-            ppimg = await conn.profilePictureUrl(`${mem.split('@')[0]}@c.us`)
+            ppimg = await conn.profilePictureUrl(`${mem.split("@")[0]}@c.us`);
           } catch {
-            ppimg = 'https://telegra.ph/file/b5427ea4b8701bc47e751.jpg'
+            ppimg = "https://telegra.ph/file/b5427ea4b8701bc47e751.jpg";
           }
-
 
           if (isByed) {
-            var ind = groupIdBye.indexOf(ale.id)
+            var ind = groupIdBye.indexOf(ale.id);
             teks = bye_group[ind].mek
-              .replace('#hora#', time)
-              .replace('#nomedogp#', mdata.subject)
-              .replace('#numerodele#', ale.participants[0].split('@')[0])
-              .replace('#numerobot#', conn.user.id)
-              .replace('#prefixo#', prefix)
-              .replace('#descrição#', groupDesc)
+              .replace("#hora#", time)
+              .replace("#nomedogp#", mdata.subject)
+              .replace("#numerodele#", ale.participants[0].split("@")[0])
+              .replace("#numerobot#", conn.user.id)
+              .replace("#prefixo#", prefix)
+              .replace("#descrição#", groupDesc);
           } else {
-            teks = bye(ale.participants[0].split('@')[0])
+            teks = bye(ale.participants[0].split("@")[0]);
           }
 
-          let buff = await getBuffer(ppimg)
-          ran = getRandom('.jpg')
-          fs.writeFileSync(ran, buff)
+          let buff = await getBuffer(ppimg);
+          ran = getRandom(".jpg");
+          fs.writeFileSync(ran, buff);
 
-          imgbuff = await getBuffer(`https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSj3QSujsWG0LtzgE_2qRWA5ynruykS246CqQ&usqp=CAU`)
+          imgbuff = await getBuffer(
+            `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSj3QSujsWG0LtzgE_2qRWA5ynruykS246CqQ&usqp=CAU`
+          );
           conn.sendMessage(mdata.id, {
-            image: imgbuff, caption: teks,
-            mentions: ale.participants
-          })
-          fs.unlinkSync(ran)
-
+            image: imgbuff,
+            caption: teks,
+            mentions: ale.participants,
+          });
+          fs.unlinkSync(ran);
         }
       } catch (e) {
         console.log(e);
       }
     }
-  })
+  });
   // FIM ^
 
   // BEM VINDO 2 ( SEM FOTO )
 
-  conn.ev.on('creds.update', saveState);
-  conn.ev.on('group-participants.update', async (ale) => {
-    const isGroup = ale.id.endsWith('@g.us');
-    const mdata = isGroup ? await conn.groupMetadata(ale.id) : {}
+  conn.ev.on("creds.update", saveState);
+  conn.ev.on("group-participants.update", async (ale) => {
+    const isGroup = ale.id.endsWith("@g.us");
+    const mdata = isGroup ? await conn.groupMetadata(ale.id) : {};
 
     if (Object.keys(mdata).length == 0) return;
 
     // PEGAR DESCRIÇÃO DO GRUPO
-    const groupDesc = !mdata.desc ? '' : mdata.desc.toString();
+    const groupDesc = !mdata.desc ? "" : mdata.desc.toString();
 
     // CONST DO CMD DE BANIR QUEM ESTIVER NA LISTA N
     if (welkom2.includes(ale.id)) {
-      if (antifake.includes(ale.id) && !ale.participants[0].startsWith(55)) return
+      if (antifake.includes(ale.id) && !ale.participants[0].startsWith(55))
+        return;
       try {
+        const welcome_group2 = JSON.parse(
+          fs.readFileSync("./db/json/welcomegp2.json")
+        );
+        const welcome_group = JSON.parse(
+          fs.readFileSync("./db/json/welcomegp.json")
+        );
+        const groupIdWelcomed2 = [];
+        const groupIdBye2 = [];
+        for (let obj of welcome_group2) groupIdWelcomed2.push(obj.jid);
+        for (let obj of bye_group2) groupIdBye2.push(obj.jid);
 
-        const welcome_group2 = JSON.parse(fs.readFileSync('./db/json/welcomegp2.json'));
-        const welcome_group = JSON.parse(fs.readFileSync('./db/json/welcomegp.json'));
-        const groupIdWelcomed2 = []
-        const groupIdBye2 = []
-        for (let obj of welcome_group2) groupIdWelcomed2.push(obj.jid)
-        for (let obj of bye_group2) groupIdBye2.push(obj.jid)
+        const isByed2 = groupIdBye2.indexOf(ale.id) >= 0 ? true : false;
 
+        const isWelcomed2 =
+          groupIdWelcomed2.indexOf(ale.id) >= 0 ? true : false;
 
-        const isByed2 = groupIdBye2.indexOf(ale.id) >= 0 ? true : false
-
-        const isWelcomed2 = (groupIdWelcomed2.indexOf(ale.id) >= 0) ? true : false
-
-        if (ale.action === 'add') {
+        if (ale.action === "add") {
           if (isWelcomed2) {
-            var ind = groupIdWelcomed2.indexOf(ale.id)
+            var ind = groupIdWelcomed2.indexOf(ale.id);
             teks = welcome_group2[ind].mek
-              .replace('#hora#', time)
-              .replace('#nomedogp#', mdata.subject)
-              .replace('#numerodele#', '@' + ale.participants[0].split('@')[0])
-              .replace('#numerobot#', conn.user.id)
-              .replace('#prefixo#', prefix)
-              .replace('#descrição#', groupDesc)
+              .replace("#hora#", time)
+              .replace("#nomedogp#", mdata.subject)
+              .replace("#numerodele#", "@" + ale.participants[0].split("@")[0])
+              .replace("#numerobot#", conn.user.id)
+              .replace("#prefixo#", prefix)
+              .replace("#descrição#", groupDesc);
           } else {
-            teks = welcome(ale.participants[0].split('@')[0], mdata.subject)
+            teks = welcome(ale.participants[0].split("@")[0], mdata.subject);
           }
 
-          conn.sendMessage(mdata.id, { text: teks }, { mentions: ale.participants })
-
-        } else if (ale.action === 'remove') {
-          mem = ale.participants[0]
+          conn.sendMessage(
+            mdata.id,
+            { text: teks },
+            { mentions: ale.participants }
+          );
+        } else if (ale.action === "remove") {
+          mem = ale.participants[0];
 
           if (isByed2) {
-            var ind = groupIdBye2.indexOf(ale.id)
+            var ind = groupIdBye2.indexOf(ale.id);
             teks = bye_group2[ind].mek
-              .replace('#hora#', time)
-              .replace('#nomedogp#', mdata.subject)
-              .replace('#numerodele#', ale.participants[0].split('@')[0])
-              .replace('#numerobot#', conn.user.id)
-              .replace('#prefixo#', prefix)
-              .replace('#descrição#', groupDesc)
+              .replace("#hora#", time)
+              .replace("#nomedogp#", mdata.subject)
+              .replace("#numerodele#", ale.participants[0].split("@")[0])
+              .replace("#numerobot#", conn.user.id)
+              .replace("#prefixo#", prefix)
+              .replace("#descrição#", groupDesc);
           } else {
-            teks = bye(ale.participants[0].split('@')[0])
+            teks = bye(ale.participants[0].split("@")[0]);
           }
 
-          conn.sendMessage(mdata.id, { text: teks }, { mentions: ale.participants })
-          fs.unlinkSync(ran)
+          conn.sendMessage(
+            mdata.id,
+            { text: teks },
+            { mentions: ale.participants }
+          );
+          fs.unlinkSync(ran);
         }
       } catch (e) {
         console.log(e);
       }
     }
-  })
+  });
 
-  conn.ev.on('creds.update', saveState);
+  conn.ev.on("creds.update", saveState);
 
-  conn.ev.on('messages.upsert', async updateM => {
-    if (updateM.type != 'notify') return;
+  conn.ev.on("messages.upsert", async (updateM) => {
+    if (updateM.type != "notify") return;
     const mek = updateM.messages[0];
     if (!mek.key.participant) mek.key.participant = mek.key.remoteJid;
-    mek.key.participant = mek.key.participant.replace(/:[0-9]+/gi, '');
+    mek.key.participant = mek.key.participant.replace(/:[0-9]+/gi, "");
     if (mek.key.fromMe) return;
     if (!mek.message) return;
     const from = mek.key.remoteJid;
     const info = mek.message;
-    const pushname = mek.pushName || "Undefined"
-    const type = require('@adiwajshing/baileys').getContentType(info);
+    const pushname = mek.pushName || "Undefined";
+    const type = require("@adiwajshing/baileys").getContentType(info);
     // console.log(mek);
 
-    const body = type == 'conversation' ? info[type] : type == 'imageMessage' ? info[type].caption : type == 'videoMessage' ? info[type].caption : type == 'extendedTextMessage' ? info[type].text : type == 'buttonsResponseMessage' ? info[type].selectedButtonId : type == 'listResponseMessage' ? info[type].singleSelectReply.selectedRowId : type == 'templateButtonReplyMessage' ? info[type].selectedId : '';
+    const body =
+      type == "conversation"
+        ? info[type]
+        : type == "imageMessage"
+        ? info[type].caption
+        : type == "videoMessage"
+        ? info[type].caption
+        : type == "extendedTextMessage"
+        ? info[type].text
+        : type == "buttonsResponseMessage"
+        ? info[type].selectedButtonId
+        : type == "listResponseMessage"
+        ? info[type].singleSelectReply.selectedRowId
+        : type == "templateButtonReplyMessage"
+        ? info[type].selectedId
+        : "";
 
-    selectedButton = (type == 'buttonsResponseMessage') ? mek.message.buttonsResponseMessage.selectedButtonId : ''
-    const argsButton = selectedButton.trim().split(/ +/)
+    selectedButton =
+      type == "buttonsResponseMessage"
+        ? mek.message.buttonsResponseMessage.selectedButtonId
+        : "";
+    const argsButton = selectedButton.trim().split(/ +/);
 
-    var budy = type === 'conversation' ? mek.message.conversation : type === 'extendedTextMessage' ? mek.message.extendedTextMessage.text : ''
-    var pes = (type === 'conversation' && mek.message.conversation) ? mek.message.conversation : (type == 'imageMessage') && mek.message.imageMessage.caption ? mek.message.imageMessage.caption : (type == 'videoMessage') && mek.message.videoMessage.caption ? mek.message.videoMessage.caption : (type == 'extendedTextMessage') && mek.message.extendedTextMessage.text ? mek.message.extendedTextMessage.text : ''
+    var budy =
+      type === "conversation"
+        ? mek.message.conversation
+        : type === "extendedTextMessage"
+        ? mek.message.extendedTextMessage.text
+        : "";
+    var pes =
+      type === "conversation" && mek.message.conversation
+        ? mek.message.conversation
+        : type == "imageMessage" && mek.message.imageMessage.caption
+        ? mek.message.imageMessage.caption
+        : type == "videoMessage" && mek.message.videoMessage.caption
+        ? mek.message.videoMessage.caption
+        : type == "extendedTextMessage" && mek.message.extendedTextMessage.text
+        ? mek.message.extendedTextMessage.text
+        : "";
     function env(text) {
       conn.sendMessage(from, { text: text }, { quoted: mek });
     }
-
+    function env2(text, emoji){
+  
+      env(text);
+     
+      const sendReaction2 = {
+         react: {
+             text: null, 
+             key: mek.key
+         }
+     }
+     const sendReagir2 = conn.sendMessage(from, sendReaction2)
+     
+     setTimeout(() =>{  const sendReactionn2 = {
+         react: {
+             text: emoji, 
+             key: mek.key
+         }
+     }
+     const sendReagirr2 = conn.sendMessage(from, sendReactionn2) }, 1)
+     }
+     function env3(text, text3, emoji){
+  
+      sendButtonText(from, text, text3, {quoted: mek});
+     
+      const sendReaction3 = {
+         react: {
+             text: null, 
+             key: mek.key
+         }
+     }
+     const sendReagir3 = conn.sendMessage(from, sendReaction3)
+     
+     setTimeout(() =>{  const sendReactionn3 = {
+         react: {
+             text: emoji, 
+             key: mek.key
+         }
+     }
+     const sendReagirr3 = conn.sendMessage(from, sendReactionn3) }, 1)
+     }
     const envJSON = (text) => {
-      env(JSON.stringify(text, null, 2))
-
-    }
+      env(JSON.stringify(text, null, 2));
+    };
 
     function mention(text, quoted = true) {
-      conn.sendMessage(from, { text: text, mentions: addMentionsInArray(text, "@s.whatsapp.net") }, quoted ? { quoted: mek } : {});
+      conn.sendMessage(
+        from,
+        { text: text, mentions: addMentionsInArray(text, "@s.whatsapp.net") },
+        quoted ? { quoted: mek } : {}
+      );
     }
-
     //IMPORTANTES, NÃO MEXA AQUI
 
-    const botN = conn.user.id.replace(/:[0-9]+/gi, '');
+    const botN = conn.user.id.replace(/:[0-9]+/gi, "");
     const isBot = mek.key.fromMe;
     const owner = ["554497433716@s.whatsapp.net"];
     const mods = ["554497433716@s.whatsapp.net"];
     const mito = "17144092135@s.whatsapp.net";
-    const vini = ["5519983528567@s.whatsapp.net"]
+    const vini = ["5519983528567@s.whatsapp.net"];
     const akashi = "559291687728@s.whatsapp.net";
 
-    const isGroup = mek.key.remoteJid.endsWith('g.us');
+    const isGroup = mek.key.remoteJid.endsWith("g.us");
     const metadata = isGroup ? await conn.groupMetadata(from) : {};
-    const IsDonoGo = metadata.owner
-    const groupMetadata = isGroup ? await conn.groupMetadata(from) : ''
-    const groupName = isGroup ? groupMetadata.subject : ''
-    const groupDesc = isGroup ? groupMetadata.desc : ''
-    const groupMembers = isGroup ? groupMetadata.participants : []
+    const IsDonoGo = metadata.owner;
+    const groupMetadata = isGroup ? await conn.groupMetadata(from) : "";
+    const groupName = isGroup ? groupMetadata.subject : "";
+    const groupDesc = isGroup ? groupMetadata.desc : "";
+    const groupMembers = isGroup ? groupMetadata.participants : [];
     const sender = mek.key.participant;
-    const adivinha = mek.key.id.length > 21 ? 'Android 📱' : mek.key.id.substring(0, 2) == '3A' ? 'IOS 📱' : 'WEB  💻';
-    const sleep = async (ms) => { return new Promise(resolve => setTimeout(resolve, ms)) }
+    const adivinha =
+      mek.key.id.length > 21
+        ? "Android 📱"
+        : mek.key.id.substring(0, 2) == "3A"
+        ? "IOS 📱"
+        : "WEB  💻";
+    const sleep = async (ms) => {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    };
 
-    const ants = body
-    const args = body.trim().split(/ +/).slice(1)
-    const argss = body.split(/ +/g)
-    const texto = args.join(" ")
-    const q = args.join(" ")
-    const p = args.join(" ")
+    const ants = body;
+    const args = body.trim().split(/ +/).slice(1);
+    const argss = body.split(/ +/g);
+    const texto = args.join(" ");
+    const q = args.join(" ");
+    const p = args.join(" ");
     const command = body.slice(1).trim().split(/ +/).shift().toLowerCase();
-    const quoted = mek.quoted ? mek.quoted : mek
-    const content = JSON.stringify(mek.message)
-
+    const quoted = mek.quoted ? mek.quoted : mek;
+    const content = JSON.stringify(mek.message);
 
     //CONSOLE
 
-    console.log('\n\033[31mENDEREÇO IP: \033[34m' + mek.key.remoteJid + '\n' + '\033[31mID DE MENSAGEM: \033[34m' + mek.key.id + '\n' + '\033[31mUSUÁRIO: \033[34m' + mek.key.participant + '\n' + '\033[31mPUSHNAME: \033[34m' + pushname + '\n' + '\033[31mCOMANDO: \033[34m' + texto + '\n' + '\033[31mData e hora: \033[34m' + data2 + ' ' + 'as' + ' ' + hora() + '\n\n')
+    console.log(
+      "\n\033[31mENDEREÇO IP: \033[34m" +
+        mek.key.remoteJid +
+        "\n" +
+        "\033[31mID DE MENSAGEM: \033[34m" +
+        mek.key.id +
+        "\n" +
+        "\033[31mUSUÁRIO: \033[34m" +
+        mek.key.participant +
+        "\n" +
+        "\033[31mPUSHNAME: \033[34m" +
+        pushname +
+        "\n" +
+        "\033[31mCOMANDO: \033[34m" +
+        texto +
+        "\n" +
+        "\033[31mData e hora: \033[34m" +
+        data2 +
+        " " +
+        "as" +
+        " " +
+        hora() +
+        "\n\n"
+    );
 
     //VERIFICADOS
-    const selo = { key: { participant: "0@s.whatsapp.net", remoteJid: "120363023849383476@g.us", }, message: { conversation: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD" }, }
-    const whatsapp = { key: { fromMe: false, participant: `0@s.whatsapp.net` }, message: { "extendedTextMessage": { "text": `Toki Bot`, "title": "hmm" } } }
-    const imagemek = { key: { fromMe: false, participant: `0@s.whatsapp.net` }, message: { "extendedTextMessage": { "text": `Toki Bot`, "title": "hmm" } } }
-    const videomek = { key: { fromMe: false, participant: `0@s.whatsapp.net` }, message: { "extendedTextMessage": { "text": `Toki Bot`, "title": "hmm" } } }
-    const stickermek = { key: { fromMe: false, participant: `0@s.whatsapp.net` }, message: { "stickerMessage": { "text": `Toki Bot`, "title": "hmm" } } }
-    const documentomek = { key: { fromMe: false, participant: `0@s.whatsapp.net` }, message: { "documentMessage": { "text": `Toki Bot`, "title": "hmm" } } }
-    const contatomek = { key: { fromMe: false, participant: `0@s.whatsapp.net` }, message: { "contactMessage": { "text": `Toki Bot`, "title": "hmm" } } }
-    const audiomek = { key: { fromMe: false, participant: `0@s.whatsapp.net` }, message: { "audioMessage": { "text": `Toki Bot`, "title": "hmm" } } }
+    const selo = {
+      key: {
+        participant: "0@s.whatsapp.net",
+        remoteJid: "120363023849383476@g.us",
+      },
+      message: { conversation: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD" },
+    };
+    const whatsapp = {
+      key: { fromMe: false, participant: `0@s.whatsapp.net` },
+      message: { extendedTextMessage: { text: `Toki Bot`, title: "hmm" } },
+    };
+    const imagemek = {
+      key: { fromMe: false, participant: `0@s.whatsapp.net` },
+      message: { extendedTextMessage: { text: `Toki Bot`, title: "hmm" } },
+    };
+    const videomek = {
+      key: { fromMe: false, participant: `0@s.whatsapp.net` },
+      message: { extendedTextMessage: { text: `Toki Bot`, title: "hmm" } },
+    };
+    const stickermek = {
+      key: { fromMe: false, participant: `0@s.whatsapp.net` },
+      message: { stickerMessage: { text: `Toki Bot`, title: "hmm" } },
+    };
+    const documentomek = {
+      key: { fromMe: false, participant: `0@s.whatsapp.net` },
+      message: { documentMessage: { text: `Toki Bot`, title: "hmm" } },
+    };
+    const contatomek = {
+      key: { fromMe: false, participant: `0@s.whatsapp.net` },
+      message: { contactMessage: { text: `Toki Bot`, title: "hmm" } },
+    };
+    const audiomek = {
+      key: { fromMe: false, participant: `0@s.whatsapp.net` },
+      message: { audioMessage: { text: `Toki Bot`, title: "hmm" } },
+    };
 
     /*  const groupTabela = []	
     for(let obj of profissao_group) groupTabela.push(obj.jid)*/
@@ -491,80 +676,110 @@ function connect() {
     const isMito = sender != mito;
     const isAkashi = sender != akashi;
     const isVini = sender != vini;
-
-
+    const keyale = config.keyale
     const isOwner = owner.indexOf(sender) < 0;
     const isMods = mods.indexOf(sender) < 0;
-    const isPremium = premium.checkPremiumUser(sender, _premium)
-    const isSimiPv = simipv.includes(sender)
-    const isAdmins = isGroup ? getAdmins(groupMembers) : '';
+    const isPremium = premium.checkPremiumUser(sender, _premium);
+    const isSimiPv = simipv.includes(sender);
+    const isAdmins = isGroup ? getAdmins(groupMembers) : "";
     const isMemberAdmin = isGroup ? isAdmins.indexOf(sender) > -1 : false;
     const isBotAdm = isGroup ? isAdmins.indexOf(botN) > -1 : false;
     const allMembers = isGroup ? getMembers(groupMembers) : [];
-    const isWelkom = isGroup ? welkom.includes(from) : false
-    const isWelkom2 = isGroup ? welkom2.includes(from) : true
-    const isAntiPala = isGroup ? antipala.includes(from) : false
-    const isNsfw = isGroup ? nsfw.includes(from) : true
-    const isGame = isGroup ? game.includes(from) : false
-    const isAntifake = isGroup ? antifake.includes(from) : false
-    const isAntiVO = isGroup ? antiviewonce.includes(from) : false
-    const isSimi = isGroup ? simi.includes(from) : false
-    const isLevelingOn = isGroup ? _level.includes(from) : false
-    const isAutoStickerImg = isGroup ? autostickerimg.includes(from) : false
-    const isAntiLink = isGroup ? antilink.includes(from) : false
-    const isAntilinkgp = isGroup ? antilinkgp.includes(from) : false
-    const isBanned = ban.includes(sender)
-    const isCmd = prefix.indexOf(body.slice(0, 1)) > - 1;
+    const isWelkom = isGroup ? welkom.includes(from) : false;
+    const isWelkom2 = isGroup ? welkom2.includes(from) : true;
+    const isAntiPala = isGroup ? antipala.includes(from) : false;
+    const isNsfw = isGroup ? nsfw.includes(from) : true;
+    const isGame = isGroup ? game.includes(from) : false;
+    const isAntifake = isGroup ? antifake.includes(from) : false;
+    const isAntiVO = isGroup ? antiviewonce.includes(from) : false;
+    const isSimi = isGroup ? simi.includes(from) : false;
+    const isLevelingOn = isGroup ? _level.includes(from) : false;
+    const isAntiLink = isGroup ? antilink.includes(from) : false;
+    const isAntilinkgp = isGroup ? antilinkgp.includes(from) : false;
+    const isBanned = ban.includes(sender);
+    const isCmd = prefix.indexOf(body.slice(0, 1)) > -1;
+    const senderfix = mek.key.fromMe ? tomioka.user.jid : isGroup ? mek.participant : mek.key.remoteJid
     const mentions = (teks, memberr, id) => {
-      (id == null || id == undefined || id == false) ? conn.sendMessage(from, { text: teks.trim(), mentions: memberr }) : conn.sendMessage(from, { text: teks.trim(), mentions: memberr })
-    }
-    const createMessageByContent = (id, content) => {
-      conn.relayMessage(id, content, { messageId: require('@adiwajshing/baileys').generateMessageID(), additionalAttributes: {} });
+      id == null || id == undefined || id == false
+        ? conn.sendMessage(from, { text: teks.trim(), mentions: memberr })
+        : conn.sendMessage(from, { text: teks.trim(), mentions: memberr });
     };
-    const messagesC = pes.slice(0).trim().split(/ +/).shift().toLowerCase()
+    const createMessageByContent = (id, content) => {
+      conn.relayMessage(id, content, {
+        messageId: require("@adiwajshing/baileys").generateMessageID(),
+        additionalAttributes: {},
+      });
+    };
+    const messagesC = pes.slice(0).trim().split(/ +/).shift().toLowerCase();
     const isUrl = (url) => {
-      if (linkfy.find(url)[0]) return true
-      return false
-    }
+      if (linkfy.find(url)[0]) return true;
+      return false;
+    };
     const getExtension = async (type) => {
-      return await mimetype.extension(type)
-    }
+      return await mimetype.extension(type);
+    };
     //=========(isQuoted/consts)=============\\
-    const isImage = type == 'imageMessage'
-    const isVideo = type == 'videoMessage'
-    const isAudio = type == 'audioMessage'
-    const isSticker = type == 'stickerMessage'
-    const isContact = type == 'contactMessage'
-    const isLocation = type == 'locationMessage'
-    const isProduct = type == 'productMessage'
-    const isMedia = (type === 'imageMessage' || type === 'videoMessage' || type === 'audioMessage')
-    typeMessage = body.substr(0, 50).replace(/\n/g, '')
-    if (isImage) typeMessage = "Image"
-    else if (isVideo) typeMessage = "Video"
-    else if (isAudio) typeMessage = "Audio"
-    else if (isSticker) typeMessage = "Sticker"
-    else if (isContact) typeMessage = "Contact"
-    else if (isLocation) typeMessage = "Location"
-    else if (isProduct) typeMessage = "Product"
+    const isImage = type == "imageMessage";
+    const isVideo = type == "videoMessage";
+    const isAudio = type == "audioMessage";
+    const isSticker = type == "stickerMessage";
+    const isContact = type == "contactMessage";
+    const isLocation = type == "locationMessage";
+    const isProduct = type == "productMessage";
+    const isMedia =
+      type === "imageMessage" ||
+      type === "videoMessage" ||
+      type === "audioMessage";
+    typeMessage = body.substr(0, 50).replace(/\n/g, "");
+    if (isImage) typeMessage = "Image";
+    else if (isVideo) typeMessage = "Video";
+    else if (isAudio) typeMessage = "Audio";
+    else if (isSticker) typeMessage = "Sticker";
+    else if (isContact) typeMessage = "Contact";
+    else if (isLocation) typeMessage = "Location";
+    else if (isProduct) typeMessage = "Product";
 
-    const isQuotedMsg = type === 'extendedTextMessage' && content.includes('textMessage')
+    const isQuotedMsg =
+      type === "extendedTextMessage" && content.includes("textMessage");
 
-    const isQuotedImage = type === 'extendedTextMessage' && content.includes('imageMessage')
+    const isQuotedImage =
+      type === "extendedTextMessage" && content.includes("imageMessage");
 
-    const isQuotedVideo = type === 'extendedTextMessage' && content.includes('videoMessage')
+    const isQuotedVideo =
+      type === "extendedTextMessage" && content.includes("videoMessage");
 
-    const isQuotedDocument = type === 'extendedTextMessage' && content.includes('documentMessage')
+    const isQuotedDocument =
+      type === "extendedTextMessage" && content.includes("documentMessage");
 
-    const isQuotedAudio = type === 'extendedTextMessage' && content.includes('audioMessage')
+    const isQuotedAudio =
+      type === "extendedTextMessage" && content.includes("audioMessage");
 
-    const isQuotedSticker = type === 'extendedTextMessage' && content.includes('stickerMessage')
+    const isQuotedSticker =
+      type === "extendedTextMessage" && content.includes("stickerMessage");
 
-    const isQuotedContact = type === 'extendedTextMessage' && content.includes('contactMessage')
+    const isQuotedContact =
+      type === "extendedTextMessage" && content.includes("contactMessage");
 
-    const isQuotedLocation = type === 'extendedTextMessage' && content.includes('locationMessage')
+    const isQuotedLocation =
+      type === "extendedTextMessage" && content.includes("locationMessage");
 
-    const isQuotedProduct = type === 'extendedTextMessage' && content.includes('productMessage')
+    const isQuotedProduct =
+      type === "extendedTextMessage" && content.includes("productMessage");
+      
 
+ 
+  // ENVIAR BOTÃO COM TEXTO
+  var sendBtext = async (id, text1, desc1, but = [], vr) => {
+  buttonMessage = {
+  text: text1,
+  footer: desc1,
+  buttons: but,
+  headerType: 1
+  }
+  conn.sendMessage(id, buttonMessage, {quoted: vr})
+  }
+  
+  
     function sendButtonText(contentText, footerText, options = {}) {
       const content = {
         buttonsMessage: {
@@ -573,44 +788,43 @@ function connect() {
           buttons: [],
           contextInfo: {
             isForwarded: true,
-            forwardingScore: 0
+            forwardingScore: 0,
           },
-          headerType: 1
-        }
+          headerType: 1,
+        },
       };
       const key = Object.keys(content)[0];
-      content[key].contextInfo.mentionedJid = ('contextInfo' in options) ? options.contextInfo.mentionedJid : [];
-      if ('quoted' in options) {
+      content[key].contextInfo.mentionedJid =
+        "contextInfo" in options ? options.contextInfo.mentionedJid : [];
+      if ("quoted" in options) {
         const { quoted } = options;
         content[key].contextInfo.participant = quoted.key.participant;
         content[key].contextInfo.quotedMessage = quoted.message;
-      } else if ('contextInfo' in options) {
-
+      } else if ("contextInfo" in options) {
       }
       conn.relayMessage(from, content, {
-        messageId: require('@adiwajshing/baileys').generateMessageID(), additionalAttributes: {}
+        messageId: require("@adiwajshing/baileys").generateMessageID(),
+        additionalAttributes: {},
       });
     }
 
     const getFileBuffer = async (mediakey, MediaType) => {
-      const stream = await downloadContentFromMessage(mediakey, MediaType)
+      const stream = await downloadContentFromMessage(mediakey, MediaType);
 
-      let buffer = Buffer.from([])
+      let buffer = Buffer.from([]);
       for await (const chunk of stream) {
-        buffer = Buffer.concat([buffer, chunk])
+        buffer = Buffer.concat([buffer, chunk]);
       }
-      return buffer
-    }
+      return buffer;
+    };
 
     const fetchJson = (url) => {
       return fetch(url)
-        .then(response =>
-          response.json()
-        )
+        .then((response) => response.json())
         .catch((err) => {
           throw new Error(err);
         });
-    }
+    };
     const addMentionsInArray = (me, idWA) => {
       if (!/@[0-9]+/g.test(me)) {
         const mentioneds = [];
@@ -621,12 +835,12 @@ function connect() {
       const NumberMentioneds = me.match(regExp);
 
       for (let i of NumberMentioneds) {
-        var ending = i.replace(/@/g, '');
+        var ending = i.replace(/@/g, "");
         var format = ending + idWA;
         mentioneds.push(format);
       }
       return mentioneds;
-    }
+    };
 
     //===============(APAGA MENSAGEM AUTOMÁTICO)=============\\
 
@@ -651,76 +865,239 @@ function connect() {
       }*/
 
     //===============(AUTO-BAN)=============\\
-    const dbids = []
+    const dbids = [];
     for (i = 0; i < adeuscara.length; ++i) {
-      dbids.push(adeuscara[i].groupId)
+      dbids.push(adeuscara[i].groupId);
     }
-    const isAdeusCara = (isGroup && dbids.indexOf(from) >= 0) ? true : false
+    const isAdeusCara = isGroup && dbids.indexOf(from) >= 0 ? true : false;
 
     //======================================\\
-    letcentralrpg = '120363023849383476@g.us';
+    letcentralrpg = "120363023849383476@g.us";
 
     //ARMADURA
-    const addProfissaoId = (userId, chatId) => { const obj = { grupo: chatId, pessoa: userId, profissao: 'Camisa simples' }; profissao.push(obj); fs.writeFileSync('./db/json/profissao.json', JSON.stringify(profissao)) }
-    const addProfissao = (userId, chatId, quanto) => { let position = false; Object.keys(profissao).forEach((i) => { if (profissao[i].pessoa === userId && profissao[i].grupo === chatId) { position = i } }); if (position !== false) { profissao[position].profissao = quanto; fs.writeFileSync('./db/json/profissao.json', JSON.stringify(profissao)) } }
-    const getProfissao = (userId, chatId) => { let position = false; Object.keys(profissao).forEach((i) => { if (profissao[i].pessoa === userId && profissao[i].grupo === chatId) { position = i } }); if (position !== false) { return profissao[position].profissao } }
-    const getProfissao2 = (userId, chatId) => { let position = false; Object.keys(profissao).forEach((i) => { if (profissao[i].pessoa === userId && profissao[i].grupo === chatId) { position = i } }); if (position !== false) { return profissao[position] } }
+    const addProfissaoId = (userId, chatId) => {
+      const obj = {
+        grupo: chatId,
+        pessoa: userId,
+        profissao: "Camisa simples",
+      };
+      profissao.push(obj);
+      fs.writeFileSync("./db/json/profissao.json", JSON.stringify(profissao));
+    };
+    const addProfissao = (userId, chatId, quanto) => {
+      let position = false;
+      Object.keys(profissao).forEach((i) => {
+        if (profissao[i].pessoa === userId && profissao[i].grupo === chatId) {
+          position = i;
+        }
+      });
+      if (position !== false) {
+        profissao[position].profissao = quanto;
+        fs.writeFileSync("./db/json/profissao.json", JSON.stringify(profissao));
+      }
+    };
+    const getProfissao = (userId, chatId) => {
+      let position = false;
+      Object.keys(profissao).forEach((i) => {
+        if (profissao[i].pessoa === userId && profissao[i].grupo === chatId) {
+          position = i;
+        }
+      });
+      if (position !== false) {
+        return profissao[position].profissao;
+      }
+    };
+    const getProfissao2 = (userId, chatId) => {
+      let position = false;
+      Object.keys(profissao).forEach((i) => {
+        if (profissao[i].pessoa === userId && profissao[i].grupo === chatId) {
+          position = i;
+        }
+      });
+      if (position !== false) {
+        return profissao[position];
+      }
+    };
 
-    if (isGroup && !mek.key.fromMe) { cg = getProfissao2((sender.includes(':') ? sender.split(':')[0] + '@s.whatsapp.net' : sender), letcentralrpg); if (cg == undefined) addProfissaoId((sender.includes(':') ? sender.split(':')[0] + '@s.whatsapp.net' : sender), letcentralrpg) }
+    if (isGroup && !mek.key.fromMe) {
+      cg = getProfissao2(
+        sender.includes(":")
+          ? sender.split(":")[0] + "@s.whatsapp.net"
+          : sender,
+        letcentralrpg
+      );
+      if (cg == undefined)
+        addProfissaoId(
+          sender.includes(":")
+            ? sender.split(":")[0] + "@s.whatsapp.net"
+            : sender,
+          letcentralrpg
+        );
+    }
 
     //NOME
-    const addNomerpg = (userId, chatId) => { const obj = { grupo: chatId, pessoa: userId, nomerpg: '*Nome:* Desconhecido\n*Idade:* Desconhecida' }; nomerpg.push(obj); fs.writeFileSync('./db/json/nomerpg.json', JSON.stringify(nomerpg)) }
-    const addNome = (userId, chatId, quanto) => { let position = false; Object.keys(nomerpg).forEach((i) => { if (nomerpg[i].pessoa === userId && nomerpg[i].grupo === chatId) { position = i } }); if (position !== false) { nomerpg[position].nomerpg = quanto; fs.writeFileSync('./db/json/nomerpg.json', JSON.stringify(nomerpg)) } }
-    const getNome = (userId, chatId) => { let position = false; Object.keys(nomerpg).forEach((i) => { if (nomerpg[i].pessoa === userId && nomerpg[i].grupo === chatId) { position = i } }); if (position !== false) { return nomerpg[position].nomerpg } }
-    const getNome2 = (userId, chatId) => { let position = false; Object.keys(nomerpg).forEach((i) => { if (nomerpg[i].pessoa === userId && nomerpg[i].grupo === chatId) { position = i } }); if (position !== false) { return nomerpg[position] } }
+    const addNomerpg = (userId, chatId) => {
+      const obj = {
+        grupo: chatId,
+        pessoa: userId,
+        nomerpg: "*Nome:* Desconhecido\n*Idade:* Desconhecida",
+      };
+      nomerpg.push(obj);
+      fs.writeFileSync("./db/json/nomerpg.json", JSON.stringify(nomerpg));
+    };
+    const addNome = (userId, chatId, quanto) => {
+      let position = false;
+      Object.keys(nomerpg).forEach((i) => {
+        if (nomerpg[i].pessoa === userId && nomerpg[i].grupo === chatId) {
+          position = i;
+        }
+      });
+      if (position !== false) {
+        nomerpg[position].nomerpg = quanto;
+        fs.writeFileSync("./db/json/nomerpg.json", JSON.stringify(nomerpg));
+      }
+    };
+    const getNome = (userId, chatId) => {
+      let position = false;
+      Object.keys(nomerpg).forEach((i) => {
+        if (nomerpg[i].pessoa === userId && nomerpg[i].grupo === chatId) {
+          position = i;
+        }
+      });
+      if (position !== false) {
+        return nomerpg[position].nomerpg;
+      }
+    };
+    const getNome2 = (userId, chatId) => {
+      let position = false;
+      Object.keys(nomerpg).forEach((i) => {
+        if (nomerpg[i].pessoa === userId && nomerpg[i].grupo === chatId) {
+          position = i;
+        }
+      });
+      if (position !== false) {
+        return nomerpg[position];
+      }
+    };
 
-    if (isGroup && !mek.key.fromMe) { cg = getNome2((sender.includes(':') ? sender.split(':')[0] + '@s.whatsapp.net' : sender), letcentralrpg); if (cg == undefined) addNomerpg((sender.includes(':') ? sender.split(':')[0] + '@s.whatsapp.net' : sender), letcentralrpg) }
+    if (isGroup && !mek.key.fromMe) {
+      cg = getNome2(
+        sender.includes(":")
+          ? sender.split(":")[0] + "@s.whatsapp.net"
+          : sender,
+        letcentralrpg
+      );
+      if (cg == undefined)
+        addNomerpg(
+          sender.includes(":")
+            ? sender.split(":")[0] + "@s.whatsapp.net"
+            : sender,
+          letcentralrpg
+        );
+    }
 
     //RANÇA
-    const addRancarpg = (userId, chatId) => { const obj = { grupo: chatId, pessoa: userId, rancarpg: '*Rança:* Desconhecido\n*Região:* Desconhecida' }; rancarpg.push(obj); fs.writeFileSync('./db/json/rancca.json', JSON.stringify(rancarpg)) }
+    const addRancarpg = (userId, chatId) => {
+      const obj = {
+        grupo: chatId,
+        pessoa: userId,
+        rancarpg: "*Rança:* Desconhecido\n*Região:* Desconhecida",
+      };
+      rancarpg.push(obj);
+      fs.writeFileSync("./db/json/rancca.json", JSON.stringify(rancarpg));
+    };
 
-    const addRanca = (userId, chatId, quanto) => { let position = false; Object.keys(rancarpg).forEach((i) => { if (rancarpg[i].pessoa === userId && rancarpg[i].grupo === chatId) { position = i } }); if (position !== false) { rancarpg[position].rancarpg = quanto; fs.writeFileSync('./db/json/rancca.json', JSON.stringify(rancarpg)) } }
+    const addRanca = (userId, chatId, quanto) => {
+      let position = false;
+      Object.keys(rancarpg).forEach((i) => {
+        if (rancarpg[i].pessoa === userId && rancarpg[i].grupo === chatId) {
+          position = i;
+        }
+      });
+      if (position !== false) {
+        rancarpg[position].rancarpg = quanto;
+        fs.writeFileSync("./db/json/rancca.json", JSON.stringify(rancarpg));
+      }
+    };
 
-    const getRanca = (userId, chatId) => { let position = false; Object.keys(rancarpg).forEach((i) => { if (rancarpg[i].pessoa === userId && rancarpg[i].grupo === chatId) { position = i } }); if (position !== false) { return rancarpg[position].rancarpg } }
+    const getRanca = (userId, chatId) => {
+      let position = false;
+      Object.keys(rancarpg).forEach((i) => {
+        if (rancarpg[i].pessoa === userId && rancarpg[i].grupo === chatId) {
+          position = i;
+        }
+      });
+      if (position !== false) {
+        return rancarpg[position].rancarpg;
+      }
+    };
 
-    const getRanca2 = (userId, chatId) => { let position = false; Object.keys(rancarpg).forEach((i) => { if (rancarpg[i].pessoa === userId && rancarpg[i].grupo === chatId) { position = i } }); if (position !== false) { return rancarpg[position] } }
+    const getRanca2 = (userId, chatId) => {
+      let position = false;
+      Object.keys(rancarpg).forEach((i) => {
+        if (rancarpg[i].pessoa === userId && rancarpg[i].grupo === chatId) {
+          position = i;
+        }
+      });
+      if (position !== false) {
+        return rancarpg[position];
+      }
+    };
 
-    if (isGroup && !mek.key.fromMe) { cg = getRanca2((sender.includes(':') ? sender.split(':')[0] + '@s.whatsapp.net' : sender), letcentralrpg); if (cg == undefined) addRancarpg((sender.includes(':') ? sender.split(':')[0] + '@s.whatsapp.net' : sender), letcentralrpg) }
+    if (isGroup && !mek.key.fromMe) {
+      cg = getRanca2(
+        sender.includes(":")
+          ? sender.split(":")[0] + "@s.whatsapp.net"
+          : sender,
+        letcentralrpg
+      );
+      if (cg == undefined)
+        addRancarpg(
+          sender.includes(":")
+            ? sender.split(":")[0] + "@s.whatsapp.net"
+            : sender,
+          letcentralrpg
+        );
+    }
 
     //
 
     // Automate
 
-    premium.expiredCheck(_premium)
+    premium.expiredCheck(_premium);
 
     //=================================\\
 
     if (isUrl(body) && isAntiLink && isMemberAdmin && isBotAdm) {
-      linkgpp = await conn.groupInviteCode(from)
-      if (!isUrl(body)) return
-      if (budy.match(`${linkgpp}`)) return
-      if (isBot) return
+      linkgpp = await conn.groupInviteCode(from);
+      if (!isUrl(body)) return;
+      if (budy.match(`${linkgpp}`)) return;
+      if (isBot) return;
     }
 
     if (isUrl(body) && isAntiLink && !isMemberAdmin && isBotAdm) {
-      linkgpp = await conn.groupInviteCode(from)
-      if (budy.match(`${linkgpp}`)) return env('Link do nosso grupo, não irei remover.. ')
-      if (!isUrl(body)) return
-      env('*Link detectado...*')
-      conn.groupParticipantsUpdate(from, [sender], 'remove')
+      linkgpp = await conn.groupInviteCode(from);
+      if (budy.match(`${linkgpp}`))
+        return env("Link do nosso grupo, não irei remover.. ");
+      if (!isUrl(body)) return;
+      env("*Link detectado...*");
+      conn.groupParticipantsUpdate(from, [sender], "remove");
     }
 
     if (!isGroup && isBotAdm && isAntiLink) {
-      if (mek.key.fromMe) return
-      if (type == "stickerMessage") return
-      if (type == "audioMessage") return
-      linkgppp = await conn.groupInviteCode(from)
-      if (!budy.match(linkgppp) && budy.includes("chat.whatsapp.com/") || budy.includes("whatsapp.com/")) {
-        if (budy.match(linkgppp)) return env('Link de nosso grupo 🙂')
-        if (mek.key.fromMe) return
-        if (isMemberAdmin && isOwner) return
-        env('Adeus bosta')
-        conn.groupParticipantsUpdate(from, [sender], 'remove')
+      if (mek.key.fromMe) return;
+      if (type == "stickerMessage") return;
+      if (type == "audioMessage") return;
+      linkgppp = await conn.groupInviteCode(from);
+      if (
+        (!budy.match(linkgppp) && budy.includes("chat.whatsapp.com/")) ||
+        budy.includes("whatsapp.com/")
+      ) {
+        if (budy.match(linkgppp)) return env("Link de nosso grupo 🙂");
+        if (mek.key.fromMe) return;
+        if (isMemberAdmin && isOwner) return;
+        env("Adeus bosta");
+        conn.groupParticipantsUpdate(from, [sender], "remove");
       }
     }
 
@@ -730,294 +1107,350 @@ function connect() {
       var names = Date.now() / 10000;
       var download = function (uri, filename, callback) {
         request.head(uri, function (err, res, body) {
-          request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+          request(uri)
+            .pipe(fs.createWriteStream(filename))
+            .on("close", callback);
         });
       };
-      download(url, './complement/sticker' + names + '.png', async function () {
-        console.log('enviando sticker');
-        let filess = './complement/sticker' + names + '.png'
-        let asw = './complement/sticker' + names + '.webp'
-        exec(`ffmpeg -i ${filess} -vcodec libwebp -filter:v fps=fps=15 -lossless 1 -loop 0 -preset default -an -vsync 0 -s 800:800 ${asw}`, (err) => {
-          let media = fs.readFileSync(asw)
-          conn.sendMessage(to, { sticker: media }, { sendEphemeral: true, contextInfo: { forwardingScore: 50, isForwarded: true }, quoted: mek })
-          fs.unlinkSync(filess)
-          fs.unlinkSync(asw)
-        });
+      download(url, "./complement/sticker" + names + ".png", async function () {
+        console.log("enviando sticker");
+        let filess = "./complement/sticker" + names + ".png";
+        let asw = "./complement/sticker" + names + ".webp";
+        exec(
+          `ffmpeg -i ${filess} -vcodec libwebp -filter:v fps=fps=15 -lossless 1 -loop 0 -preset default -an -vsync 0 -s 800:800 ${asw}`,
+          (err) => {
+            let media = fs.readFileSync(asw);
+            conn.sendMessage(
+              to,
+              { sticker: media },
+              {
+                sendEphemeral: true,
+                contextInfo: { forwardingScore: 50, isForwarded: true },
+                quoted: mek,
+              }
+            );
+            fs.unlinkSync(filess);
+            fs.unlinkSync(asw);
+          }
+        );
       });
-    }
+    };
 
     //======================================\\
 
-
     const getGroup = async function (totalchat) {
-      let grup = []
-      let a = []
-      let b = []
+      let grup = [];
+      let a = [];
+      let b = [];
       for (c of totalchat) {
-        a.push(c.id)
+        a.push(c.id);
       }
       for (d of a) {
-        if (d && d.includes('g.us')) {
-          b.push(d)
+        if (d && d.includes("g.us")) {
+          b.push(d);
         }
       }
       for (e of b) {
-        let ingfo = await conn.groupMetadata(e)
-        grup.push(ingfo)
+        let ingfo = await conn.groupMetadata(e);
+        grup.push(ingfo);
       }
-      return grup
-    }
+      return grup;
+    };
 
     /********** sendFileFromUrl ***************/
 
     function sendFileFromUrl(link) {
-      conn.sendMessage(from, { image: { url: link } }, { quoted: mek }).catch(e => {
-        env('Erro ao baixar e enviar mídia.')
-        console.log(e)
-      })
+      conn
+        .sendMessage(from, { image: { url: link } }, { quoted: mek })
+        .catch((e) => {
+          env("Erro ao baixar e enviar mídia.");
+          console.log(e);
+        });
     }
 
     const sendFileFromUrl2 = async (link, type, options) => {
-      hasil = await getBuffer(link)
-      await conn.sendMessage(from, hasil, type, options).catch(e => {
+      hasil = await getBuffer(link);
+      await conn.sendMessage(from, hasil, type, options).catch((e) => {
         fetch(link).then((hasil) => {
-          conn.sendMessage(from, hasil, type, options).catch(e => {
-            conn.sendMessage(from, { url: link }, type, options).catch(e => {
-              env('_[ ! ] Erro ao baixar e enviar mídia_')
-              console.log(e)
-            })
-          })
-        })
-      })
-    }
+          conn.sendMessage(from, hasil, type, options).catch((e) => {
+            conn.sendMessage(from, { url: link }, type, options).catch((e) => {
+              env("_[ ! ] Erro ao baixar e enviar mídia_");
+              console.log(e);
+            });
+          });
+        });
+      });
+    };
 
     const sendMediaURL = async (to, url, text = "", mids = []) => {
       if (mids.length > 0) {
-        text = normalizeMention(to, text, mids)
+        text = normalizeMention(to, text, mids);
       }
       const fn = Date.now() / 10000;
-      const filename = fn.toString()
-      let mime = ""
+      const filename = fn.toString();
+      let mime = "";
       var download = function (uri, filename, callback) {
         request.head(uri, function (err, res, body) {
-          mime = res.headers['content-type']
-          request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+          mime = res.headers["content-type"];
+          request(uri)
+            .pipe(fs.createWriteStream(filename))
+            .on("close", callback);
         });
       };
       download(url, filename, async function () {
-        console.log('done');
-        let media = fs.readFileSync(filename)
-        let type = mime.split("/")[0] + "Message"
+        console.log("done");
+        let media = fs.readFileSync(filename);
+        let type = mime.split("/")[0] + "Message";
         if (mime === "image/gif") {
-          type = MessageType.video
-          mime = Mimetype.gif
+          type = MessageType.video;
+          mime = Mimetype.gif;
         }
         if (mime.split("/")[0] === "audio") {
-          mime = Mimetype.mp4Audio
+          mime = Mimetype.mp4Audio;
         }
-        conn.sendMessage(to, media, type, { quoted: mek, Mimetype: mime, caption: text, contextInfo: { "mentionedJid": mids } })
-        fs.unlinkSync(filename)
+        conn.sendMessage(to, media, type, {
+          quoted: mek,
+          Mimetype: mime,
+          caption: text,
+          contextInfo: { mentionedJid: mids },
+        });
+        fs.unlinkSync(filename);
       });
-    }
+    };
 
     /********** MÓDULO TOGIF ***************/
 
     const sendStickerUrl = async (to, url) => {
-      console.log(color(time, 'magenta'), color(moment.tz('Asia/Jakarta').format('HH:mm:ss'), "gold"), color('Downloading sticker...'))
-      var names = getRandom('.webp')
-      var namea = getRandom('.png')
+      console.log(
+        color(time, "magenta"),
+        color(moment.tz("Asia/Jakarta").format("HH:mm:ss"), "gold"),
+        color("Downloading sticker...")
+      );
+      var names = getRandom(".webp");
+      var namea = getRandom(".png");
       var download = function (uri, filename, callback) {
         request.head(uri, function (err, res, body) {
-          request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+          request(uri)
+            .pipe(fs.createWriteStream(filename))
+            .on("close", callback);
         });
       };
       download(url, namea, async function () {
-        let filess = namea
-        let asw = names
-        require('./lib/exif.js')
-        exec(`ffmpeg -i ${filess} -vcodec libwebp -filter:v fps=fps=20 -lossless 1 -loop 0 -preset default -an -vsync 0 -s 512:512 ${asw}`, (err) => {
-          exec(`webpmux -set exif ./complementos/sticker/data.exif ${asw} -o ${asw}`, async (error) => {
-            let media = fs.readFileSync(asw)
-            connsendMessage(to, media, sticker, zits)
-            console.log(color(time, 'magenta'), color(moment.tz('Asia/Jakarta').format('HH:mm:ss'), "gold"), color('Enviando sticker com sucesso!'))
-          });
-        });
+        let filess = namea;
+        let asw = names;
+        require("./lib/exif.js");
+        exec(
+          `ffmpeg -i ${filess} -vcodec libwebp -filter:v fps=fps=20 -lossless 1 -loop 0 -preset default -an -vsync 0 -s 512:512 ${asw}`,
+          (err) => {
+            exec(
+              `webpmux -set exif ./complementos/sticker/data.exif ${asw} -o ${asw}`,
+              async (error) => {
+                let media = fs.readFileSync(asw);
+                connsendMessage(to, media, sticker, zits);
+                console.log(
+                  color(time, "magenta"),
+                  color(moment.tz("Asia/Jakarta").format("HH:mm:ss"), "gold"),
+                  color("Enviando sticker com sucesso!")
+                );
+              }
+            );
+          }
+        );
       });
-    }
+    };
 
     // RANKS para leveis
     {
-      const levelRole = level.getLevelingLevel(sender, _level)
-      var role = 'Bronze 5'
-      if ((levelRole >= 5) && (levelRole <= 9)) {
-        role = 'Bronze 4'
-      } else if ((levelRole >= 10) && (levelRole <= 14)) {
-        role = 'Bronze 3'
-      } else if ((levelRole >= 15) && (levelRole <= 19)) {
-        role = 'Bronze 2'
-      } else if ((levelRole >= 20) && (levelRole <= 24)) {
-        role = 'Bronze 1'
-      } else if ((levelRole >= 25) && (levelRole <= 29)) {
-        role = 'Prata 5'
-      } else if ((levelRole >= 30) && (levelRole <= 34)) {
-        role = 'Prata 4'
-      } else if ((levelRole >= 35) && (levelRole <= 39)) {
-        role = 'Prata 3'
-      } else if ((levelRole >= 40) && (levelRole <= 44)) {
-        role = 'Prata 2'
-      } else if ((levelRole >= 45) && (levelRole <= 49)) {
-        role = 'Prata 1'
-      } else if ((levelRole >= 50) && (levelRole <= 54)) {
-        role = 'Ouro 5'
-      } else if ((levelRole >= 55) && (levelRole <= 59)) {
-        role = 'Ouro 4'
-      } else if ((levelRole >= 60) && (levelRole <= 64)) {
-        role = 'Ouro 3'
-      } else if ((levelRole >= 65) && (levelRole <= 69)) {
-        role = 'Ouro 2'
-      } else if ((levelRole >= 70) && (levelRole <= 74)) {
-        role = 'Ouro 1'
-      } else if ((levelRole >= 75) && (levelRole <= 79)) {
-        role = 'Platina 5'
-      } else if ((levelRole >= 80) && (levelRole <= 84)) {
-        role = 'Platina 4'
-      } else if ((levelRole >= 85) && (levelRole <= 89)) {
-        role = 'Platina 3'
-      } else if ((levelRole >= 90) && (levelRole <= 94)) {
-        role = 'Platina 2'
-      } else if ((levelRole >= 95) && (levelRole <= 99)) {
-        role = 'Platina 1'
-      } else if ((levelRole >= 100) && (levelRole <= 124)) {
-        role = 'DEUS ASH 3'
-      } else if ((levelRole >= 125) && (levelRole <= 149)) {
-        role = 'DEUS ASH 2'
-      } else if ((levelRole >= 150) && (levelRole <= 174)) {
-        role = 'DEUS ASH 1'
-      } else if ((levelRole >= 175) && (levelRole <= 199)) {
-        role = 'ASH MAX 2'
+      const levelRole = level.getLevelingLevel(sender, _level);
+      var role = "Bronze 5";
+      if (levelRole >= 5 && levelRole <= 9) {
+        role = "Bronze 4";
+      } else if (levelRole >= 10 && levelRole <= 14) {
+        role = "Bronze 3";
+      } else if (levelRole >= 15 && levelRole <= 19) {
+        role = "Bronze 2";
+      } else if (levelRole >= 20 && levelRole <= 24) {
+        role = "Bronze 1";
+      } else if (levelRole >= 25 && levelRole <= 29) {
+        role = "Prata 5";
+      } else if (levelRole >= 30 && levelRole <= 34) {
+        role = "Prata 4";
+      } else if (levelRole >= 35 && levelRole <= 39) {
+        role = "Prata 3";
+      } else if (levelRole >= 40 && levelRole <= 44) {
+        role = "Prata 2";
+      } else if (levelRole >= 45 && levelRole <= 49) {
+        role = "Prata 1";
+      } else if (levelRole >= 50 && levelRole <= 54) {
+        role = "Ouro 5";
+      } else if (levelRole >= 55 && levelRole <= 59) {
+        role = "Ouro 4";
+      } else if (levelRole >= 60 && levelRole <= 64) {
+        role = "Ouro 3";
+      } else if (levelRole >= 65 && levelRole <= 69) {
+        role = "Ouro 2";
+      } else if (levelRole >= 70 && levelRole <= 74) {
+        role = "Ouro 1";
+      } else if (levelRole >= 75 && levelRole <= 79) {
+        role = "Platina 5";
+      } else if (levelRole >= 80 && levelRole <= 84) {
+        role = "Platina 4";
+      } else if (levelRole >= 85 && levelRole <= 89) {
+        role = "Platina 3";
+      } else if (levelRole >= 90 && levelRole <= 94) {
+        role = "Platina 2";
+      } else if (levelRole >= 95 && levelRole <= 99) {
+        role = "Platina 1";
+      } else if (levelRole >= 100 && levelRole <= 124) {
+        role = "DEUS ASH 3";
+      } else if (levelRole >= 125 && levelRole <= 149) {
+        role = "DEUS ASH 2";
+      } else if (levelRole >= 150 && levelRole <= 174) {
+        role = "DEUS ASH 1";
+      } else if (levelRole >= 175 && levelRole <= 199) {
+        role = "ASH MAX 2";
       } else if (levelRole >= 200) {
-        role = 'ASH MAX'
+        role = "ASH MAX";
       }
     }
 
-    // Leveling 
+    // Leveling
 
     if (isGroup && isCmd && !level.isGained(sender) && isLevelingOn) {
       try {
-        const currentLevel = level.getLevelingLevel(sender, _level)
-        const requiredXp = 5 * Math.pow(currentLevel, 2) + 50 * currentLevel + 100
-        level.addLevelingXp(sender, 1, _level)
+        const currentLevel = level.getLevelingLevel(sender, _level);
+        const requiredXp =
+          5 * Math.pow(currentLevel, 2) + 50 * currentLevel + 100;
+        level.addLevelingXp(sender, 1, _level);
         if (requiredXp <= level.getLevelingXp(sender, _level)) {
-          level.addLevelingLevel(sender, 1, _level)
-          const userLevel = level.getLevelingLevel(sender, _level)
-          const fetchXp = 5 * Math.pow(userLevel, 2) + 50 * userLevel + 100
-          await env(`*── 「 LEVEL UP 」 ──*\n\n➸ *Nome*: ${pushname}\n➸ *XP*: ${level.getLevelingXp(sender, _level)} / ${fetchXp}\n➸ *Level*: ${currentLevel} -> ${level.getLevelingLevel(sender, _level)} 🆙 \n➸ *Rank*: *${role}*\n\n*═══〘 ASH BOT 〙═══*`)
+          level.addLevelingLevel(sender, 1, _level);
+          const userLevel = level.getLevelingLevel(sender, _level);
+          const fetchXp = 5 * Math.pow(userLevel, 2) + 50 * userLevel + 100;
+          await env(
+            `*── 「 LEVEL UP 」 ──*\n\n➸ *Nome*: ${pushname}\n➸ *XP*: ${level.getLevelingXp(
+              sender,
+              _level
+            )} / ${fetchXp}\n➸ *Level*: ${currentLevel} -> ${level.getLevelingLevel(
+              sender,
+              _level
+            )} 🆙 \n➸ *Rank*: *${role}*\n\n*═══〘 ASH BOT 〙═══*`
+          );
         }
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
     }
 
     //========(CONTADOR-DE-MENSAGENS)========\\
 
-    const groupIdscount = []
-    const numbersIds = []
+    const groupIdscount = [];
+    const numbersIds = [];
     for (let obj of countMessage) {
-      groupIdscount.push(obj.groupId)
+      groupIdscount.push(obj.groupId);
     }
     if (isGroup && groupIdscount.indexOf(from) >= 0) {
-      var ind = groupIdscount.indexOf(from)
-      for (let obj of countMessage[ind].numbers) { numbersIds.push(obj.jid) }
+      var ind = groupIdscount.indexOf(from);
+      for (let obj of countMessage[ind].numbers) {
+        numbersIds.push(obj.jid);
+      }
       if (numbersIds.indexOf(sender) >= 0) {
-        var indnum = numbersIds.indexOf(sender)
-        countMessage[ind].numbers[indnum].messages += 1
-        countMessage[ind].numbers[indnum].cmd_messages += isCmd ? 1 : 0
-        fs.writeFileSync('./db/json/countmsg.json', JSON.stringify(countMessage, null, 2) + '\n')
+        var indnum = numbersIds.indexOf(sender);
+        countMessage[ind].numbers[indnum].messages += 1;
+        countMessage[ind].numbers[indnum].cmd_messages += isCmd ? 1 : 0;
+        fs.writeFileSync(
+          "./db/json/countmsg.json",
+          JSON.stringify(countMessage, null, 2) + "\n"
+        );
       } else {
-        const messages = 1
-        const cmd_messages = isCmd ? 1 : 0
+        const messages = 1;
+        const cmd_messages = isCmd ? 1 : 0;
         countMessage[ind].numbers.push({
           jid: sender,
           messages: messages,
-          cmd_messages: cmd_messages
-        })
-        fs.writeFileSync('./db/json/countmsg.json', JSON.stringify(countMessage, null, 2) + '\n')
+          cmd_messages: cmd_messages,
+        });
+        fs.writeFileSync(
+          "./db/json/countmsg.json",
+          JSON.stringify(countMessage, null, 2) + "\n"
+        );
       }
     } else if (isGroup) {
       countMessage.push({
         groupId: from,
-        numbers: [{
-          jid: sender,
-          messages: 2,
-          cmd_messages: isCmd ? 1 : 0
-        }]
-      })
-      fs.writeFileSync('./db/json/countmsg.json', JSON.stringify(countMessage, null, 2) + '\n')
+        numbers: [
+          {
+            jid: sender,
+            messages: 2,
+            cmd_messages: isCmd ? 1 : 0,
+          },
+        ],
+      });
+      fs.writeFileSync(
+        "./db/json/countmsg.json",
+        JSON.stringify(countMessage, null, 2) + "\n"
+      );
     }
     //======================================\\
 
     //começo do dinheiro
     // ADICIONA UMA QUANTIA DE DINHEIRO NA CONTA DO USUÁRIO
     const addATM = (sender) => {
-      const obj = { id: sender, dinheiro: 0 }
-      dinheiro.push(obj)
-      fs.writeFileSync('./db/json/dinheiro.json', JSON.stringify(dinheiro))
-    }
+      const obj = { id: sender, dinheiro: 0 };
+      dinheiro.push(obj);
+      fs.writeFileSync("./db/json/dinheiro.json", JSON.stringify(dinheiro));
+    };
     // SISTEMA PARA ADICIONAR/RETIRAR O DINHEIRO DO USUÁRIO
 
     const addKoinUser = (sender, amount) => {
-      let position = false
+      let position = false;
       Object.keys(dinheiro).forEach((i) => {
         if (dinheiro[i].id === sender) {
-          position = i
+          position = i;
         }
-      })
+      });
       if (position !== false) {
-        dinheiro[position].dinheiro += amount
-        fs.writeFileSync('./db/json/dinheiro.json', JSON.stringify(dinheiro))
+        dinheiro[position].dinheiro += amount;
+        fs.writeFileSync("./db/json/dinheiro.json", JSON.stringify(dinheiro));
       }
-    }
+    };
 
-    //CHECAR O DINHEIRO 
+    //CHECAR O DINHEIRO
     const checkATMuser = (sender) => {
-      let position = false
+      let position = false;
       Object.keys(dinheiro).forEach((i) => {
         if (dinheiro[i].id === sender) {
-          position = i
+          position = i;
         }
-      })
+      });
       if (position !== false) {
-        return dinheiro[position].dinheiro
+        return dinheiro[position].dinheiro;
       }
-    }
+    };
 
-    //COMFIRMAR ATM 
+    //COMFIRMAR ATM
     const confirmATM = (sender, amount) => {
-      let position = false
+      let position = false;
       Object.keys(dinheiro).forEach((i) => {
         if (dinheiro[i].id === sender) {
-          position = i
+          position = i;
         }
-      })
+      });
       if (position !== false) {
-        dinheiro[position].dinheiro -= amount
-        fs.writeFileSync('./db/json/dinheiro.json', JSON.stringify(dinheiro))
+        dinheiro[position].dinheiro -= amount;
+        fs.writeFileSync("./db/json/dinheiro.json", JSON.stringify(dinheiro));
       }
-    }
+    };
 
+    //BALANCEAMENTO DA MOEDA/DINHERO DO BOT
 
-    //BALANCEAMENTO DA MOEDA/DINHERO DO BOT       
-
-    const checkATM = checkATMuser(sender)
+    const checkATM = checkATMuser(sender);
     try {
-      if (checkATM === undefined) addATM(sender)
-      const dinheirosaku = Math.floor(Math.random() * 1) + 2//GANHA ENTRA 10 * 50 POR CADA MSG
-      addKoinUser(sender, dinheirosaku)
+      if (checkATM === undefined) addATM(sender);
+      const dinheirosaku = Math.floor(Math.random() * 1) + 2; //GANHA ENTRA 10 * 50 POR CADA MSG
+      addKoinUser(sender, dinheirosaku);
     } catch (err) {
-      console.error(err)
+      console.error(err);
     }
-
-
 
     //======(JOGO-DA-VELHA)=======(Função)===\\
 
@@ -1033,11 +1466,11 @@ function connect() {
         budy.toLowerCase() == "ok"
       ) {
         if (boardnow.O == sender.replace("@s.whatsapp.net", "")) {
-          if (boardnow.status)
-            return env(`O jogo já começou antes!`);
+          if (boardnow.status) return env(`O jogo já começou antes!`);
           const matrix = boardnow._matrix;
           boardnow.status = true;
-          fs.writeFileSync(`./db/tictactoe/db/${from}.json`,
+          fs.writeFileSync(
+            `./db/tictactoe/db/${from}.json`,
             JSON.stringify(boardnow, null, 2)
           );
           const chatAccept = `*🎮Ꮐ̸Ꭺ̸Ꮇ̸Ꭼ̸ Ꭰ̸Ꭺ̸ Ꮩ̸Ꭼ̸Ꮮ̸Ꮋ̸Ꭺ̸🕹️*
@@ -1059,20 +1492,21 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
         budy.toLowerCase() == "no"
       ) {
         if (boardnow.O == sender.replace("@s.whatsapp.net", "")) {
-          if (boardnow.status)
-            return env(`O jogo já começou!`);
+          if (boardnow.status) return env(`O jogo já começou!`);
           fs.unlinkSync(`./db/tictactoe/db/${from}.json`);
-          mention(`@${boardnow.X} *_Infelizmente seu oponente não aceitou o desafio ❌😕_*`)
+          mention(
+            `@${boardnow.X} *_Infelizmente seu oponente não aceitou o desafio ❌😕_*`
+          );
         }
       }
     }
 
     if (arrNum.includes(cmde)) {
       const boardnow = setGame(`${from}`);
-      if (!boardnow.status) return env(`Parece que seu oponente não aceitou o desafio ainda...`)
+      if (!boardnow.status)
+        return env(`Parece que seu oponente não aceitou o desafio ainda...`);
       if (
         (boardnow.turn == "X" ? boardnow.X : boardnow.O) !=
-
         sender.replace("@s.whatsapp.net", "")
       )
         return;
@@ -1088,7 +1522,7 @@ Jogo termina empatado 😐
           fs.unlinkSync(`./db/tictactoe/db/${from}.json`);
           return;
         }
-        const abt = Math.ceil(Math.random() + 4000)
+        const abt = Math.ceil(Math.random() + 4000);
         const winnerJID = moving.winner == "O" ? moving.O : moving.X;
         const looseJID = moving.winner == "O" ? moving.X : moving.O;
         const limWin = Math.floor(Math.random() * 1) + 10;
@@ -1097,17 +1531,23 @@ Jogo termina empatado 😐
           
 Vencido por @${winnerJID} 😎👑
 `;
-        level.addLevelingXp(winnerJID + "@s.whatsapp.net", abt, _level)
+        level.addLevelingXp(winnerJID + "@s.whatsapp.net", abt, _level);
         mention(chatWon);
         setTimeout(() => {
           if (fs.existsSync("./db/tictactoe/db/" + from + ".json")) {
             fs.unlinkSync("./db/tictactoe/db/" + from + ".json");
             env(`*🕹️JOGO DA VELHA RESETADO...🕹️*`);
           } else {
-            console.log(color(time, "red"), color("[ ESPIRADO ]", "magenta"), color('Jogo da velha espirado', "red"));
+            console.log(
+              color(time, "red"),
+              color("[ ESPIRADO ]", "magenta"),
+              color("Jogo da velha espirado", "red")
+            );
           }
-        }, 2000000) //20 minutos
-        mention(`_*🥳Parabéns @${winnerJID} Você ganhou "${abt}" em xp por ter ganhado o jogo da velha🎉...*_`)
+        }, 2000000); //20 minutos
+        mention(
+          `_*🥳Parabéns @${winnerJID} Você ganhou "${abt}" em xp por ter ganhado o jogo da velha🎉...*_`
+        );
         fs.unlinkSync(`./db/tictactoe/db/${from}.json`);
       } else {
         const chatMove = `*🎮Ꮐ̸Ꭺ̸Ꮇ̸Ꭼ̸ Ꭰ̸Ꭺ̸ Ꮩ̸Ꭼ̸Ꮮ̸Ꮋ̸Ꭺ̸🕹️*
@@ -1127,35 +1567,43 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
 
     //PALA
     if (isAntiPala) {
-      if ((body === `Puta`) || (body === `Fdp`) || (body === `Pqp`) || (body === `Lixo`) || (body === `Mamaco`) || (body === `Preto`) || (body === `Seu preto`) || (body === `Mendigo`) || (body === `Vsf`) || (body === `Bts`) || (body === `Viado`)) {
-        if (isMemberAdmin) return
+      if (
+        body === `Puta` ||
+        body === `Fdp` ||
+        body === `Pqp` ||
+        body === `Lixo` ||
+        body === `Mamaco` ||
+        body === `Preto` ||
+        body === `Seu preto` ||
+        body === `Mendigo` ||
+        body === `Vsf` ||
+        body === `Bts` ||
+        body === `Viado`
+      ) {
+        if (isMemberAdmin) return;
         if (!isBotAdm) return env(mensagem[0].botadmin);
         setTimeout(() => {
-          conn.groupParticipantsUpdate(from, [sender], 'remove')
-        }, 1000)
+          conn.groupParticipantsUpdate(from, [sender], "remove");
+        }, 1000);
       }
     }
 
     //=================================\\
+   
 
+    
+     
+     
+    
     /********** IF DE AUTO RESPONDE TXT ***************/
 
-    if ((body === `bot`) || (body === `Bot`) || (body === `BOT`)) {
-      env('Euuuuuu');
-      conn.sendMessage(from, { sticker: { url: `./complement/sticker/eu.webp` } }, { quoted: mek });
-    }
-
-    if ((body === `Hitler`)) {
-      env(`⠀         ⠀⣀⣤⣶⣶⠖⠲⣶⣶⣤⣀⠀⠀⠀⠀⠀
-⠀⠀⢀⣴⣾⣿⣿⠟⠁⠀⠀⣨⣿⣿⣿⣿⣦⡀⠀⠀
-⠀⢠⣾⣿⣿⡿⠁⠀⠀⣠⣾⣿⣿⠟⢻⣿⣿⣿⡄⠀
-⢠⣿⣿⣿⣯⡀⠀⠀⠸⣿⣿⡿⠃⠀⠀⠙⢿⣿⣿⡄
-⣾⡿⠻⣿⣿⣷⣄⠀⠀⠈⠋⠀⠀⢀⡀⠀⠀⠙⢿⣷
-⣏⠀⠀⠈⠻⣿⣿⠗⠀⠀⠀⠀⢴⣿⣿⣦⡀⠀⠀⣹
-⢿⣷⣄⠀⠀⠈⠋⠀⠀⣠⡀⠀⠀⠙⢿⣿⣿⣦⣾⡿
-⠘⣿⣿⣷⣄⠀⠀⢀⣼⣿⣿⡦⠀⠀⠀⢻⣿⣿⣿⠃
-⠀⠘⢿⣿⣿⣷⣴⣿⣿⡿⠋⠀⠀⢀⣴⣿⣿⣿⠃⠀
-⠀⠀⠈⠻⣿`)
+    if (body === `bot` || body === `Bot` || body === `BOT`) {
+      env("Euuuuuu");
+      conn.sendMessage(
+        from,
+        { sticker: { url: `./complement/sticker/eu.webp` } },
+        { quoted: mek }
+      );
     }
 
     //VISU MSG
@@ -1163,7 +1611,6 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
 
     //=================================\\
     if (!isCmd && !isGroup && !bemvindo2.includes(sender)) {
-
       var menuzin = ` _*Olá ${pushname}*_
 *Prazer em conhecê-lo(a), me chamo Toki Bot.😊*
 _Sou uma inteligência artificial 100% automatizado para ajudar em todo que for possível nessa plataforma._
@@ -1188,13 +1635,71 @@ Obs:
 -para fazer figurinhas mande a midia para depois comentar com /s para ele identificar!
 se não fizer isso e mandar direto na foto ele não identifica e cai...
 
-‼️ _*LEIA ATENTAMENTE AS REGRAS PARA EVITAR BANIMENTO*_ ‼`
-      conn.sendMessage(from, { text: menuzin, footer: '✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD', buttons: [{ buttonId: `${prefixobot}menu`, buttonText: { displayText: 'MENU PRINCIPAL 📖' }, type: 1 }, { buttonId: `${prefixobot}menufigu`, buttonText: { displayText: 'MENU FIGURINHA 🧩' }, type: 1 }, { buttonId: `${prefixobot}regras`, buttonText: { displayText: 'REGRAS ⚠️' }, type: 1 }] }, { quoted: whatsapp })
+‼️ _*LEIA ATENTAMENTE AS REGRAS PARA EVITAR BANIMENTO*_ ‼`;
+      conn.sendMessage(
+        from,
+        {
+          text: menuzin,
+          footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
+          buttons: [
+            {
+              buttonId: `${prefixobot}menu`,
+              buttonText: { displayText: "MENU PRINCIPAL 📖" },
+              type: 1,
+            },
+            {
+              buttonId: `${prefixobot}menufigu`,
+              buttonText: { displayText: "MENU FIGURINHA 🧩" },
+              type: 1,
+            },
+            {
+              buttonId: `${prefixobot}regras`,
+              buttonText: { displayText: "REGRAS ⚠️" },
+              type: 1,
+            },
+          ],
+        },
+        { quoted: whatsapp }
+      );
 
-      bemvindo2.push(sender)
-      fs.writeFileSync('./db/json/bemvindo2.json', JSON.stringify(bemvindo2))
+      bemvindo2.push(sender);
+      fs.writeFileSync("./db/json/bemvindo2.json", JSON.stringify(bemvindo2));
     }
 
+     //autofigu
+      if(type === "videoMessage") {
+        rane = getRandom()
+        buffvid = await getFileBuffer(mek.message.videoMessage, 'video')
+       
+        
+        fs.writeFileSync(`./${rane}`,buffvid)
+       // fs.unlinkSync(`./tempfig/${senderfix}.webp`) 
+
+        ffmpeg(`${rane}`)
+.on('start', function (cmd) {
+})
+.on('error', function (err) {
+})
+.on('end', async function () {
+
+  const fig_enviarv = await createSticker(`./${rane}`, descFig)
+  conn.sendMessage(from, {sticker: fig_enviarv}, {quoted: mek})
+fs.unlinkSync(`./${rane}`, descFig)
+})
+.addOutputOptions([`-vcodec`,`libwebp`,`-vf`,`scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`])
+.toFormat('webp')
+.save(`./${rane}`)
+        } 
+      if(type === "imageMessage") {
+        rane = getRandom('.'+'webp')
+        buffimg = await getFileBuffer(mek.message.imageMessage, 'image')
+        fs.writeFileSync(rane, buffimg)
+const fig_enviar = await createSticker(rane, descFig)
+conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
+fs.unlinkSync(rane, buffimg)  
+
+      }
+    
     /*********** SIMI PV ***********/
 
     /*if (!isCmd && !isGroup && !isSimiPv && !simipv.includes(sender)) {
@@ -1222,64 +1727,77 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
     */
 
     switch (argsButton[0]) {
-      case 'finaki':
-        if (argsButton[1] == 'nao') return env('*Puxa não foi desta vez 😔*')
-        env('*SABIA! EU VENCI KK 🥳*')
-        akinator[0][from] = undefined
-        fs.writeFileSync('./db/json/akinator.json', JSON.stringify(akinator, null, 2))
-        break
-      case 'akinator':
-        if (argsButton[1] == 'nao') return env('*Até a próxima amigo*')
-        if (akinator[0][from]) return env('*Desculpe-me amigo alguem ja está jogando, aguarde pra chegar sua vez*')
+      case "finaki":
+        if (argsButton[1] == "nao") return env("*Puxa não foi desta vez 😔*");
+        env("*SABIA! EU VENCI KK 🥳*");
+        akinator[0][from] = undefined;
+        fs.writeFileSync(
+          "./db/json/akinator.json",
+          JSON.stringify(akinator, null, 2)
+        );
+        break;
+      case "akinator":
+        if (argsButton[1] == "nao") return env("*Até a próxima amigo*");
+        if (akinator[0][from])
+          return env(
+            "*Desculpe-me amigo alguem ja está jogando, aguarde pra chegar sua vez*"
+          );
         akinator[0][from] = {
           id: from,
           player: sender,
-          game: new Aki({ region: 'pt' })
-        }
-        await akinator[0][from].game.start()
+          game: new Aki({ region: "pt" }),
+        };
+        await akinator[0][from].game.start();
         listMessage = {
           text: akinator[0][from].game.question,
-          footer: 'Mostrar opções',
-          buttonText: 'Opções',
+          footer: "Mostrar opções",
+          buttonText: "Opções",
           title: "Pergunta",
-          sections: [{
-            title: 'Opções',
-            rows: [{
-              rowId: `${prefixobot}respaki 0`,
-              title: 'Sim',
-              description: ''
-            },
+          sections: [
             {
-              rowId: `${prefixobot}respaki 1`,
-              title: 'Não',
-              description: ''
-            }, {
-              rowId: `${prefixobot}respaki 2`,
-              title: 'Não sei',
-              description: ''
-            }, {
-              rowId: `${prefixobot}respaki 3`,
-              title: 'Provavelmente sim',
-              description: ''
+              title: "Opções",
+              rows: [
+                {
+                  rowId: `${prefixobot}respaki 0`,
+                  title: "Sim",
+                  description: "",
+                },
+                {
+                  rowId: `${prefixobot}respaki 1`,
+                  title: "Não",
+                  description: "",
+                },
+                {
+                  rowId: `${prefixobot}respaki 2`,
+                  title: "Não sei",
+                  description: "",
+                },
+                {
+                  rowId: `${prefixobot}respaki 3`,
+                  title: "Provavelmente sim",
+                  description: "",
+                },
+                {
+                  rowId: `${prefixobot}respaki 4`,
+                  title: "Provavelmente não",
+                  description: "",
+                },
+              ],
             },
-            {
-              rowId: `${prefixobot}respaki 4`,
-              title: 'Provavelmente não',
-              description: ''
-            }]
-          }]
-        }
+          ],
+        };
         conn.sendMessage(from, listMessage, { quoted: mek });
-        fs.writeFileSync('./db/json/akinator.json', JSON.stringify(akinator, null, 2))
-        break
+        fs.writeFileSync(
+          "./db/json/akinator.json",
+          JSON.stringify(akinator, null, 2)
+        );
+        break;
     }
 
     if (prefix.indexOf(body.slice(0, 1)) < 0) return;
 
     switch (command) {
-
       //MENUS
-
 
       /* $eval dados = ("")
  numero = dados.replace('-', '')
@@ -1288,14 +1806,40 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
  nums = num.replace('+', '')
  env(nums) */
 
-      case 'templatemessageee':
-        conn.sendMessage(from, { text: 'text1', footer: 'text2 ', templateButtons: [{ index: 1, urlButton: { displayText: 'Meu site ', url: 'https://linktr.ee/tokibot' } }, { index: 2, callButton: { displayText: 'call me', phoneNumber: '+55 44 99743-3716' } }, { index: 3, quickReplyButton: { displayText: 'teste', id: `${prefixobot}tac` } }] });
+      case "templatemessageee":
+        conn.sendMessage(from, {
+          text: "text1",
+          footer: "text2 ",
+          templateButtons: [
+            {
+              index: 1,
+              urlButton: {
+                displayText: "Meu site ",
+                url: "https://linktr.ee/tokibot",
+              },
+            },
+            {
+              index: 2,
+              callButton: {
+                displayText: "call me",
+                phoneNumber: "+55 44 99743-3716",
+              },
+            },
+            {
+              index: 3,
+              quickReplyButton: {
+                displayText: "teste",
+                id: `${prefixobot}tac`,
+              },
+            },
+          ],
+        });
         break;
 
-      case 'menu':
-      case 'help':
-      case 'comandos':
-        let menuft = `${Math.floor(Math.random() * 12)}`
+      case "menu":
+      case "help":
+      case "comandos":
+        let menuft = `${Math.floor(Math.random() * 12)}`;
 
         var menuzin = `╭──────────────╮
 │░ BEM VINDO AO MENU░
@@ -1438,6 +1982,8 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
 │➪ *${prefixobot}ytsrc* 
 │➪ *${prefixobot}Instagram*
 │➪ *${prefixobot}tiktok*
+│➪ *${prefixobot}twitter*
+│➪ *${prefixobot}facebook*
 │
 ╞═⟪ *PESQUISAR* ⟫════
 │
@@ -1469,7 +2015,7 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
 │➪ *${prefixobot}admins* 
 │➪ *${prefixobot}infogp* 
 │➪ *${prefixobot}calcular*
-│➪ *${prefixobot}joinemoji* 
+│➪ *${prefixobot}misturar* 
 │➪ *${prefixobot}semoji* 
 │
 ╞═⟪ *DONO* ⟫════
@@ -1489,8 +2035,33 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
 │➪ *${prefixobot}ping*
 │➪ *${prefixobot}bug*
 │
-╰──────────────╯`
-        conn.sendMessage(from, { image: { url: `./complement/menus/${menuft}.jpg` }, caption: menuzin, footer: '✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD', buttons: [{ buttonId: `${prefixobot}menu`, buttonText: { displayText: 'MENU PRINCIPAL 📖' }, type: 1 }, { buttonId: `${prefixobot}menufigu`, buttonText: { displayText: 'MENU FIGURINHA 🧩' }, type: 1 }, { buttonId: `${prefixobot}dono`, buttonText: { displayText: 'DONO 👑' }, type: 1 }] }, { quoted: mek });
+╰──────────────╯`;
+        conn.sendMessage(
+          from,
+          {
+            image: { url: `./complement/menus/${menuft}.jpg` },
+            caption: menuzin,
+            footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
+            buttons: [
+              {
+                buttonId: `${prefixobot}menu`,
+                buttonText: { displayText: "MENU PRINCIPAL 📖" },
+                type: 1,
+              },
+              {
+                buttonId: `${prefixobot}menufigu`,
+                buttonText: { displayText: "MENU FIGURINHA 🧩" },
+                type: 1,
+              },
+              {
+                buttonId: `${prefixobot}dono`,
+                buttonText: { displayText: "DONO 👑" },
+                type: 1,
+              },
+            ],
+          },
+          { quoted: mek }
+        );
         break;
 
       /*case 'menu2':
@@ -1510,7 +2081,9 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
      */
       //COMANDOS OWNER
 
-      case 'aluguel': case 'alugar': case 'vip':
+      case "aluguel":
+      case "alugar":
+      case "vip":
         let alugarr = `╭──────────────╮
 │                PREÇOS 
 ╞─────╮ ▽ ╭─────╯
@@ -1541,12 +2114,31 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
 │🔸️Administração do grupo
 │🔸️Acesso a mini games exclusivos.
 │🔸️Acesso a comandos/menus exclusivos.
-╰──────────────╯`
-        conn.sendMessage(from, { text: alugarr, footer: 'Escolha um formato de contato abaixo', buttons: [{ buttonId: `${prefixobot}dono`, buttonText: { displayText: 'Contato' }, type: 1 }, { buttonId: `${prefixobot}linkdono`, buttonText: { displayText: 'link' }, type: 1 }] }, { quoted: mek });
-        break
-      case 'linkdono':
-        env('wa.me/5544997433716');
-        break
+╰──────────────╯`;
+        conn.sendMessage(
+          from,
+          {
+            text: alugarr,
+            footer: "Escolha um formato de contato abaixo",
+            buttons: [
+              {
+                buttonId: `${prefixobot}dono`,
+                buttonText: { displayText: "Contato" },
+                type: 1,
+              },
+              {
+                buttonId: `${prefixobot}linkdono`,
+                buttonText: { displayText: "link" },
+                type: 1,
+              },
+            ],
+          },
+          { quoted: mek }
+        );
+        break;
+      case "linkdono":
+        env("wa.me/5544997433716");
+        break;
       /*case 'doar':
       exec('cd pix && php index.php', (err, msg) => {
        if (err) return env(err.message);
@@ -1556,139 +2148,263 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
       });
       break*/
 
-      case 'cpf':
-        if (!isPremium && isOwner) return env('vc nn e Premium;-;')
-        if (!texto) return env(`Informe o CPF.\nExemplo de como usar: ${prefixobot}cpf 97067580200`);
-        let cpf = args.join(" ")
-        let cpff = cpf.replace(/\D+/g, '');
-        if (isNaN(cpff)) return env('O cpf precisa estar em número!')
-        if (cpff.length > 11) return env('O cpf  ultrapassar 11 dígitos, talvez você tenha adicionado um número a mais!')
-        if (cpff.length < 11) return env('O cpf deve conter 11 Dígitos!')
+      case "cpf":
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!texto)
+          return env(
+            `Informe o CPF.\nExemplo de como usar: ${prefixobot}cpf 97067580200`
+          );
+        let cpf = args.join(" ");
+        let cpff = cpf.replace(/\D+/g, "");
+        if (isNaN(cpff)) return env("O cpf precisa estar em número!");
+        if (cpff.length > 11)
+          return env(
+            "O cpf  ultrapassar 11 dígitos, talvez você tenha adicionado um número a mais!"
+          );
+        if (cpff.length < 11) return env("O cpf deve conter 11 Dígitos!");
         try {
-          let cpfn1 = await fetchJson(`https://merriodafuu-api.herokuapp.com/api/consulta/cpf3?cpf=${cpff}&apikey=Gremory`);
-          env(cpfn1.dados.resultado)
+          let cpfn1 = await fetchJson(
+            `https://merriodafuu-api.herokuapp.com/api/consulta/cpf3?cpf=${cpff}&apikey=Gremory`
+          );
+          env(cpfn1.dados.resultado);
         } catch (err) {
-          sendButtonText(`Cpf ${cpff} não encontrando❗`, 'Talvez api tenha parado de funcionar, ou caiu apenas.', { quoted: mek });
+          sendButtonText(
+            `Cpf ${cpff} não encontrando❗`,
+            "Talvez api tenha parado de funcionar, ou caiu apenas.",
+            { quoted: mek }
+          );
         }
-        break
+        break;
 
-      case 'cpf2':
-      case 'cpf3':
-      case 'cpf4':
-        if (!isPremium && isOwner) return env('vc nn e Premium;-;')
-        if (!texto) return env(`Informe o CPF.\nExemplo de como usar: ${prefixobot + command}cpf 97067580200`);
-        let ccpf = args.join(" ")
-        let cpfff = ccpf.replace(/\D+/g, '');
-        if (isNaN(cpfff)) return env('O cpf precisa estar em número!')
-        if (cpfff.length > 11) return env('O cpf  ultrapassar 11 dígitos, talvez você tenha adicionado um número a mais!')
-        if (cpfff.length < 11) return env('O cpf deve conter 11 Dígitos!')
+      case "cpf2":
+      case "cpf3":
+      case "cpf4":
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!texto)
+          return env(
+            `Informe o CPF.\nExemplo de como usar: ${
+              prefixobot + command
+            }cpf 97067580200`
+          );
+        let ccpf = args.join(" ");
+        let cpfff = ccpf.replace(/\D+/g, "");
+        if (isNaN(cpfff)) return env("O cpf precisa estar em número!");
+        if (cpfff.length > 11)
+          return env(
+            "O cpf  ultrapassar 11 dígitos, talvez você tenha adicionado um número a mais!"
+          );
+        if (cpfff.length < 11) return env("O cpf deve conter 11 Dígitos!");
         try {
-          let cpfn2 = await fetchJson(`https://merriodafuu-api.herokuapp.com/api/consulta/${command}?cpf=${cpfff}&apikey=Gremory`);
-          env(cpfn2.dados.resultado)
+          let cpfn2 = await fetchJson(
+            `https://merriodafuu-api.herokuapp.com/api/consulta/${command}?cpf=${cpfff}&apikey=Gremory`
+          );
+          env(cpfn2.dados.resultado);
         } catch (err) {
-          sendButtonText(`Cpf ${cpfff} não encontrando❗`, 'Talvez api tenha parado de funcionar, ou caiu apenas.', { quoted: mek });
+          sendButtonText(
+            `Cpf ${cpfff} não encontrando❗`,
+            "Talvez api tenha parado de funcionar, ou caiu apenas.",
+            { quoted: mek }
+          );
         }
-        break
+        break;
 
-      case 'addficha':
-        [number, token] = body.replace(new RegExp(`${command} `, 'gi'), '').slice(1).split('/');
-        if (body.replace(new RegExp(`${command} `, 'gi'), '').slice(1) == '') return env('use assim: ¿addficha 558898078824/ficha');
-        if (!number) return env('defina o numero');
-        if (!token) return env('defina a ficha');
+      case "addficha":
+        [number, token] = body
+          .replace(new RegExp(`${command} `, "gi"), "")
+          .slice(1)
+          .split("/");
+        if (body.replace(new RegExp(`${command} `, "gi"), "").slice(1) == "")
+          return env("use assim: ¿addficha 558898078824/ficha");
+        if (!number) return env("defina o numero");
+        if (!token) return env("defina a ficha");
         env(addToken(number, token));
         break;
 
-      case 'removerficha':
-        if (body.replace(new RegExp(`${command} `, 'gi'), '').slice(1) == '') return env('coloque o numero do portador da ficha!');
-        env(removeToken(body.replace(new RegExp(`${command} `, 'gi'), '').slice(1)));
+      case "removerficha":
+        if (body.replace(new RegExp(`${command} `, "gi"), "").slice(1) == "")
+          return env("coloque o numero do portador da ficha!");
+        env(
+          removeToken(
+            body.replace(new RegExp(`${command} `, "gi"), "").slice(1)
+          )
+        );
         break;
 
-      case 'listarfichas':
+      case "listarfichas":
         env(getAllTokens().list || getAllTokens());
         break;
 
-      case 'fichas':
+      case "fichas":
         env(getTokenByNumber(sender));
         break;
 
-      case 'bug':
-      case 'reporte':
-      case 'reporta':
-        if (!texto) return env('Cadê o a mensagem do bug');
-        if (texto.length > 500) return env('Até 500 características');
+      case "bug":
+      case "reporte":
+      case "reporta":
+        if (!texto) return env("Cadê o a mensagem do bug");
+        if (texto.length > 500) return env("Até 500 características");
         try {
           let reportt = `[❕𝐑𝐄𝐏𝐎𝐑𝐓❕]
 👤Reportado por @${sender.split("@")[0]} 
-✏️Mensagem: ${texto}`
-          conn.sendMessage('554497433716@s.whatsapp.net', { text: reportt, mentions: [sender] });
+✏️Mensagem: ${texto}`;
+          conn.sendMessage("554497433716@s.whatsapp.net", {
+            text: reportt,
+            mentions: [sender],
+          });
         } catch (a) {
-          env('Falha ao fazer suporte❗');
+          env("Falha ao fazer suporte❗");
         }
-        break
-      case 'chatvip':
-        if (isOwner) return env('Você não tem permissão para estar usando esse comando');
-        if (!texto) return env('...');
-        conn.sendMessage('120363023849383476@g.us', { text: texto, mentions: allMembers }, { quoted: whatsapp });
-        break
+        break;
+      case "chatvip":
+        if (isOwner)
+          return env("Você não tem permissão para estar usando esse comando");
+        if (!texto) return env("...");
+        conn.sendMessage(
+          "120363023849383476@g.us",
+          { text: texto, mentions: allMembers },
+          { quoted: whatsapp }
+        );
+        break;
 
-      case 'chatnet':
-        if (isVini) return env('Você não tem permissão para estar usando esse comando');
-        if (!texto) return env('Cadê o aviso!?');
-        const whatsappv = { key: { fromMe: false, participant: `0@s.whatsapp.net` }, message: { "extendedTextMessage": { "text": `Fast 4G - Atualizações`, "title": "hmm" } } }
+      case "chatnet":
+        if (isVini)
+          return env("Você não tem permissão para estar usando esse comando");
+        if (!texto) return env("Cadê o aviso!?");
+        const whatsappv = {
+          key: { fromMe: false, participant: `0@s.whatsapp.net` },
+          message: {
+            extendedTextMessage: {
+              text: `Fast 4G - Atualizações`,
+              title: "hmm",
+            },
+          },
+        };
 
-        const totic = args.join(" ") || BotName
-        if ((isMedia && !mek.message.videoMessage || isQuotedSticker) && args.length == 0) {
-          media = isQuotedSticker ? mek.message.extendedTextMessage.contextInfo.quotedMessage.stickerMessage : mek.message.stickerMessage
-          rane = getRandom('.' + await getExtension(media.mimetype))
-          img = await getFileBuffer(media, 'sticker')
-          fs.writeFileSync(rane, img)
-          fig = fs.readFileSync(rane)
+        const totic = args.join(" ") || BotName;
+        if (
+          ((isMedia && !mek.message.videoMessage) || isQuotedSticker) &&
+          args.length == 0
+        ) {
+          media = isQuotedSticker
+            ? mek.message.extendedTextMessage.contextInfo.quotedMessage
+                .stickerMessage
+            : mek.message.stickerMessage;
+          rane = getRandom("." + (await getExtension(media.mimetype)));
+          img = await getFileBuffer(media, "sticker");
+          fs.writeFileSync(rane, img);
+          fig = fs.readFileSync(rane);
           var options = {
             sticker: fig,
-            mentions: groupMembers.map(i => i.id)
-          }
-          conn.sendMessage('120363041425189640@g.us', options)
-        } else if ((isMedia && !mek.message.videoMessage || isQuotedImage) && args.length == 0) {
-          media = isQuotedImage ? mek.message.extendedTextMessage.contextInfo.quotedMessage.imageMessage : mek.message.imageMessage
-          rane = getRandom('.' + await getExtension(media.mimetype))
-          img = await getFileBuffer(media, 'image')
-          fs.writeFileSync(rane, img)
-          buff = fs.readFileSync(rane)
-          conn.sendMessage('120363041425189640@g.us', { image: buff, caption: totic, mentions: groupMembers.map(i => i.id) }, { quoted: whatsappv })
-        } else if ((isMedia && !mek.message.videoMessage || isQuotedVideo) && args.length == 0) {
-          media = isQuotedVideo ? mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage : mek.message.videoMessage
-          rane = getRandom('.' + await getExtension(media.mimetype))
-          vid = await getFileBuffer(media, 'video')
-          fs.writeFileSync(rane, vid)
-          buff = fs.readFileSync(rane)
-          conn.sendMessage('120363041425189640@g.us', { video: buff, caption: toti, mimetype: 'video/mp4', mentions: groupMembers.map(i => i.id) }, { quoted: whatsappv })
-        } else if ((isMedia && !mek.message.videoMessage || isQuotedAudio) && args.length == 0) {
-          media = isQuotedAudio ? mek.message.extendedTextMessage.contextInfo.quotedMessage.audioMessage : mek.message.audioMessage
-          rane = getRandom('.' + await getExtension(media.mimetype))
-          aud = await getFileBuffer(media, 'audio')
-          fs.writeFileSync(rane, aud)
-          buff = fs.readFileSync(rane)
-          conn.sendMessage('120363041425189640@g.us', { audio: buff, mimetype: 'audio/mp4', ptt: true, mentions: groupMembers.map(i => i.id) }, { quoted: whatsappv })
-        } else if ((isMedia && !mek.message.videoMessage || isQuotedDocument) && args.length == 0) {
-          media = isQuotedDocument ? mek.message.extendedTextMessage.contextInfo.quotedMessage.documentMessage : mek.message.documentMessage
-          rane = getRandom('.' + await getExtension(media.mimetype))
-          doc = await getFileBuffer(media, 'document')
-          fs.writeFileSync(rane, doc)
-          buff = fs.readFileSync(rane)
-          conn.sendMessage('120363041425189640@g.us', { document: buff, mimetype: 'text/plain', mentions: groupMembers.map(i => i.id) }, { quoted: whatsappv })
+            mentions: groupMembers.map((i) => i.id),
+          };
+          conn.sendMessage("120363041425189640@g.us", options);
+        } else if (
+          ((isMedia && !mek.message.videoMessage) || isQuotedImage) &&
+          args.length == 0
+        ) {
+          media = isQuotedImage
+            ? mek.message.extendedTextMessage.contextInfo.quotedMessage
+                .imageMessage
+            : mek.message.imageMessage;
+          rane = getRandom("." + (await getExtension(media.mimetype)));
+          img = await getFileBuffer(media, "image");
+          fs.writeFileSync(rane, img);
+          buff = fs.readFileSync(rane);
+          conn.sendMessage(
+            "120363041425189640@g.us",
+            {
+              image: buff,
+              caption: totic,
+              mentions: groupMembers.map((i) => i.id),
+            },
+            { quoted: whatsappv }
+          );
+        } else if (
+          ((isMedia && !mek.message.videoMessage) || isQuotedVideo) &&
+          args.length == 0
+        ) {
+          media = isQuotedVideo
+            ? mek.message.extendedTextMessage.contextInfo.quotedMessage
+                .videoMessage
+            : mek.message.videoMessage;
+          rane = getRandom("." + (await getExtension(media.mimetype)));
+          vid = await getFileBuffer(media, "video");
+          fs.writeFileSync(rane, vid);
+          buff = fs.readFileSync(rane);
+          conn.sendMessage(
+            "120363041425189640@g.us",
+            {
+              video: buff,
+              caption: toti,
+              mimetype: "video/mp4",
+              mentions: groupMembers.map((i) => i.id),
+            },
+            { quoted: whatsappv }
+          );
+        } else if (
+          ((isMedia && !mek.message.videoMessage) || isQuotedAudio) &&
+          args.length == 0
+        ) {
+          media = isQuotedAudio
+            ? mek.message.extendedTextMessage.contextInfo.quotedMessage
+                .audioMessage
+            : mek.message.audioMessage;
+          rane = getRandom("." + (await getExtension(media.mimetype)));
+          aud = await getFileBuffer(media, "audio");
+          fs.writeFileSync(rane, aud);
+          buff = fs.readFileSync(rane);
+          conn.sendMessage(
+            "120363041425189640@g.us",
+            {
+              audio: buff,
+              mimetype: "audio/mp4",
+              ptt: true,
+              mentions: groupMembers.map((i) => i.id),
+            },
+            { quoted: whatsappv }
+          );
+        } else if (
+          ((isMedia && !mek.message.videoMessage) || isQuotedDocument) &&
+          args.length == 0
+        ) {
+          media = isQuotedDocument
+            ? mek.message.extendedTextMessage.contextInfo.quotedMessage
+                .documentMessage
+            : mek.message.documentMessage;
+          rane = getRandom("." + (await getExtension(media.mimetype)));
+          doc = await getFileBuffer(media, "document");
+          fs.writeFileSync(rane, doc);
+          buff = fs.readFileSync(rane);
+          conn.sendMessage(
+            "120363041425189640@g.us",
+            {
+              document: buff,
+              mimetype: "text/plain",
+              mentions: groupMembers.map((i) => i.id),
+            },
+            { quoted: whatsappv }
+          );
         } else if (budy) {
-          if (q.length < 1) return env('Citar oq?')
+          if (q.length < 1) return env("Citar oq?");
           //if(q.startsWith('/'))return env('sai dae arrombado')
-          conn.sendMessage('120363041425189640@g.us', { text: texto, mentions: groupMembers.map(i => i.id) }, { quoted: whatsappv })
+          conn.sendMessage(
+            "120363041425189640@g.us",
+            { text: texto, mentions: groupMembers.map((i) => i.id) },
+            { quoted: whatsappv }
+          );
         } else {
-          env(`Responder imagem/documento/gif/adesivo/áudio/vídeo com legenda ${prefixobot + command}`)
+          env(
+            `Responder imagem/documento/gif/adesivo/áudio/vídeo com legenda ${
+              prefixobot + command
+            }`
+          );
         }
-        break
+        break;
 
-      case 'menufigu':
-      case 'menufig':
-        var menufigu = ['figumenu2.mp4', 'figumenu.mp4']
-        var menufig = menufigu[Math.floor(Math.random() * menufigu.length)]
+      case "menufigu":
+      case "menufig":
+        var menufigu = ["figumenu2.mp4", "figumenu.mp4"];
+        var menufig = menufigu[Math.floor(Math.random() * menufigu.length)];
         let menufigut = `╭──────────────╮
 │         MENU FIGURINHA
 ╞─────╮ ▽ ╭─────╯
@@ -1700,13 +2416,21 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
 ╞➸ *${prefixobot}attp* [Sua frase]
 ╞➸ *${prefixobot}renomear* [Renomear figu]
 │
-╰──────────────╯`
+╰──────────────╯`;
 
-        await conn.sendMessage(from, { video: fs.readFileSync(`./complement/menus/${menufig}`), caption: menufigut, gifPlayback: true }, { quoted: selo })
-        break
+        await conn.sendMessage(
+          from,
+          {
+            video: fs.readFileSync(`./complement/menus/${menufig}`),
+            caption: menufigut,
+            gifPlayback: true,
+          },
+          { quoted: selo }
+        );
+        break;
 
-      case 'regra':
-      case 'regras':
+      case "regra":
+      case "regras":
         let textregra = `╭──────────────╮
 │           REGRAS           
 ╞─────╮ ▽ ╭─────╯
@@ -1716,13 +2440,26 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
 ╞➸ Floodar comandos
 ╞➸ Enviar travar
 │
-╰──────────────╯`
-        conn.sendMessage(from, { text: textregra, buttons: [{ buttonId: `/termos`, buttonText: { displayText: 'TERMOS DE RESPONSABILIDADE 📖' }, type: 1 }] }, { quoted: mek })
-        break
+╰──────────────╯`;
+        conn.sendMessage(
+          from,
+          {
+            text: textregra,
+            buttons: [
+              {
+                buttonId: `/termos`,
+                buttonText: { displayText: "TERMOS DE RESPONSABILIDADE 📖" },
+                type: 1,
+              },
+            ],
+          },
+          { quoted: mek }
+        );
+        break;
 
-      case 'termos':
-        const termm = ['termo1.jpg', 'termo2.jpg', 'termo3.jpg'];
-        const termof = termm[Math.floor(Math.random() * termm.length)]
+      case "termos":
+        const termm = ["termo1.jpg", "termo2.jpg", "termo3.jpg"];
+        const termof = termm[Math.floor(Math.random() * termm.length)];
         var menuzin = `
 *📝 TERMOS E POLÍTICAS DE PRIVACIDADE*
 
@@ -1740,32 +2477,62 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
 
 5) Todos estão sujeito a banimento no bot (caso não siga as regras).
 
-6) Em caso de nossos bots ficar fora de serviço, os clientes terão direito de um aumento no seu prazo de vencimento do vip (relativo ao tempo em que ficou inativo).`
-        conn.sendMessage(from, { image: { url: `./complement/termos/${termof}` }, caption: menuzin, footer: `${BotName}`, buttons: [{ buttonId: `$termosaceitoss`, buttonText: { displayText: 'LI E CONCORDO 📖' }, type: 1 }] }, { quoted: mek })
-        break
+6) Em caso de nossos bots ficar fora de serviço, os clientes terão direito de um aumento no seu prazo de vencimento do vip (relativo ao tempo em que ficou inativo).`;
+        conn.sendMessage(
+          from,
+          {
+            image: { url: `./complement/termos/${termof}` },
+            caption: menuzin,
+            footer: `${BotName}`,
+            buttons: [
+              {
+                buttonId: `$termosaceitoss`,
+                buttonText: { displayText: "LI E CONCORDO 📖" },
+                type: 1,
+              },
+            ],
+          },
+          { quoted: mek }
+        );
+        break;
 
-      case 'termosaceitoss':
-        termos.push(sender)
-        fs.writeFileSync('./db/json/termos.json', JSON.stringify(termos))
-        env('Termos assinados com sucesso ✅');
-        break
-      case 'tmpvgp':
-        if (isOwner) return env('Apenas meu criador pode utilizar');
-        if (!texto) return env('Qual o tema da tm?');
-        let texttmpv = texto
+      case "termosaceitoss":
+        termos.push(sender);
+        fs.writeFileSync("./db/json/termos.json", JSON.stringify(termos));
+        env("Termos assinados com sucesso ✅");
+        break;
+      case "tmpvgp":
+        if (isOwner) return env("Apenas meu criador pode utilizar");
+        if (!texto) return env("Qual o tema da tm?");
+        let texttmpv = texto;
         for (const chat of allMembers) {
-          conn.sendMessage(chat, { text: texttmpv, footer: `✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD`, buttons: [{ buttonId: `/owner`, buttonText: { displayText: 'DONO' }, type: 1 }] });
+          conn.sendMessage(chat, {
+            text: texttmpv,
+            footer: `✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD`,
+            buttons: [
+              {
+                buttonId: `/owner`,
+                buttonText: { displayText: "DONO" },
+                type: 1,
+              },
+            ],
+          });
         }
-        break
-
-      case 'cekvip':
+        break;
+        case 'attp':     
+          puxe = encodeURI(`http://aleatoryapi.herokuapp.com/api/attp?q=${q}&apikey=${keyale}`)
+          attp = await getBuffer(puxe)
+          fig_enviar = await createSticker(attp, descFig)
+          conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
+          break
+      case "cekvip":
         let cekvip = `Status vip
-*STATUS:* ${isPremium ? '✅' : '❎'}`;
-        env(cekvip)
-        break
+*STATUS:* ${isPremium ? "✅" : "❎"}`;
+        env(cekvip);
+        break;
 
-      case 'criarlista':
-        if (isOwner) return env('Apenas meu criador pode utilizar');
+      case "criarlista":
+        if (isOwner) return env("Apenas meu criador pode utilizar");
         pkt = `┏━━━━ 『 *𝙵𝙸𝙲𝙷𝙰 𝙿𝚁𝙴𝙼𝙸𝚄𝙼* 』 ━━━┓     
 ┣ *👤𝙽𝚘𝚖𝚎:*
 ┣ *📞𝙲𝚘𝚗𝚝𝚊𝚝𝚘:* wa.me/
@@ -1774,99 +2541,124 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
 ┣ *📅𝙳𝚊𝚝𝚊 𝚍𝚊 𝚌𝚘𝚖𝚙𝚛𝚊:* ${data2}
 ┣ *⏳𝙳𝚊𝚝𝚊 𝚍𝚎 𝚟𝚎𝚗𝚌𝚒𝚖𝚎𝚗𝚝𝚘:*
 ┣ *📱𝚝𝚒𝚙𝚘:*
-┃➥*📍𝙶𝚛𝚞𝚙𝚘(𝚜):* `
-        conn.sendMessage(from, { text: pkt }, { quoted: whatsapp })
-        break
+┃➥*📍𝙶𝚛𝚞𝚙𝚘(𝚜):* `;
+        conn.sendMessage(from, { text: pkt }, { quoted: whatsapp });
+        break;
 
-      case 'joingroup':
-        if (!isGroup) return env('Comando apenas para grupo');
-        if (isOwner) return env('Apenas meu criador pode utilizar');
-        if (!texto) return env('Qual o nome do grupo papai');
-        const group = await conn.groupCreate(texto, ["554497433716@s.whatsapp.net"])
-        conn.sendMessage(group.id, { text: 'Bem vindo papai' });
-        break
+      case "joingroup":
+        if (!isGroup) return env("Comando apenas para grupo");
+        if (isOwner) return env("Apenas meu criador pode utilizar");
+        if (!texto) return env("Qual o nome do grupo papai");
+        const group = await conn.groupCreate(texto, [
+          "554497433716@s.whatsapp.net",
+        ]);
+        conn.sendMessage(group.id, { text: "Bem vindo papai" });
+        break;
 
-      case 'idchat':
-        if (!isGroup) return env('Comando apenas para grupo')
-        env(metadata.id)
-        break
-      case 'addautorm':
-      case 'addautoban':
-      case 'listanegra':
-        if (isOwner) return env(';-;')
-        if (args.length < 1) return env('Diga o numero sem espaço, + ou traço')
-        var ind = dbids.indexOf(from)
+      case "idchat":
+        if (!isGroup) return env("Comando apenas para grupo");
+        env(metadata.id);
+        break;
+      case "addautorm":
+      case "addautoban":
+      case "listanegra":
+        if (isOwner) return env(";-;");
+        if (args.length < 1) return env("Diga o numero sem espaço, + ou traço");
+        var ind = dbids.indexOf(from);
         if (isAdeusCara) {
-          var numind = adeuscara[ind].number.indexOf(args[0])
-          if (numind >= 0) return env('*Esse Número ja esta incluso*')
-          adeuscara[ind].number.push(args[0])
+          var numind = adeuscara[ind].number.indexOf(args[0]);
+          if (numind >= 0) return env("*Esse Número ja esta incluso*");
+          adeuscara[ind].number.push(args[0]);
         } else {
           adeuscara.push({
             groupId: from,
             actived: false,
-            number: [args[0]]
-          })
+            number: [args[0]],
+          });
         }
-        fs.writeFileSync('./db/json/adeuscara.json', JSON.stringify(adeuscara, null, 2) + '\n')
-        env(`*Número adicionado a lista de autoban*`)
-        break
+        fs.writeFileSync(
+          "./db/json/adeuscara.json",
+          JSON.stringify(adeuscara, null, 2) + "\n"
+        );
+        env(`*Número adicionado a lista de autoban*`);
+        break;
 
-      case 'autoban':
-        if (isOwner) return env(';-;')
-        if (args.length < 1) return env('Hmmmm')
+      case "autoban":
+        if (isOwner) return env(";-;");
+        if (args.length < 1) return env("Hmmmm");
         if (Number(args[0]) === 1) {
-          var ind = dbids.indexOf(from)
+          var ind = dbids.indexOf(from);
           if (isAdeusCara) {
-            adeuscara[ind].actived = true
+            adeuscara[ind].actived = true;
           } else {
             adeuscara.push({
               groupId: from,
               actived: true,
-              number: []
-            })
+              number: [],
+            });
           }
-          fs.writeFileSync('./db/json/adeuscara.json', JSON.stringify(adeuscara, null, 2) + '\n')
-          env(`Ativou com sucesso o recurso de autoban neste grupo✔️`)
+          fs.writeFileSync(
+            "./db/json/adeuscara.json",
+            JSON.stringify(adeuscara, null, 2) + "\n"
+          );
+          env(`Ativou com sucesso o recurso de autoban neste grupo✔️`);
         } else if (Number(args[0]) === 0) {
-          var ind = dbids.indexOf(from)
+          var ind = dbids.indexOf(from);
           if (isAdeusCara) {
-            adeuscara[ind].actived = false
+            adeuscara[ind].actived = false;
           } else {
             adeuscara.push({
               groupId: from,
               actived: false,
-              number: []
-            })
+              number: [],
+            });
           }
-          fs.writeFileSync('./db/json/adeuscara.json', JSON.stringify(adeuscara, null, 2) + '\n')
-          env(`Desativou com sucesso o recurso de autoban neste grupo✔️`)
+          fs.writeFileSync(
+            "./db/json/adeuscara.json",
+            JSON.stringify(adeuscara, null, 2) + "\n"
+          );
+          env(`Desativou com sucesso o recurso de autoban neste grupo✔️`);
         } else {
-          env('1 para ativar, 0 para desativar')
+          env("1 para ativar, 0 para desativar");
         }
-        break
+        break;
 
-      case 'suiced':
-      case 'suicida':
-      case 'crashuser':
-        if (isOwner && isAzevedo) return env('Você não têm permissão para usar esse comando.');
-        if (!texto) return env('Cade o número da vítima');
-        env('Toki trava zip zap😡🥵');
-        let telpr = args.join(' ')
-        let craahspp = { key: { participant: "0@s.whatsapp.net", remoteJid: "0@g.us", }, message: { conversation: "nada haver isso aí animal" } }
+      case "suiced":
+      case "suicida":
+      case "crashuser":
+        if (isOwner && isAzevedo)
+          return env("Você não têm permissão para usar esse comando.");
+        if (!texto) return env("Cade o número da vítima");
+        env("Toki trava zip zap😡🥵");
+        let telpr = args.join(" ");
+        let craahspp = {
+          key: { participant: "0@s.whatsapp.net", remoteJid: "0@g.us" },
+          message: { conversation: "nada haver isso aí animal" },
+        };
 
-        if (telpr == '11966491483') return env('Não e possível usar crashuser o número do silasn.');
-        if (telpr == 'Seu Número') return env('Não e possível usar crashuser o número do Meliodas.');
-        if (telpr == 'Número do bot') return env('Não e possível usar crashuser meu número.');
-        conn.sendMessage(`${telpr}@s.whatsapp.net`, { text: 'bom dia!' }, { quoted: craahspp })
-        break
+        if (telpr == "11966491483")
+          return env("Não e possível usar crashuser o número do silasn.");
+        if (telpr == "Seu Número")
+          return env("Não e possível usar crashuser o número do Meliodas.");
+        if (telpr == "Número do bot")
+          return env("Não e possível usar crashuser meu número.");
+        conn.sendMessage(
+          `${telpr}@s.whatsapp.net`,
+          { text: "bom dia!" },
+          { quoted: craahspp }
+        );
+        break;
 
-      case 'suicídio':
-      case 'suicidio':
-        if (!isGroup) return env('Comando apenas para grupo');
-        env('A miguinho cometeu suicídio😔');
-        let seloso = { key: { participant: "0@s.whatsapp.net", remoteJid: "0@g.us", }, message: { conversation: "nada haver isso aí animal" } }
-        conn.sendMessage(sender, { text: 'tess' }, { quoted: seloso })
-        break
+      case "suicídio":
+      case "suicidio":
+        if (!isGroup) return env("Comando apenas para grupo");
+        env("A miguinho cometeu suicídio😔");
+        let seloso = {
+          key: { participant: "0@s.whatsapp.net", remoteJid: "0@g.us" },
+          message: { conversation: "nada haver isso aí animal" },
+        };
+        conn.sendMessage(sender, { text: "tess" }, { quoted: seloso });
+        break;
 
       /*case 'suiced':
       case 'suicida':
@@ -1894,14 +2686,17 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
       
       break*/
 
-      case 'suicidagp':
-        if (isOwner) return env(';-;')
-        env('Toki trava zip zap😡🥵')
+      case "suicidagp":
+        if (isOwner) return env(";-;");
+        env("Toki trava zip zap😡🥵");
 
-        const seloogp = { key: { participant: "0@s.whatsapp.net", remoteJid: "0@g.us", }, message: { conversation: "nada haver isso aí animal" }, }
+        const seloogp = {
+          key: { participant: "0@s.whatsapp.net", remoteJid: "0@g.us" },
+          message: { conversation: "nada haver isso aí animal" },
+        };
 
-        conn.sendMessage(from, { text: 'sexo' }, { quoted: seloogp })
-        break
+        conn.sendMessage(from, { text: "sexo" }, { quoted: seloogp });
+        break;
 
       /*case 'tmmmprem':
        const listvip  = JSON.parse(fs.readFileSync('./db/json/premium.json'))
@@ -1919,145 +2714,212 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
       env(teks)
       break*/
 
-      case 'grupos':
-        if (isOwner) return env('recurso so pro dono');
-        let groups = require('./db/json/countmsg.json');
+      case "grupos":
+        if (isOwner) return env("recurso so pro dono");
+        let groups = require("./db/json/countmsg.json");
         let grouplength = [];
-        let texts = '╭─────────────────╮\n│ *Lista de Grupos:* \n╞───────╮ ▽ ╭───────╯\n│\n';
+        let texts =
+          "╭─────────────────╮\n│ *Lista de Grupos:* \n╞───────╮ ▽ ╭───────╯\n│\n";
         for (const group of groups) {
           try {
-            const { subject, participants } = await conn.groupMetadata(group.groupId);
+            const { subject, participants } = await conn.groupMetadata(
+              group.groupId
+            );
             grouplength.push(group.groupId);
             texts += `│ *Nome:* ${subject}\n│ *Id:* ${group.groupId}\n│ *Membros:*  ${participants.length}\n│\n`;
-          } catch (a) { }
+          } catch (a) {}
         }
         texts += `│+ Total : ${grouplength.length}\n╰──────*「 *Toki bot* 」*────`;
         env(texts);
-        break
-      case 'tmprem':
-        if (isOwner) return env('recurso so pro dono');
-        const listvip = JSON.parse(fs.readFileSync('./db/json/premium.json'));
+        break;
+      case "tmprem":
+        if (isOwner) return env("recurso so pro dono");
+        const listvip = JSON.parse(fs.readFileSync("./db/json/premium.json"));
         const deret = premium.getAllPremiumUser(_premium);
-        teks = '╭──────────────╮ \n│            *LISTA DE VIPS*\n╞─────╮ ▽ ╭─────╯\n│\n';
+        teks =
+          "╭──────────────╮ \n│            *LISTA DE VIPS*\n╞─────╮ ▽ ╭─────╯\n│\n";
         let count = 1;
         let users = [];
         for (let i = 0; i < deret.length; i++) {
-          const pitin = `${premium.getAllPremiumUser(_premium)[i].replace('@c.us', '')}`;
-          const tes7 = pitin.replace('@s.whatsapp.net', '');
-          const checkExp = ms(premium.getPremiumExpired(deret[i], _premium) - Date.now());
+          const pitin = `${premium
+            .getAllPremiumUser(_premium)
+            [i].replace("@c.us", "")}`;
+          const tes7 = pitin.replace("@s.whatsapp.net", "");
+          const checkExp = ms(
+            premium.getPremiumExpired(deret[i], _premium) - Date.now()
+          );
           pinga = `Dia ${checkExp.days}`;
-          const day = checkExp.days || '0';
-          const hours = checkExp.hours || '0';
-          const minuto = checkExp.minutes || '0';
-          const segudos = 'sim';
-          const tpem = (day != '0' ? day + ' dias ' : '') + (hours != '0' ? hours + ' horas e ' : '') + (minuto != '0' ? minuto + ' minutos' : '');
+          const day = checkExp.days || "0";
+          const hours = checkExp.hours || "0";
+          const minuto = checkExp.minutes || "0";
+          const segudos = "sim";
+          const tpem =
+            (day != "0" ? day + " dias " : "") +
+            (hours != "0" ? hours + " horas e " : "") +
+            (minuto != "0" ? minuto + " minutos" : "");
           teks += `│ *Usuário:* @${tes7}\n│ *Tempo*: ${tpem}\n│\n`;
-          users.push(tes7 + '@s.whatsapp.net');
+          users.push(tes7 + "@s.whatsapp.net");
         }
         teks += `│👨🏽‍💻 *Total* : ${listvip.length}\n╰──────────────╯`;
         conn.sendMessage(from, { text: teks.trim(), mentions: users });
-        break
-      case 'prem':
-        if (isOwner) return env('recurso so pro dono');
-        mentioned = mek.message.extendedTextMessage.contextInfo.mentionedJid
-        if (args[0] === 'add') {
+        break;
+      case "prem":
+        if (isOwner) return env("recurso so pro dono");
+        mentioned = mek.message.extendedTextMessage.contextInfo.mentionedJid;
+        if (args[0] === "add") {
           if (mentioned.length === 1) {
             for (let prem of mentioned) {
-              if (prem === isOwner) return await env('Apenas meu Owner pode usar esse comando')
-              premium.addPremiumUser(prem, args[2], _premium)
-              await env(`*── 「 PREMIUM 」 ──*\n\n➸ *ID*: ${prem}\n➸ *Expira em:* ${ms(toMs(args[2])).days} dia(s) ${ms(toMs(args[2])).hours} hora(s) ${ms(toMs(args[2])).minutes} minuto(s)`)
-              conn.sendMessage(prem, { text: `── 「 PREMIUM 」 ──\n\nVocê agora é um membro vip❤️\n\n➸ *seu vip expira em:* ${ms(toMs(args[2])).days} dia(s) ${ms(toMs(args[2])).hours} hora(s) ${ms(toMs(args[2])).minutes} minuto(s)*` })
+              if (prem === isOwner)
+                return await env("Apenas meu Owner pode usar esse comando");
+              premium.addPremiumUser(prem, args[2], _premium);
+              await env(
+                `*── 「 PREMIUM 」 ──*\n\n➸ *ID*: ${prem}\n➸ *Expira em:* ${
+                  ms(toMs(args[2])).days
+                } dia(s) ${ms(toMs(args[2])).hours} hora(s) ${
+                  ms(toMs(args[2])).minutes
+                } minuto(s)`
+              );
+              conn.sendMessage(prem, {
+                text: `── 「 PREMIUM 」 ──\n\nVocê agora é um membro vip❤️\n\n➸ *seu vip expira em:* ${
+                  ms(toMs(args[2])).days
+                } dia(s) ${ms(toMs(args[2])).hours} hora(s) ${
+                  ms(toMs(args[2])).minutes
+                } minuto(s)*`,
+              });
             }
           } else {
-            premium.addPremiumUser(args[1] + '@s.whatsapp.net', args[2], _premium)
-            await env(`*── 「 PREMIUM 」 ──*\n\n➸ *ID*: ${args[1]}@c.us\n➸ *Expira em:* ${ms(toMs(args[2])).days} dia(s) ${ms(toMs(args[2])).hours} hora(s) ${ms(toMs(args[2])).minutes} minuto(s)`)
-            await conn.sendMessage(args[1] + '@s.whatsapp.net', { text: `── 「 PREMIUM 」 ──\n\nVocê agora é um membro vip❤️\n\n➸ *seu vip expira em:* ${ms(toMs(args[2])).days} dia(s) ${ms(toMs(args[2])).hours} hora(s) ${ms(toMs(args[2])).minutes} minuto(s)` });
+            premium.addPremiumUser(
+              args[1] + "@s.whatsapp.net",
+              args[2],
+              _premium
+            );
+            await env(
+              `*── 「 PREMIUM 」 ──*\n\n➸ *ID*: ${
+                args[1]
+              }@c.us\n➸ *Expira em:* ${ms(toMs(args[2])).days} dia(s) ${
+                ms(toMs(args[2])).hours
+              } hora(s) ${ms(toMs(args[2])).minutes} minuto(s)`
+            );
+            await conn.sendMessage(args[1] + "@s.whatsapp.net", {
+              text: `── 「 PREMIUM 」 ──\n\nVocê agora é um membro vip❤️\n\n➸ *seu vip expira em:* ${
+                ms(toMs(args[2])).days
+              } dia(s) ${ms(toMs(args[2])).hours} hora(s) ${
+                ms(toMs(args[2])).minutes
+              } minuto(s)`,
+            });
           }
-        } else if (args[0] === 'del') {
-          if (!premium.checkPremiumUser(args[1] + '@s.whatsapp.net', _premium)) return await env(`O usuário ${args[1]} não é um membro vip!`)
-          _premium.slice(premium.getPremiumPosition(args[1] + '@s.whatsapp.net', _premium), 1)
-          fs.writeFileSync('./db/json/premium.json', JSON.stringify(_premium))
-          await env('Erro')
+        } else if (args[0] === "del") {
+          if (!premium.checkPremiumUser(args[1] + "@s.whatsapp.net", _premium))
+            return await env(`O usuário ${args[1]} não é um membro vip!`);
+          _premium.slice(
+            premium.getPremiumPosition(args[1] + "@s.whatsapp.net", _premium),
+            1
+          );
+          fs.writeFileSync("./db/json/premium.json", JSON.stringify(_premium));
+          await env("Erro");
+        } else {
+          await env(
+            `${prefixobot + command} add ou ${prefixobot + command} del`
+          );
         }
-        else {
-          await env(`${prefixobot + command} add ou ${prefixobot + command} del`)
-        }
-        break
-      case 'gtoken':
-        if (isOwner) return env('Comando apenas pro meu dono')
-        if (body.slice(7).trim() == '') env('Pra quem será gerando o token?');
+        break;
+      case "gtoken":
+        if (isOwner) return env("Comando apenas pro meu dono");
+        if (body.slice(7).trim() == "") env("Pra quem será gerando o token?");
         [nome, temp] = body.slice(7).split("|");
-        if (!nome || !temp) return env('coloque os emojis que vc quer juntar separando-os com +\n exemplo: ¿joiemoji 😎+😝');
+        if (!nome || !temp)
+          return env(
+            "coloque os emojis que vc quer juntar separando-os com +\n exemplo: ¿joiemoji 😎+😝"
+          );
         const generateRandomString = (num) => {
-          const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-          let result1 = '';
+          const characters =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+          let result1 = "";
           const charactersLength = characters.length;
           for (let i = 0; i < num; i++) {
-            result1 += characters.charAt(Math.floor(Math.random() * charactersLength));
+            result1 += characters.charAt(
+              Math.floor(Math.random() * charactersLength)
+            );
           }
 
           return result1;
-        }
+        };
 
         const displayRandomString = () => {
-          let randomStringContainer = document.getElementById('random_string');
+          let randomStringContainer = document.getElementById("random_string");
           randomStringContainer.innerHTML = generateRandomString(8);
-        }
+        };
         console.log(generateRandomString(5));
 
         a = `*Nome:* ${nome}
 *Tempo:* ${temp}
-*Token:* ${generateRandomString(5)}-${generateRandomString(5)}-${generateRandomString(5)}-${generateRandomString(5)}`;
-        env(a)
-        break
-      case 'block':
-      case 'unblock':
-        if (isOwner) return env('Comando apenas pro meu dono')
-        const tim = args.join(" ")
+*Token:* ${generateRandomString(5)}-${generateRandomString(
+          5
+        )}-${generateRandomString(5)}-${generateRandomString(5)}`;
+        env(a);
+        break;
+      case "block":
+      case "unblock":
+        if (isOwner) return env("Comando apenas pro meu dono");
+        const tim = args.join(" ");
 
-        var mentioned = mek.message.extendedTextMessage.contextInfo.participant
-        var nuumero = mentioned.replace('@s.whatsapp.net', '')
+        var mentioned = mek.message.extendedTextMessage.contextInfo.participant;
+        var nuumero = mentioned.replace("@s.whatsapp.net", "");
 
-        var numero = tim.replace('-', '')
-        var number = numero.replace(' ', '')
-        var num = number.replace(' ', '')
-        var numss = num.replace('+', '')
-        if (command == 'block') {
-          await conn.updateBlockStatus(`${numss + nuumero}@s.whatsapp.net`, "block")
-          env('bloqueado com sucesso')
-        } else
-          if (command == 'unblock') {
-            conn.updateBlockStatus(`${numss + nuumero}@s.whatsapp.net`, "unblock")
-            env('Desbloqueado com sucesso!')
-          }
-        break
-      case 'join':
-      case 'entrar':
-        if (isOwner) return env('Comando apenas para meus donos')
-        if (!texto) return env('Cade o link do grupo')
-        if (!isUrl(args[0]) && !args[0].includes('whatsapp.com')) return env('Cade o link do grupo');
-        let grupin = args[0].split('https://chat.whatsapp.com/')[1]
-        await conn.groupAcceptInvite(grupin)
-        env('Entrandoooo');
-        break
+        var numero = tim.replace("-", "");
+        var number = numero.replace(" ", "");
+        var num = number.replace(" ", "");
+        var numss = num.replace("+", "");
+        if (command == "block") {
+          await conn.updateBlockStatus(
+            `${numss + nuumero}@s.whatsapp.net`,
+            "block"
+          );
+          env("bloqueado com sucesso");
+        } else if (command == "unblock") {
+          conn.updateBlockStatus(
+            `${numss + nuumero}@s.whatsapp.net`,
+            "unblock"
+          );
+          env("Desbloqueado com sucesso!");
+        }
+        break;
+      case "join":
+      case "entrar":
+        if (isOwner) return env("Comando apenas para meus donos");
+        if (!texto) return env("Cade o link do grupo");
+        if (!isUrl(args[0]) && !args[0].includes("whatsapp.com"))
+          return env("Cade o link do grupo");
+        let grupin = args[0].split("https://chat.whatsapp.com/")[1];
+        await conn.groupAcceptInvite(grupin);
+        env("Entrandoooo");
+        break;
 
-      case 'owner':
-      case 'dono':
+      case "owner":
+      case "dono":
         pinga = `Nome: silasn
 Idade: False,
 Frase preferida: Há duas coisas infinitas: o Universo e a tolice dos Homens.`;
         // em menu de link..//conn.sendMessage(from, {text: pinga, footer: 'Escolha um formato de contato abaixo', templateButtons: [ {index: 1, urlButton: {displayText: 'Whatsapp', url: 'https://wa.me/qr/LCOHSK2URVRXG1'}}, {index: 2, urlButton: {displayText: 'Instagram', url: 'https://instagram.com/sla_silasn?utm_medium=copy_link'}} ]});
-        await conn.sendMessage(from, { contacts: { displayName: 'silasn', contacts: [{ vcard }] } }, { quoted: contatomek })
-        break
-      case 'vcardowner':
-        const sentMsg = await conn.sendMessage(from, { contacts: { displayName: 'silasn', contacts: [{ vcard }] } }, { quoted: contatomek })
-        break
+        await conn.sendMessage(
+          from,
+          { contacts: { displayName: "silasn", contacts: [{ vcard }] } },
+          { quoted: contatomek }
+        );
+        break;
+      case "vcardowner":
+        const sentMsg = await conn.sendMessage(
+          from,
+          { contacts: { displayName: "silasn", contacts: [{ vcard }] } },
+          { quoted: contatomek }
+        );
+        break;
 
-      case 'eval':
-        if (!texto) return
-        if (texto == 'main') return env('...')
-        if (texto == 'rm') return env('...')
-        if (isOwner && isMods) return env('recurso so pro dono');
+      case "eval":
+        if (!texto) return;
+        if (texto == "main") return env("...");
+        if (texto == "rm") return env("...");
+        if (isOwner && isMods) return env("recurso so pro dono");
         try {
           eval(`(async () => {
           try {
@@ -2071,64 +2933,77 @@ Frase preferida: Há duas coisas infinitas: o Universo e a tolice dos Homens.`;
         }
         break;
 
-      case 'exec':
-        if (isOwner) return env('Somente meu proprietário');
-        let exexv = texto || 'ls';
+      case "exec":
+        if (isOwner) return env("Somente meu proprietário");
+        let exexv = texto || "ls";
 
         exec(exexv, (err, msg) => {
           if (err) return env(err.message);
           if (msg) return env(msg);
         });
-        break
-
-      case 'mek':
-        conn.sendMessage(from, { text: JSON.stringify(updateM, null, '\t') }, { quoted: mek });
         break;
 
-      case 'reiniciar':
-      case 'resetar':
-        if (isOwner && isMods) return env(';-;')
-        env(`reiniciando...`)
-        setTimeout(() => {
-          process.exit(1)
-          env(`Prontinho ${pushname}`);
-        }, 3000)
-        break
+      case "mek":
+        conn.sendMessage(
+          from,
+          { text: JSON.stringify(updateM, null, "\t") },
+          { quoted: mek }
+        );
+        break;
 
-      case 'ping':
-      case 'status':
+      case "reiniciar":
+      case "resetar":
+        if (isOwner && isMods) return env(";-;");
+        env(`reiniciando...`);
+        setTimeout(() => {
+          process.exit(1);
+          env(`Prontinho ${pushname}`);
+        }, 3000);
+        break;
+
+      case "ping":
+      case "status":
         {
-          const used = process.memoryUsage()
-          const ram2 = `${(process.memoryUsage().heapUsed / 859 / 859).toFixed(2)}MB / ${Math.round(require('os').totalmem / 859 / 859)}MB`
-          const cpus = os.cpus().map(cpu => {
-            cpu.total = Object.keys(cpu.times).reduce((last, type) => last + cpu.times[type], 0)
-            return cpu
-          })
-          const cpu = cpus.reduce((last, cpu, _, { length }) => {
-            last.total += cpu.total
-            last.speed += cpu.speed / length
-            last.times.user += cpu.times.user
-            last.times.nice += cpu.times.nice
-            last.times.sys += cpu.times.sys
-            last.times.idle += cpu.times.idle
-            last.times.irq += cpu.times.irq
-            return last
-          }, {
-            speed: 0,
-            total: 0,
-            times: {
-              user: 0,
-              nice: 0,
-              sys: 0,
-              idle: 0,
-              irq: 0
+          const used = process.memoryUsage();
+          const ram2 = `${(process.memoryUsage().heapUsed / 859 / 859).toFixed(
+            2
+          )}MB / ${Math.round(require("os").totalmem / 859 / 859)}MB`;
+          const cpus = os.cpus().map((cpu) => {
+            cpu.total = Object.keys(cpu.times).reduce(
+              (last, type) => last + cpu.times[type],
+              0
+            );
+            return cpu;
+          });
+          const cpu = cpus.reduce(
+            (last, cpu, _, { length }) => {
+              last.total += cpu.total;
+              last.speed += cpu.speed / length;
+              last.times.user += cpu.times.user;
+              last.times.nice += cpu.times.nice;
+              last.times.sys += cpu.times.sys;
+              last.times.idle += cpu.times.idle;
+              last.times.irq += cpu.times.irq;
+              return last;
+            },
+            {
+              speed: 0,
+              total: 0,
+              times: {
+                user: 0,
+                nice: 0,
+                sys: 0,
+                idle: 0,
+                irq: 0,
+              },
             }
-          })
-          let timestamp = speed()
-          let latensi = speed() - timestamp
-          neww = performance.now()
-          oldd = performance.now()
-          const platform = os.platform()[0].toUpperCase() + os.platform().slice(1);
+          );
+          let timestamp = speed();
+          let latensi = speed() - timestamp;
+          neww = performance.now();
+          oldd = performance.now();
+          const platform =
+            os.platform()[0].toUpperCase() + os.platform().slice(1);
 
           respon = `
 ╭───〈 *INFORMAÇÕES DO BOT* 〉
@@ -2141,7 +3016,14 @@ Frase preferida: Há duas coisas infinitas: o Universo e a tolice dos Homens.`;
 │➸ *Tempo ativo:* ${runtime(process.uptime())} 
 │➸ *Memória sendo usada:* 
 │
-${Object.keys(used).map((key, _, arr) => `│${key.padEnd(Math.max(...arr.map(v => v.length)), ' ')}: ${formatp(used[key])}`).join('\n')} 
+${Object.keys(used)
+  .map(
+    (key, _, arr) =>
+      `│${key.padEnd(Math.max(...arr.map((v) => v.length)), " ")}: ${formatp(
+        used[key]
+      )}`
+  )
+  .join("\n")} 
 │
 ╰──────────────────
 
@@ -2152,26 +3034,27 @@ ${Object.keys(used).map((key, _, arr) => `│${key.padEnd(Math.max(...arr.map(v 
 │➸ Uso da ram : *${ram2}*
 │➸ Plataforma : ${platform}
 │
-╰──────────────────`
-          env(respon)
+╰──────────────────`;
+          env(respon);
         }
-        break
+        break;
       //FIM
-
 
       //RPG MEDIEVAL
 
-      case 'manualrpg':
-        if (!isGroup) return env('Comando apenas para grupo')
+      case "manualrpg":
+        if (!isGroup) return env("Comando apenas para grupo");
         var sections = [
           {
             title: "Registro de dados.",
             rows: [
-              { title: "Cadastrar nome e Idade ", rowId: `${prefixobot}nickname` }
-
-            ]
-          }
-        ]
+              {
+                title: "Cadastrar nome e Idade ",
+                rowId: `${prefixobot}nickname`,
+              },
+            ],
+          },
+        ];
 
         const racatxtma = `Para está participando do rpg via whatsapp, bastar seguir as etapas abaixo.😉`;
 
@@ -2180,13 +3063,15 @@ ${Object.keys(used).map((key, _, arr) => `│${key.padEnd(Math.max(...arr.map(v 
           footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD-PRIVATE",
           title: "\t\t\t*MANUAL DO RPG*",
           buttonText: "Selecione aqui para começar.",
-          sections
-        }
+          sections,
+        };
 
-        const sendene = await conn.sendMessage(from, sendbemtx, { quoted: mek })
-        break
-      case 'test':
-        if (isOwner) return env('recurso so pro dono');
+        const sendene = await conn.sendMessage(from, sendbemtx, {
+          quoted: mek,
+        });
+        break;
+      case "test":
+        if (isOwner) return env("recurso so pro dono");
 
         let ferroarma = `Blonze\n\nDefesa: +7   Ataque: +5\nResidência: 9+    Velocidade: +4`;
         let bronzearm = `Ferro\n\nDefesa: +10     Ataque: +5\nResidência: 11+      Velocidade: +8`;
@@ -2197,36 +3082,57 @@ ${Object.keys(used).map((key, _, arr) => `│${key.padEnd(Math.max(...arr.map(v 
           {
             title: "🇵 🇪 🇮 🇹 🇴 🇷 🇦 🇱 ",
             rows: [
-              { title: "Blonze", rowId: `${prefixobot}helmetrpg Bronze\n\nDefesa: +7   Ataque: +5\nResidência: 9+    Velocidade: +4`, description: "Defesa: +7   Ataque: +5\nResidência: 9+    Velocidade: +4" },
+              {
+                title: "Blonze",
+                rowId: `${prefixobot}helmetrpg Bronze\n\nDefesa: +7   Ataque: +5\nResidência: 9+    Velocidade: +4`,
+                description:
+                  "Defesa: +7   Ataque: +5\nResidência: 9+    Velocidade: +4",
+              },
 
-              { title: "Ferro", rowId: `${prefixobot}helmetrpg Ferro\n\nDefesa: +10     Ataque: +5\nResidência: 11+      Velocidade: +8`, description: "Defesa: +10     Ataque: +5\nResidência: 11+      Velocidade: +8" },
+              {
+                title: "Ferro",
+                rowId: `${prefixobot}helmetrpg Ferro\n\nDefesa: +10     Ataque: +5\nResidência: 11+      Velocidade: +8`,
+                description:
+                  "Defesa: +10     Ataque: +5\nResidência: 11+      Velocidade: +8",
+              },
 
-              { title: "Escalating Diamond", rowId: `${prefixobot}helmetrpg Escalating Diamond\n\nDefesa: +15     Ataque: +7\nResidência: 15+      Velocidade: +11`, description: "Defesa: +15     Ataque: +7\nResidência: 15+      Velocidade: +11" },
+              {
+                title: "Escalating Diamond",
+                rowId: `${prefixobot}helmetrpg Escalating Diamond\n\nDefesa: +15     Ataque: +7\nResidência: 15+      Velocidade: +11`,
+                description:
+                  "Defesa: +15     Ataque: +7\nResidência: 15+      Velocidade: +11",
+              },
 
-              { title: "Underworld Soul Reaper", rowId: `${prefixobot}helmetrpg Underworld Soul Reaper\n\nDefesa: +21     Ataque: +19\nResidência: 19+      Velocidade: +14`, description: "Defesa: +21     Ataque: +19\nResidência: 19+      Velocidade: +14" }
-            ]
+              {
+                title: "Underworld Soul Reaper",
+                rowId: `${prefixobot}helmetrpg Underworld Soul Reaper\n\nDefesa: +21     Ataque: +19\nResidência: 19+      Velocidade: +14`,
+                description:
+                  "Defesa: +21     Ataque: +19\nResidência: 19+      Velocidade: +14",
+              },
+            ],
           },
           {
-            title: "🇦 🇴     🇸 🇪 🇱 🇪 🇨 🇮 🇴 🇳 🇦 🇷     🇪 🇸 🇸 🇦     🇴 🇵 🇨 🇦 🇴 ,    🇻 🇴 🇱 🇹 🇦 🇷 🇦     🇦 🇴     🇲 🇪 🇳 🇺     🇩 🇪     🇨 🇴 🇲 🇵 🇷 🇦 🇷",
-            rows: [
-              { title: "↩️", rowId: "option4" }
-            ]
+            title:
+              "🇦 🇴     🇸 🇪 🇱 🇪 🇨 🇮 🇴 🇳 🇦 🇷     🇪 🇸 🇸 🇦     🇴 🇵 🇨 🇦 🇴 ,    🇻 🇴 🇱 🇹 🇦 🇷 🇦     🇦 🇴     🇲 🇪 🇳 🇺     🇩 🇪     🇨 🇴 🇲 🇵 🇷 🇦 🇷",
+            rows: [{ title: "↩️", rowId: "option4" }],
           },
-        ]
+        ];
 
         const listArmadu = {
           text: "Faça sua armadura e elimine seus oponentes através de criatividade!",
           title: "⚔️ *Loja John Witcher* ⚔️",
           buttonText: "Arsenal de armaduras ",
-          sections
-        }
+          sections,
+        };
 
-        const peituralrpg = await conn.sendMessage(from, listArmadu, { quoted: mek })
-        break
+        const peituralrpg = await conn.sendMessage(from, listArmadu, {
+          quoted: mek,
+        });
+        break;
 
-      case 'inventário':
-      case 'inventario':
-        letcentralrpg = '120363023849383476@g.us';
+      case "inventário":
+      case "inventario":
+        letcentralrpg = "120363023849383476@g.us";
         let inventariopfg = ` ℹ️ *DADOS SOBRE USUÁRIO* ℹ️
 
 ${getNome(sender, letcentralrpg)}
@@ -2251,94 +3157,153 @@ Resistencia: +3  Velocidade: +7
 *Botas:* Botas de couro.`;
 
         env(inventariopfg);
-        break
+        break;
 
-      case 'nickname':
-        if (!isGroup) return env('Comando apenas para grupo')
-        if (body.slice(10).trim() == '') env(`Informe nome e Idade, separando-os com 
+      case "nickname":
+        if (!isGroup) return env("Comando apenas para grupo");
+        if (body.slice(10).trim() == "")
+          env(`Informe nome e Idade, separando-os com 
 /\n exemplo: ${prefixobot}nickname silas/20`);
         [nomepe, idadepe] = body.slice(10).split("/");
-        if (!nomepe || !idadepe) return env(`coloque o nome e idade separando-os.\n Exemplo: ${prefixobot}nickname silas/20`);
+        if (!nomepe || !idadepe)
+          return env(
+            `coloque o nome e idade separando-os.\n Exemplo: ${prefixobot}nickname silas/20`
+          );
         var sections = [
           {
             title: "Selecione uma das opções abaixo:",
             rows: [
-              { title: "Sim", rowId: `${prefixobot + `nicknameme10` + ` ` + `*Nome:*` + ` ` + nomepe + `\n` + `*Idade:*` + ` ` + idadepe}` },
-              { title: "Não", rowId: "option4" }
-            ]
-          }
-        ]
+              {
+                title: "Sim",
+                rowId: `${
+                  prefixobot +
+                  `nicknameme10` +
+                  ` ` +
+                  `*Nome:*` +
+                  ` ` +
+                  nomepe +
+                  `\n` +
+                  `*Idade:*` +
+                  ` ` +
+                  idadepe
+                }`,
+              },
+              { title: "Não", rowId: "option4" },
+            ],
+          },
+        ];
 
         const dadosnomerpg = {
           text: `*Nome:* ${nomepe}\n*Idade!* ${idadepe}`,
           title: "Confirma os dados abaixo?",
           buttonText: "confirmar aqui",
-          sections
-        }
+          sections,
+        };
 
-        const sendNomeRog = await conn.sendMessage(from, dadosnomerpg, { quoted: mek })
-        break
+        const sendNomeRog = await conn.sendMessage(from, dadosnomerpg, {
+          quoted: mek,
+        });
+        break;
 
-      case 'nicknameme10':
-        if (!isGroup) return env('Comando apenas para grupo')
-        let letcentralrpgg = '120363023849383476@g.us';
-        if (args.length < 1) return env('...')
-        addNome(sender, letcentralrpgg, args.join(' '))
+      case "nicknameme10":
+        if (!isGroup) return env("Comando apenas para grupo");
+        let letcentralrpgg = "120363023849383476@g.us";
+        if (args.length < 1) return env("...");
+        addNome(sender, letcentralrpgg, args.join(" "));
         let nicktruel = `✅ *Nome e idade registrando* ✅\n
-${args.join(' ')}
+${args.join(" ")}
 `;
 
-        conn.sendMessage(from, { text: nicktruel, footer: `Selecione o botão abaixo para próxima etapa.`, buttons: [{ buttonId: `${prefixobot}rançarpg`, buttonText: { displayText: 'Next step ⏯️' }, type: 1 }] }, { quoted: mek })
-        break
+        conn.sendMessage(
+          from,
+          {
+            text: nicktruel,
+            footer: `Selecione o botão abaixo para próxima etapa.`,
+            buttons: [
+              {
+                buttonId: `${prefixobot}rançarpg`,
+                buttonText: { displayText: "Next step ⏯️" },
+                type: 1,
+              },
+            ],
+          },
+          { quoted: mek }
+        );
+        break;
 
-      case 'helmetrpg':
-        if (!isGroup) return env('Comando apenas para grupo')
-        if (args.length < 1) return env('...')
-        let letcentralrpggg = '120363023849383476@g.us';
-        addProfissao(sender, letcentralrpggg, args.join(' '))
+      case "helmetrpg":
+        if (!isGroup) return env("Comando apenas para grupo");
+        if (args.length < 1) return env("...");
+        let letcentralrpggg = "120363023849383476@g.us";
+        addProfissao(sender, letcentralrpggg, args.join(" "));
         env(`✅ *Ítens comprando com sucesso* ✅*\n
-*Armadura:* ${args.join(' ')}
-`)
-        break
+*Armadura:* ${args.join(" ")}
+`);
+        break;
       //RAÇAS
-      case 'decentetes10':
-        if (!isGroup) return env('Comando apenas para grupo')
-        if (args.length < 1) return env('...');
-        let letcentrralrpg = '120363023849383476@g.us';
-        addRanca(sender, letcentrralrpg, args.join(' '))
+      case "decentetes10":
+        if (!isGroup) return env("Comando apenas para grupo");
+        if (args.length < 1) return env("...");
+        let letcentrralrpg = "120363023849383476@g.us";
+        addRanca(sender, letcentrralrpg, args.join(" "));
         let textran = `✅ Raça e Região registrando ✅*\n
-${args.join(' ')}
+${args.join(" ")}
 `;
-        conn.sendMessage(from, { text: textran, footer: `Selecione o botão abaixo para seu inventário!.`, buttons: [{ buttonId: `${prefixobot} inventário`, buttonText: { displayText: 'Abrir inventário 📦' }, type: 1 }] }, { quoted: mek })
-        break
+        conn.sendMessage(
+          from,
+          {
+            text: textran,
+            footer: `Selecione o botão abaixo para seu inventário!.`,
+            buttons: [
+              {
+                buttonId: `${prefixobot} inventário`,
+                buttonText: { displayText: "Abrir inventário 📦" },
+                type: 1,
+              },
+            ],
+          },
+          { quoted: mek }
+        );
+        break;
 
-      case 'decentes':
-        if (!isGroup) return env('Comando apenas para grupo');
-        if (body.slice(10).trim() == '') env(`coloque a raça e região separando-os.\n Exemplo: ${prefixobot}decentetes10 Spriggan/Sudeste`);
+      case "decentes":
+        if (!isGroup) return env("Comando apenas para grupo");
+        if (body.slice(10).trim() == "")
+          env(
+            `coloque a raça e região separando-os.\n Exemplo: ${prefixobot}decentetes10 Spriggan/Sudeste`
+          );
         [especie, regiaorpg] = body.slice(10).split("/");
-        if (!especie || !regiaorpg) return env(`coloque a raça e região separando-os.\n Exemplo: ${prefixobot}decentetes10 Spriggan/Sudeste`);
+        if (!especie || !regiaorpg)
+          return env(
+            `coloque a raça e região separando-os.\n Exemplo: ${prefixobot}decentetes10 Spriggan/Sudeste`
+          );
         var sections = [
           {
             title: "Selecione uma das opções abaixo:",
             rows: [
-              { title: "Sim", rowId: `${prefixobot}decentetes10 *Especie:* ${especie}\n*Região:* ${regiaorpg}` },
-              { title: "Não", rowId: "option4" }
-            ]
-          }
-        ]
+              {
+                title: "Sim",
+                rowId: `${prefixobot}decentetes10 *Especie:* ${especie}\n*Região:* ${regiaorpg}`,
+              },
+              { title: "Não", rowId: "option4" },
+            ],
+          },
+        ];
 
         const dadoseso = {
           text: `*Espécie:* ${especie}\n*Região* ${regiaorpg}`,
           title: "Confirma os dados abaixo?",
           buttonText: "Confirmar aqui",
-          sections
-        }
+          sections,
+        };
 
-        const sendcong = await conn.sendMessage(from, dadoseso, { quoted: mek })
-        break
+        const sendcong = await conn.sendMessage(from, dadoseso, {
+          quoted: mek,
+        });
+        break;
 
-      case 'rançarpg':
-        if (!isGroup) return env('Comando apenas para grupo')
+      case "rançarpg":
+        if (!isGroup) return env("Comando apenas para grupo");
         var sections = [
           {
             title: "Raças disponível",
@@ -2352,10 +3317,10 @@ ${args.join(' ')}
               { title: "Cait Sith", rowId: `${prefixobot}caitsith` },
               { title: "Gnomo", rowId: `${prefixobot}gnomo` },
               { title: "Puca", rowId: `${prefixobot}puca` },
-              { title: "Imp", rowId: `${prefixobot}imp` }
-            ]
-          }
-        ]
+              { title: "Imp", rowId: `${prefixobot}imp` },
+            ],
+          },
+        ];
 
         const racatxt = `Nove raças de fadas, cujo objetivo é chegar ao topo!. Você deve ter certeza de escolha de sua RAÇA, de acordo com sua personalidade e preferência. Pois uma vez escolhida, NÃO poderá ser mudado o seu registro. Leia tudo com calma e faça a escolha certa.`;
 
@@ -2364,15 +3329,17 @@ ${args.join(' ')}
           footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD-PRIVATE",
           title: "\t\t\t*Raças*",
           buttonText: "Selecione aqui",
-          sections
-        }
+          sections,
+        };
 
-        const rancapersonagem = await conn.sendMessage(from, msgrpgbem, { quoted: mek })
-        break
+        const rancapersonagem = await conn.sendMessage(from, msgrpgbem, {
+          quoted: mek,
+        });
+        break;
 
-      case 'navigation':
-        if (!isGroup) return env('Comando apenas para grupo')
-        if (isMods) return env('Só mods podem virar Navigation');
+      case "navigation":
+        if (!isGroup) return env("Comando apenas para grupo");
+        if (isMods) return env("Só mods podem virar Navigation");
         let navigation = `\t\t\t\t*Navigation Pixie [NPC]*
 
 *Nome:* Navigation Pixie [ピクシーナビゲーション].
@@ -2388,11 +3355,31 @@ ${args.join(' ')}
 *Descrição:* A Navigation Pixie é um programa de caráter pseudo para suporte ao usuário em Alfheim Online. Esses duendes são normalmente utilizados por jogadores que pagar taxas adicionais, a fim de receber informações básicas do sistema através de vozes sintetizadas (presumivelmente para servir mapas da área e tal). Eles também podem verificar as áreas para os outros jogadores.
 `;
 
-        conn.sendMessage(from, { image: { url: './rpg/raças/navigation.jpg' }, caption: navigation, footer: '✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD', buttons: [{ buttonId: `${prefixobot}decentes ?/?`, buttonText: { displayText: 'Comfimar.' }, type: 1 }, { buttonId: `${prefixobot}rançarpg`, buttonText: { displayText: 'Escolher outra raça.' }, type: 1 }] }, { quoted: mek });
-        break
+        conn.sendMessage(
+          from,
+          {
+            image: { url: "./rpg/raças/navigation.jpg" },
+            caption: navigation,
+            footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
+            buttons: [
+              {
+                buttonId: `${prefixobot}decentes ?/?`,
+                buttonText: { displayText: "Comfimar." },
+                type: 1,
+              },
+              {
+                buttonId: `${prefixobot}rançarpg`,
+                buttonText: { displayText: "Escolher outra raça." },
+                type: 1,
+              },
+            ],
+          },
+          { quoted: mek }
+        );
+        break;
 
-      case 'spriggan':
-        if (!isGroup) return env('Comando apenas para grupo')
+      case "spriggan":
+        if (!isGroup) return env("Comando apenas para grupo");
         let spriggan = `\t\t\t\t*Spriggan*
 
 *Nome:* Spriggan [スプリガン]
@@ -2428,11 +3415,31 @@ Os Spriggans são capazes de empunhar qualquer tipo de arma.
 *Night Vision:*
 Spriggans são conhecidos por terem visão noturna, permitindo que eles sejam capazes de ver na escuridão quase total. Eles também são capazes de lançar um buff que dá aos outros as mesmas habilidades.`;
 
-        conn.sendMessage(from, { image: { url: './rpg/raças/spriggan.jpg' }, caption: spriggan, footer: '✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD', buttons: [{ buttonId: `${prefixobot}decentes Spriggan/Norte-Oeste `, buttonText: { displayText: 'Comfimar.' }, type: 1 }, { buttonId: `${prefixobot}rançarpg`, buttonText: { displayText: 'Escolher outra raça.' }, type: 1 }] }, { quoted: mek });
-        break
+        conn.sendMessage(
+          from,
+          {
+            image: { url: "./rpg/raças/spriggan.jpg" },
+            caption: spriggan,
+            footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
+            buttons: [
+              {
+                buttonId: `${prefixobot}decentes Spriggan/Norte-Oeste `,
+                buttonText: { displayText: "Comfimar." },
+                type: 1,
+              },
+              {
+                buttonId: `${prefixobot}rançarpg`,
+                buttonText: { displayText: "Escolher outra raça." },
+                type: 1,
+              },
+            ],
+          },
+          { quoted: mek }
+        );
+        break;
 
-      case 'salamander':
-        if (!isGroup) return env('Comando apenas para grupo')
+      case "salamander":
+        if (!isGroup) return env("Comando apenas para grupo");
         let salamander = `\t\t\t\t*Salamander*
 
 *Nome:* Salamander [サンショウウオ
@@ -2459,11 +3466,31 @@ Embora eles são capazes de aprender e usar outros tipos de magia, Salamanders  
 Salamaders são conhecidos por serem os jogadores mais fortes em Alfheim Online quando se trata de força física.
 `;
 
-        conn.sendMessage(from, { image: { url: './rpg/raças/salamander.jpg' }, caption: salamander, footer: '✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD', buttons: [{ buttonId: `${prefixobot}decentes Salamander/Sul`, buttonText: { displayText: 'Comfimar.' }, type: 1 }, { buttonId: `${prefixobot}rançarpg`, buttonText: { displayText: 'Escolher outra raça.' }, type: 1 }] }, { quoted: mek });
-        break
+        conn.sendMessage(
+          from,
+          {
+            image: { url: "./rpg/raças/salamander.jpg" },
+            caption: salamander,
+            footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
+            buttons: [
+              {
+                buttonId: `${prefixobot}decentes Salamander/Sul`,
+                buttonText: { displayText: "Comfimar." },
+                type: 1,
+              },
+              {
+                buttonId: `${prefixobot}rançarpg`,
+                buttonText: { displayText: "Escolher outra raça." },
+                type: 1,
+              },
+            ],
+          },
+          { quoted: mek }
+        );
+        break;
 
-      case 'sylph':
-        if (!isGroup) return env('Comando apenas para grupo')
+      case "sylph":
+        if (!isGroup) return env("Comando apenas para grupo");
         let sylph = `\t\t\t\t*Sylph*
 
 *Nome:* Sylph [フタオハチドリ].
@@ -2497,11 +3524,31 @@ Apesar de serem capazes de aprender outros tipos de magia, através da prática 
 Como uma das raças leves, os Sylphs são capazes de usar a habilidade Wall Run, que, como o nome sugere, permite-lhes andar temporariamente nas paredes. O limite normal a uma distância de dez metros, mas aqueles com uma velocidade extremamente alta são conhecidos por serem capazes de funcionar durante cerca de trinta metros.
 `;
 
-        conn.sendMessage(from, { image: { url: './rpg/raças/sylph.jpg' }, caption: sylph, footer: '✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD', buttons: [{ buttonId: `${prefixobot}decentes Sylph/Sudoeste`, buttonText: { displayText: 'Comfimar.' }, type: 1 }, { buttonId: `${prefixobot}rançarpg`, buttonText: { displayText: 'Escolher outra raça.' }, type: 1 }] }, { quoted: mek });
-        break
+        conn.sendMessage(
+          from,
+          {
+            image: { url: "./rpg/raças/sylph.jpg" },
+            caption: sylph,
+            footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
+            buttons: [
+              {
+                buttonId: `${prefixobot}decentes Sylph/Sudoeste`,
+                buttonText: { displayText: "Comfimar." },
+                type: 1,
+              },
+              {
+                buttonId: `${prefixobot}rançarpg`,
+                buttonText: { displayText: "Escolher outra raça." },
+                type: 1,
+              },
+            ],
+          },
+          { quoted: mek }
+        );
+        break;
 
-      case 'leprechaun':
-        if (!isGroup) return env('Comando apenas para grupo')
+      case "leprechaun":
+        if (!isGroup) return env("Comando apenas para grupo");
         let leprechaun = `\t\t\t\t*Leprechaun*
 
 *Nome:* Leprechaun [レプラコーン].
@@ -2525,11 +3572,31 @@ Apesar da diferença entre a aparência das suas asas, Leprechauns são capazes 
 Leprechauns são conhecidos como a raça ferreiro. Eles são capazes de criar armas de alta qualidade e equipamentos que podem ser vendidos a outros jogadores.
 `;
 
-        conn.sendMessage(from, { image: { url: './rpg/raças/leprechaun.jpg' }, caption: leprechaun, footer: '✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD', buttons: [{ buttonId: `${prefixobot}decentes Leprechaun/Norte`, buttonText: { displayText: 'Comfimar.' }, type: 1 }, { buttonId: `${prefixobot}rançarpg`, buttonText: { displayText: 'Escolher outra raça.' }, type: 1 }] }, { quoted: mek });
-        break
+        conn.sendMessage(
+          from,
+          {
+            image: { url: "./rpg/raças/leprechaun.jpg" },
+            caption: leprechaun,
+            footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
+            buttons: [
+              {
+                buttonId: `${prefixobot}decentes Leprechaun/Norte`,
+                buttonText: { displayText: "Comfimar." },
+                type: 1,
+              },
+              {
+                buttonId: `${prefixobot}rançarpg`,
+                buttonText: { displayText: "Escolher outra raça." },
+                type: 1,
+              },
+            ],
+          },
+          { quoted: mek }
+        );
+        break;
 
-      case 'undine':
-        if (!isGroup) return env('Comando apenas para grupo')
+      case "undine":
+        if (!isGroup) return env("Comando apenas para grupo");
         let undine = `\t\t\t\t*Undine*
 
 *Nome:* Undine [ウンディーネ].
@@ -2557,11 +3624,31 @@ Embora capaz de usar outros tipos de magia, os Undines são especialistas em usa
 Como uma das raças leves, as Ondinas são capazes de usar a habilidade Wall Run, que, como o nome sugere, permite-lhes andar temporariamente nas paredes. O limite normal a uma distância de dez metros, mas aqueles com uma velocidade extremamente alta corrida são conhecidos por serem capazes de durante cerca de trinta metros.
 `;
 
-        conn.sendMessage(from, { image: { url: './rpg/raças/undine.jpg' }, caption: undine, footer: '✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD', buttons: [{ buttonId: `${prefixobot}decentes Undine/Leste`, buttonText: { displayText: 'Comfimar.' }, type: 1 }, { buttonId: `${prefixobot}rançarpg`, buttonText: { displayText: 'Escolher outra raça.' }, type: 1 }] }, { quoted: mek });
-        break
+        conn.sendMessage(
+          from,
+          {
+            image: { url: "./rpg/raças/undine.jpg" },
+            caption: undine,
+            footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
+            buttons: [
+              {
+                buttonId: `${prefixobot}decentes Undine/Leste`,
+                buttonText: { displayText: "Comfimar." },
+                type: 1,
+              },
+              {
+                buttonId: `${prefixobot}rançarpg`,
+                buttonText: { displayText: "Escolher outra raça." },
+                type: 1,
+              },
+            ],
+          },
+          { quoted: mek }
+        );
+        break;
 
-      case 'caitsith':
-        if (!isGroup) return env('Comando apenas para grupo')
+      case "caitsith":
+        if (!isGroup) return env("Comando apenas para grupo");
         let caitsith = `\t\t\t\t*Cait Sith*
 
 *Nome:* Cait Sith [ケットシー].
@@ -2588,11 +3675,31 @@ Cait Siths, como os Sylphs, são conhecidos por serem extremamente ágil. Eles s
 *Wall Run:*
 Como uma das corridas leves, os Siths Cait são capazes de usar o Wall Run habilidade, que, como o nome sugere, permite-lhes andar temporariamente nas paredes. O limite normal é uma distância de dez metros, mas aqueles com uma velocidade extremamente alta são conhecidos por serem capazes de fazer durante cerca de trinta metros.`;
 
-        conn.sendMessage(from, { image: { url: './rpg/raças/caitsith.jpg' }, caption: caitsith, footer: '✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD', buttons: [{ buttonId: `${prefixobot}decentes  Cait Sith/Oeste`, buttonText: { displayText: 'Comfimar.' }, type: 1 }, { buttonId: `${prefixobot}rançarpg`, buttonText: { displayText: 'Escolher outra raça.' }, type: 1 }] }, { quoted: mek });
-        break
+        conn.sendMessage(
+          from,
+          {
+            image: { url: "./rpg/raças/caitsith.jpg" },
+            caption: caitsith,
+            footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
+            buttons: [
+              {
+                buttonId: `${prefixobot}decentes  Cait Sith/Oeste`,
+                buttonText: { displayText: "Comfimar." },
+                type: 1,
+              },
+              {
+                buttonId: `${prefixobot}rançarpg`,
+                buttonText: { displayText: "Escolher outra raça." },
+                type: 1,
+              },
+            ],
+          },
+          { quoted: mek }
+        );
+        break;
 
-      case 'gnomo':
-        if (!isGroup) return env('Comando apenas para grupo')
+      case "gnomo":
+        if (!isGroup) return env("Comando apenas para grupo");
         let gnomo = `\t\t\t\t*Gnomo*
 
 *Nome:* Gnome [ノーム].
@@ -2615,11 +3722,31 @@ Similar às outras raças, gnomos são capazes de brotar asas que lhes permitem 
 *Earth Magic:*
 Embora eles são capazes de aprender outros tipos de magia, através da prática difícil, Gnomos são conhecidos por serem os mestres da Earth Magic.`;
 
-        conn.sendMessage(from, { image: { url: './rpg/raças/gnomo.jpg' }, caption: gnomo, footer: '✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD', buttons: [{ buttonId: `${prefixobot}decentes Gnomo/Norte`, buttonText: { displayText: 'Comfimar.' }, type: 1 }, { buttonId: `${prefixobot}rançarpg`, buttonText: { displayText: 'Escolher outra raça.' }, type: 1 }] }, { quoted: mek });
-        break
+        conn.sendMessage(
+          from,
+          {
+            image: { url: "./rpg/raças/gnomo.jpg" },
+            caption: gnomo,
+            footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
+            buttons: [
+              {
+                buttonId: `${prefixobot}decentes Gnomo/Norte`,
+                buttonText: { displayText: "Comfimar." },
+                type: 1,
+              },
+              {
+                buttonId: `${prefixobot}rançarpg`,
+                buttonText: { displayText: "Escolher outra raça." },
+                type: 1,
+              },
+            ],
+          },
+          { quoted: mek }
+        );
+        break;
 
-      case 'puca':
-        if (!isGroup) return env('Comando apenas para grupo')
+      case "puca":
+        if (!isGroup) return env("Comando apenas para grupo");
         let puca = `\t\t\t\t*Puca*
 
 *Nome:* Puca [プカ].
@@ -2642,11 +3769,31 @@ Pucas excelentes no uso de sons e música em combate. Ao tocar melodias simples,
 *Performance Containment:*
 Quando atingem um nível alto o suficiente, Pucas são capazes de "engarrafamento" e "preservar" as suas performances em um item. Quando o item é destampado, o desempenho dos Pucas pode ser ouvida como gotas de fluxo de luz prateada para fora da garrafa.`;
 
-        conn.sendMessage(from, { image: { url: './rpg/raças/puca.jpg' }, caption: puca, footer: '✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD', buttons: [{ buttonId: `${prefixobot}decentes Puca/Noroeste`, buttonText: { displayText: 'Comfimar.' }, type: 1 }, { buttonId: `${prefixobot} rançarpg`, buttonText: { displayText: 'Escolher outra raça.' }, type: 1 }] }, { quoted: mek });
-        break
+        conn.sendMessage(
+          from,
+          {
+            image: { url: "./rpg/raças/puca.jpg" },
+            caption: puca,
+            footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
+            buttons: [
+              {
+                buttonId: `${prefixobot}decentes Puca/Noroeste`,
+                buttonText: { displayText: "Comfimar." },
+                type: 1,
+              },
+              {
+                buttonId: `${prefixobot} rançarpg`,
+                buttonText: { displayText: "Escolher outra raça." },
+                type: 1,
+              },
+            ],
+          },
+          { quoted: mek }
+        );
+        break;
 
-      case 'imp':
-        if (!isGroup) return env('Comando apenas para grupo')
+      case "imp":
+        if (!isGroup) return env("Comando apenas para grupo");
         let improg = `\t\t\t\t*Imp*
 
 *Nome:* Imp [インプ].
@@ -2676,823 +3823,1390 @@ Como uma das corridas leves, os Imps são capazes de usar a habilidade Run Wall,
 *Night Vision:*
  Imps são conhecidos por terem visão noturna, permitindo-lhes ver na escuridão quase total. No entanto, esta capacidade é considerada apenas a ser a segunda à de um Spriggan.`;
 
-        conn.sendMessage(from, { image: { url: './rpg/raças/imp.jpg' }, caption: imprpg, footer: '✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD', buttons: [{ buttonId: `${prefixobot}decentes Imp/Sudeste`, buttonText: { displayText: 'Comfimar.' }, type: 1 }, { buttonId: `${prefixobot} rançarpg`, buttonText: { displayText: 'Escolher outra raça.' }, type: 1 }] }, { quoted: mek });
-        break
+        conn.sendMessage(
+          from,
+          {
+            image: { url: "./rpg/raças/imp.jpg" },
+            caption: imprpg,
+            footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
+            buttons: [
+              {
+                buttonId: `${prefixobot}decentes Imp/Sudeste`,
+                buttonText: { displayText: "Comfimar." },
+                type: 1,
+              },
+              {
+                buttonId: `${prefixobot} rançarpg`,
+                buttonText: { displayText: "Escolher outra raça." },
+                type: 1,
+              },
+            ],
+          },
+          { quoted: mek }
+        );
+        break;
 
       //FIM RPG
       //FRASES
 
-      case 'canada':
-      case 'canadá':
-        if (isMito && isOwner) return env('você não é o Canadá')
-        array = ['canada.webp', 'canada2.webp'];
+      case "canada":
+      case "canadá":
+        if (isMito && isOwner) return env("você não é o Canadá");
+        array = ["canada.webp", "canada2.webp"];
         archive = array[Math.floor(Math.random() * array.length)];
-        if (type == 'extendedTextMessage') {
+        if (type == "extendedTextMessage") {
           MessageKey = {
             key: {
               participant: info.extendedTextMessage.contextInfo.participant,
-              id: info.extendedTextMessage.contextInfo.stanzaId
+              id: info.extendedTextMessage.contextInfo.stanzaId,
             },
-            message: info.extendedTextMessage.contextInfo.quotedMessage
+            message: info.extendedTextMessage.contextInfo.quotedMessage,
           };
-          conn.sendMessage(from, { sticker: { url: `./complement/sticker/${archive}` } }, { quoted: MessageKey });
+          conn.sendMessage(
+            from,
+            { sticker: { url: `./complement/sticker/${archive}` } },
+            { quoted: MessageKey }
+          );
         } else {
-          conn.sendMessage(from, { sticker: { url: `./complement/sticker/${archive}` } }, { quoted: mek });
+          conn.sendMessage(
+            from,
+            { sticker: { url: `./complement/sticker/${archive}` } },
+            { quoted: mek }
+          );
         }
         break;
       //FIM
       //ATIVOS
 
-      case 'game':
-        if (!isMemberAdmin && isOwner) return env(mensagem[0].admin)
+      case "game":
+        if (!isMemberAdmin && isOwner) return env(mensagem[0].admin);
         if (!isBotAdm) return env(mensagem[0].botadmin);
         if (!isGroup) return env(mensagem[0].grupo);
         if (Number(args[0]) === 1) {
           if (isGame) return env(`Modo ${command} já está habilitado!`);
-          game.push(from)
-          fs.writeFileSync('./db/json/game.json', JSON.stringify(game))
-          env(`Modo *${command} habilitado* 🟢\n\nTodos os jogos foram liberados!`)
+          game.push(from);
+          fs.writeFileSync("./db/json/game.json", JSON.stringify(game));
+          env(
+            `Modo *${command} habilitado* 🟢\n\nTodos os jogos foram liberados!`
+          );
         } else if (Number(args[0]) === 0) {
-          if (!isGame) return env(`${command} já está desabilitado!`)
-          pesquisar = from
-          processo = game.indexOf(pesquisar)
+          if (!isGame) return env(`${command} já está desabilitado!`);
+          pesquisar = from;
+          processo = game.indexOf(pesquisar);
           while (processo >= 0) {
-            game.splice(processo, 1)
-            processo = welkom.indexOf(pesquisar)
+            game.splice(processo, 1);
+            processo = welkom.indexOf(pesquisar);
           }
-          fs.writeFileSync('./db/json/game.json', JSON.stringify(welkom))
-          env(`Modo *${command} desabilitado!* 🔴\n\nOs jogos foram bloqueados, para jogar é preciso que o ADM libere.`)
+          fs.writeFileSync("./db/json/game.json", JSON.stringify(welkom));
+          env(
+            `Modo *${command} desabilitado!* 🔴\n\nOs jogos foram bloqueados, para jogar é preciso que o ADM libere.`
+          );
         } else {
-          env(`${p + command} 1 para ligar ou ${p + command} 0 para desligar`)
+          env(`${p + command} 1 para ligar ou ${p + command} 0 para desligar`);
         }
-        break
+        break;
 
-      case 'nsfw':
-        if (!isMemberAdmin && isOwner) return env(mensagem[0].admin)
+      case "nsfw":
+        if (!isMemberAdmin && isOwner) return env(mensagem[0].admin);
         if (!isBotAdm) return env(mensagem[0].botadmin);
         if (!isGroup) return env(mensagem[0].grupo);
         if (Number(args[0]) === 1) {
           if (isNsfw) return env(`${command} já está habilitado!`);
-          nsfw.push(from)
-          fs.writeFileSync('./db/json/nsfw.json', JSON.stringify(nsfw))
-          env(`Modo *${command} habilitado* 🟢\n\nConteúdo +18 foi liberado neste grupo (somente usuário VIP pode ter acesso)!`)
+          nsfw.push(from);
+          fs.writeFileSync("./db/json/nsfw.json", JSON.stringify(nsfw));
+          env(
+            `Modo *${command} habilitado* 🟢\n\nConteúdo +18 foi liberado neste grupo (somente usuário VIP pode ter acesso)!`
+          );
         } else if (Number(args[0]) === 0) {
-          if (!isNsfw) return env(`${command} já está desabilitado!`)
-          pesquisar = from
-          processo = nsfw.indexOf(pesquisar)
+          if (!isNsfw) return env(`${command} já está desabilitado!`);
+          pesquisar = from;
+          processo = nsfw.indexOf(pesquisar);
           while (processo >= 0) {
-            nsfw.splice(processo, 1)
-            processo = welkom.indexOf(pesquisar)
+            nsfw.splice(processo, 1);
+            processo = welkom.indexOf(pesquisar);
           }
-          fs.writeFileSync('./db/json/nsfw.json', JSON.stringify(nsfw))
-          env(`Modo *${command} desabilitado!* 🔴\n\nO conteúdo +18 foi restringido.`)
+          fs.writeFileSync("./db/json/nsfw.json", JSON.stringify(nsfw));
+          env(
+            `Modo *${command} desabilitado!* 🔴\n\nO conteúdo +18 foi restringido.`
+          );
         } else {
-          env(`${p + command} 1 para ligar ou ${p + command} 0 para desligar`)
+          env(`${p + command} 1 para ligar ou ${p + command} 0 para desligar`);
         }
-        break
+        break;
 
-      case 'antipala':
-        if (!isMemberAdmin && isOwner) return env(mensagem[0].admin)
+      case "antipala":
+        if (!isMemberAdmin && isOwner) return env(mensagem[0].admin);
         if (!isBotAdm) return env(mensagem[0].botadmin);
         if (!isGroup) return env(mensagem[0].grupo);
         if (Number(args[0]) === 1) {
           if (isAntiPala) return env(`${command} já está habilitado!`);
-          antipala.push(from)
-          fs.writeFileSync('./db/json/antipala.json', JSON.stringify(antipala))
-          env(`Sistema de *${command} habilitado* 🟢\n\nInsultos não serão tolerados a partir de agora.`)
+          antipala.push(from);
+          fs.writeFileSync("./db/json/antipala.json", JSON.stringify(antipala));
+          env(
+            `Sistema de *${command} habilitado* 🟢\n\nInsultos não serão tolerados a partir de agora.`
+          );
         } else if (Number(args[0]) === 0) {
-          if (!isAntiPala) return env(`${command} já está desabilitado!`)
-          pesquisar = from
-          processo = antipala.indexOf(pesquisar)
+          if (!isAntiPala) return env(`${command} já está desabilitado!`);
+          pesquisar = from;
+          processo = antipala.indexOf(pesquisar);
           while (processo >= 0) {
-            antipala.splice(processo, 1)
-            processo = antipala.indexOf(pesquisar)
+            antipala.splice(processo, 1);
+            processo = antipala.indexOf(pesquisar);
           }
-          fs.writeFileSync('./db/json/antipala.json', JSON.stringify(antipala))
-          env(`Sistema de *${command} desabilitado!* 🔴\n\nQuem mandar palavrões não irá ser removido do grupo.`)
+          fs.writeFileSync("./db/json/antipala.json", JSON.stringify(antipala));
+          env(
+            `Sistema de *${command} desabilitado!* 🔴\n\nQuem mandar palavrões não irá ser removido do grupo.`
+          );
         } else {
-          env(`${p + command} 1 para ligar ou ${p + command} 0 para desligar`)
+          env(`${p + command} 1 para ligar ou ${p + command} 0 para desligar`);
         }
-        break
+        break;
 
-      case 'antiviewonce':
-      case 'antiview':
-        if (!isGroup) return env('Comando apenas para grupo')
+      case "antiviewonce":
+      case "antiview":
+        if (!isGroup) return env("Comando apenas para grupo");
         if (args[0] == "1") {
           if (isAntiVO) return env("Já está ativado!!");
           antiviewonce.push(from);
-          fs.writeFileSync("./db/json/antiviewonce.json", JSON.stringify(antiviewonce));
-          env('Antiviewonce foi ativado neste grupo!');
+          fs.writeFileSync(
+            "./db/json/antiviewonce.json",
+            JSON.stringify(antiviewonce)
+          );
+          env("Antiviewonce foi ativado neste grupo!");
         } else if (args[0] == "0") {
-          let akuu = antiviewonce.indexOf(from)
-          if (!isAntiVO) return env('Já está desativado')
-          antiviewonce.splice(akuu, 1)
-          fs.writeFileSync("./db/json/antiviewonce.json", JSON.stringify(antiviewonce));
-          env('Ativiewonce foi desativado neste grupo!');
+          let akuu = antiviewonce.indexOf(from);
+          if (!isAntiVO) return env("Já está desativado");
+          antiviewonce.splice(akuu, 1);
+          fs.writeFileSync(
+            "./db/json/antiviewonce.json",
+            JSON.stringify(antiviewonce)
+          );
+          env("Ativiewonce foi desativado neste grupo!");
         } else {
-          env('1 para ativar, 0 para desativar');
+          env("1 para ativar, 0 para desativar");
         }
-        break
+        break;
 
-      case 'simih':
-        if (!isMemberAdmin && isOwner) return env('Comando apenas para admins')
-        if (!isGroup) return env('Comando apenas para grupo')
-        if (args.length < 1) return env('Hmmmm')
+      case "simih":
+        if (!isMemberAdmin && isOwner) return env("Comando apenas para admins");
+        if (!isGroup) return env("Comando apenas para grupo");
+        if (args.length < 1) return env("Hmmmm");
         if (Number(args[0]) === 1) {
-          if (isSimi) return env('O modo Simi está ativo')
-          simi.push(from)
-          fs.writeFileSync('./db/json/simi.json', JSON.stringify(simi))
-          env('Modo simi ativando com sucesso√')
+          if (isSimi) return env("O modo Simi está ativo");
+          simi.push(from);
+          fs.writeFileSync("./db/json/simi.json", JSON.stringify(simi));
+          env("Modo simi ativando com sucesso√");
         } else if (Number(args[0]) === 0) {
-          if (isSimi) return env('Simi já está desativada..')
-          simi.splice(from, 1)
-          fs.writeFileSync('./db/json/simi.json', JSON.stringify(simi))
-          env('Simi desativada com sucesso√️')
+          if (isSimi) return env("Simi já está desativada..");
+          simi.splice(from, 1);
+          fs.writeFileSync("./db/json/simi.json", JSON.stringify(simi));
+          env("Simi desativada com sucesso√️");
         } else {
-          env(`${prefixobot + command} 1 para ativar ou ${prefixobot + command} 0 para desativar`);
+          env(
+            `${prefixobot + command} 1 para ativar ou ${
+              prefixobot + command
+            } 0 para desativar`
+          );
         }
-        break
+        break;
 
-      case 'antifake':
-        if (!isMemberAdmin && isOwner) return env('Comando apenas para admins')
-        if (!isGroup) return env('Comando apenas para grupo')
-        if (args.length < 1) return env(`${prefixobot + command} 1 para ligar ou ${prefixobot + command} 0 para desligar`)
+      case "antifake":
+        if (!isMemberAdmin && isOwner) return env("Comando apenas para admins");
+        if (!isGroup) return env("Comando apenas para grupo");
+        if (args.length < 1)
+          return env(
+            `${prefixobot + command} 1 para ligar ou ${
+              prefixobot + command
+            } 0 para desligar`
+          );
         if (Number(args[0]) === 1) {
-          if (isAntifake) return env('Ja esta ativo')
-          antifake.push(from)
-          fs.writeFileSync('./db/json/antifake.json', JSON.stringify(antifake))
-          env('Ativou com sucesso o recurso de antifake neste grupo')
+          if (isAntifake) return env("Ja esta ativo");
+          antifake.push(from);
+          fs.writeFileSync("./db/json/antifake.json", JSON.stringify(antifake));
+          env("Ativou com sucesso o recurso de antifake neste grupo");
         } else if (Number(args[0]) === 0) {
-          if (!isAntifake) return env('Ja esta Desativado')
-          pesquisar = from
-          processo = antifake.indexOf(pesquisar)
+          if (!isAntifake) return env("Ja esta Desativado");
+          pesquisar = from;
+          processo = antifake.indexOf(pesquisar);
           while (processo >= 0) {
-            antifake.splice(processo, 1)
-            processo = antifake.indexOf(pesquisar)
+            antifake.splice(processo, 1);
+            processo = antifake.indexOf(pesquisar);
           }
-          fs.writeFileSync('./db/json/antifake.json', JSON.stringify(antifake))
-          env('Desativou com sucesso o recurso de antifake neste grupo✔️')
+          fs.writeFileSync("./db/json/antifake.json", JSON.stringify(antifake));
+          env("Desativou com sucesso o recurso de antifake neste grupo✔️");
         } else {
-          env(`${prefixobot + command} 1 para ligar ou ${prefixobot + command} 0 para desligar`)
+          env(
+            `${prefixobot + command} 1 para ligar ou ${
+              prefixobot + command
+            } 0 para desligar`
+          );
         }
-        break
+        break;
 
-      case 'antilink':
-        if (!isMemberAdmin && isOwner) return env('Comando apenas para admins')
-        if (!isGroup) return env('Comando apenas para grupo')
-        if (args.length < 1) return env(`${prefixobot + command} 1 para ligar ou ${prefixobot + command} 0 para desligar`)
+      case "antilink":
+        if (!isMemberAdmin && isOwner) return env("Comando apenas para admins");
+        if (!isGroup) return env("Comando apenas para grupo");
+        if (args.length < 1)
+          return env(
+            `${prefixobot + command} 1 para ligar ou ${
+              prefixobot + command
+            } 0 para desligar`
+          );
         if (Number(args[0]) === 1) {
-          if (isAntiLink) return env('Ja esta ativo')
-          antilink.push(from)
-          fs.writeFileSync('./db/json/antilink.json', JSON.stringify(antilink))
-          env('Ativou com sucesso o recurso de antilink neste grupo')
+          if (isAntiLink) return env("Ja esta ativo");
+          antilink.push(from);
+          fs.writeFileSync("./db/json/antilink.json", JSON.stringify(antilink));
+          env("Ativou com sucesso o recurso de antilink neste grupo");
         } else if (Number(args[0]) === 0) {
-          if (!isAntiLink) return env('Ja esta Desativado')
-          pesquisar = from
-          processo = antilink.indexOf(pesquisar)
+          if (!isAntiLink) return env("Ja esta Desativado");
+          pesquisar = from;
+          processo = antilink.indexOf(pesquisar);
           while (processo >= 0) {
-            antilink.splice(processo, 1)
-            processo = antilink.indexOf(pesquisar)
+            antilink.splice(processo, 1);
+            processo = antilink.indexOf(pesquisar);
           }
-          fs.writeFileSync('./db/json/antilink.json', JSON.stringify(antilink))
-          env('Desativou com sucesso o recurso de antilink neste grupo️')
+          fs.writeFileSync("./db/json/antilink.json", JSON.stringify(antilink));
+          env("Desativou com sucesso o recurso de antilink neste grupo️");
         } else {
-          env(`${prefixobot + command} 1 para ligar ou ${prefixobot + command} 0 para desligar`)
+          env(
+            `${prefixobot + command} 1 para ligar ou ${
+              prefixobot + command
+            } 0 para desligar`
+          );
         }
-        break
+        break;
 
-      case 'leveling':
-        if (!isMemberAdmin && isOwner) return env('Comando apenas para admins')
-        if (!isGroup) return env('Comando apenas para grupo')
-        if (args.length < 1) return env(`${prefixobot + command} 1 para ligar ou ${prefixobot + command} 0 para desligar`)
+      case "leveling":
+        if (!isMemberAdmin && isOwner) return env("Comando apenas para admins");
+        if (!isGroup) return env("Comando apenas para grupo");
+        if (args.length < 1)
+          return env(
+            `${prefixobot + command} 1 para ligar ou ${
+              prefixobot + command
+            } 0 para desligar`
+          );
         if (Number(args[0]) === 1) {
-          if (isLevelingOn) return env('Ja esta ativo')
-          _level.push(from)
-          fs.writeFileSync('./db/json/level.json', JSON.stringify(_level))
-          env('Ativou com sucesso o recurso de leveling neste grupo')
+          if (isLevelingOn) return env("Ja esta ativo");
+          _level.push(from);
+          fs.writeFileSync("./db/json/level.json", JSON.stringify(_level));
+          env("Ativou com sucesso o recurso de leveling neste grupo");
         } else if (Number(args[0]) === 0) {
-          if (!isLevelingOn) return env('Ja esta Desativado')
-          let levell = from
-          let levell2 = _level.indexOf(levell)
+          if (!isLevelingOn) return env("Ja esta Desativado");
+          let levell = from;
+          let levell2 = _level.indexOf(levell);
           while (levell2 >= 0) {
-            _level.splice(levell2, 1)
-            levell2 = antilink.indexOf(levell)
+            _level.splice(levell2, 1);
+            levell2 = antilink.indexOf(levell);
           }
-          fs.writeFileSync('./db/json/level.json', JSON.stringify(_level))
-          env('Desativou com sucesso o recurso de leveling neste grupo️')
+          fs.writeFileSync("./db/json/level.json", JSON.stringify(_level));
+          env("Desativou com sucesso o recurso de leveling neste grupo️");
         } else {
-          env(`${prefixobot + command} 1 para ligar ou ${prefixobot + command} 0 para desligar`)
+          env(
+            `${prefixobot + command} 1 para ligar ou ${
+              prefixobot + command
+            } 0 para desligar`
+          );
         }
-        break
+        break;
 
       //ADMINISTRAÇÃO
 
-      case 'linkgp':
-      case 'linkgrupo':
-      case 'linkgroup':
-        if (!isMemberAdmin && isOwner) return env('Comando apenas para admins')
-        if (!isGroup) return env('Comando apenas para grupo')
-        const codelink = await conn.groupInviteCode(from)
-        env("Link do grupo: https://chat.whatsapp.com/" + codelink)
-        break
-      case 'historico':
-      case 'atividades':
-        if (!isMemberAdmin && isOwner) return env('Comando apenas para admins')
-        let jsonn = require('./db/json/countmsg.json');
+      case "linkgp":
+      case "linkgrupo":
+      case "linkgroup":
+        if (!isMemberAdmin && isOwner) return env("Comando apenas para admins");
+        if (!isGroup) return env("Comando apenas para grupo");
+        const codelink = await conn.groupInviteCode(from);
+        env("Link do grupo: https://chat.whatsapp.com/" + codelink);
+        break;
+      case "historico":
+      case "atividades":
+        if (!isMemberAdmin && isOwner) return env("Comando apenas para admins");
+        let jsonn = require("./db/json/countmsg.json");
         let historico = `╭─────────────────╮\n│ *Histórico do grupo:* ${metadata.subject}\n╞───────╮ ▽ ╭───────╯\n│\n`;
         let members = [];
         for (let i = 0; i < jsonn.length; i++) {
           if (from == jsonn[i].groupId) {
-            jsonn[i].numbers.map(index => {
+            jsonn[i].numbers.map((index) => {
               let rankk = 1;
-              members.push(index.jid)
-              historico += `│👤 *Numero:* @${index.jid.split('@')[0]}\n│💬 *Mensagens:* ${index.messages}\n│👨🏽‍💻 *Comandos:* ${index.cmd_messages}\n│\n`;
-
+              members.push(index.jid);
+              historico += `│👤 *Numero:* @${
+                index.jid.split("@")[0]
+              }\n│💬 *Mensagens:* ${index.messages}\n│👨🏽‍💻 *Comandos:* ${
+                index.cmd_messages
+              }\n│\n`;
             });
-            historico += `│👨🏽‍💻 *Total de registros* : ${jsonn.length}\n╰──────────────╯`
+            historico += `│👨🏽‍💻 *Total de registros* : ${jsonn.length}\n╰──────────────╯`;
           }
         }
-        conn.sendMessage(from, { text: historico.trim(), mentions: members }, { quoted: mek });
-        break
+        conn.sendMessage(
+          from,
+          { text: historico.trim(), mentions: members },
+          { quoted: mek }
+        );
+        break;
 
-      case 'vperfil':
-        if (!isGroup) return env('Comando apenas para grupo')
-        if (groupIdscount.indexOf(from) < 0) return env('Minha data base não possuí database desse grupo.')
-        var ind = groupIdscount.indexOf(from)
-        if (mek.message.extendedTextMessage === undefined || mek.message.extendedTextMessage === null) return env('Marque um número ')
-        mentioned = mek.message.extendedTextMessage.contextInfo.mentionedJid
+      case "vperfil":
+        if (!isGroup) return env("Comando apenas para grupo");
+        if (groupIdscount.indexOf(from) < 0)
+          return env("Minha data base não possuí database desse grupo.");
+        var ind = groupIdscount.indexOf(from);
+        if (
+          mek.message.extendedTextMessage === undefined ||
+          mek.message.extendedTextMessage === null
+        )
+          return env("Marque um número ");
+        mentioned = mek.message.extendedTextMessage.contextInfo.mentionedJid;
         if (numbersIds.indexOf(mentioned[0]) >= 0) {
-          var indnum = numbersIds.indexOf(mentioned[0])
-          mentions(`🔎 *Usuário:* @${mentioned[0].split('@')[0]}\n💭 *Total de Mensagens:* ${countMessage[ind].numbers[indnum].messages}\n🕵🏽 *Comandos usados:* ${countMessage[ind].numbers[indnum].cmd_messages}`, mentioned, true)
+          var indnum = numbersIds.indexOf(mentioned[0]);
+          mentions(
+            `🔎 *Usuário:* @${
+              mentioned[0].split("@")[0]
+            }\n💭 *Total de Mensagens:* ${
+              countMessage[ind].numbers[indnum].messages
+            }\n🕵🏽 *Comandos usados:* ${
+              countMessage[ind].numbers[indnum].cmd_messages
+            }`,
+            mentioned,
+            true
+          );
+        } else {
+          mentions(
+            `🔎 *Usuário:* @${
+              mentioned[0].split("@")[0]
+            }\n💭 *Total de Mensagens:* 0\n🕵🏽 *Comandos usados:* 0`,
+            mentioned,
+            true
+          );
         }
-        else {
-          mentions(`🔎 *Usuário:* @${mentioned[0].split('@')[0]}\n💭 *Total de Mensagens:* 0\n🕵🏽 *Comandos usados:* 0`, mentioned, true)
-        }
-        break
+        break;
 
-      case 'perfil':
-      case 'me':
-        if (!isGroup) return env('Comando apenas para grupo');
-        let saldo = checkATMuser(sender)
-        let pinha = await conn.fetchStatus(sender) || 'Sem recado';
-        const LevelMe = level.getLevelingLevel(sender, _level)
+      case "perfil":
+      case "me":
+        if (!isGroup) return env("Comando apenas para grupo");
+        let saldo = checkATMuser(sender);
+        let pinha = (await conn.fetchStatus(sender)) || "Sem recado";
+        const LevelMe = level.getLevelingLevel(sender, _level);
         let perfin = `*╭─━━══〘 PERFIL 〙══━━──*\n│
 │🔎 *Usuário:* @${sender.split("@")[0]}
 │👤 *Nome:* ${pushname}
 │💬 *Recado:* ${pinha.status}
 │📝 *Profissão:* Desempregado
 │📱 *Plataforma:* ${adivinha}
-│🧧 *Premium:* ${isPremium ? '✅' : '❎'}
+│🧧 *Premium:* ${isPremium ? "✅" : "❎"}
 │🏦 *Saldo:* ${saldo}
 │🆙 *Level*:  ${LevelMe}
 │💹 *Patente:* ${role}
 │
-│👨🏽‍💻 *Admin:* ${isMemberAdmin ? '✅' : '❎'}
-│💎 *Vip:* ${isPremium ? '✅' : '❎'}
-│🚷 *Bloqueado:* ❎\n│\n╰─━━══━━ ⌯ ━━──━━══`
-        let perfilft = '';
+│👨🏽‍💻 *Admin:* ${isMemberAdmin ? "✅" : "❎"}
+│💎 *Vip:* ${isPremium ? "✅" : "❎"}
+│🚷 *Bloqueado:* ❎\n│\n╰─━━══━━ ⌯ ━━──━━══`;
+        let perfilft = "";
 
         try {
-          perfilft += await conn.profilePictureUrl(sender, 'image');
+          perfilft += await conn.profilePictureUrl(sender, "image");
         } catch (a) {
-          perfilft += 'https://pps.whatsapp.net/v/t61.24694-24/237308573_143481851393318_5947555802364352058_n.jpg?stp=dst-jpg_s96x96&ccb=11-4&oh=1b22f035864d9ae2eee053bba2101b85&oe=6247B04E';
+          perfilft +=
+            "https://pps.whatsapp.net/v/t61.24694-24/237308573_143481851393318_5947555802364352058_n.jpg?stp=dst-jpg_s96x96&ccb=11-4&oh=1b22f035864d9ae2eee053bba2101b85&oe=6247B04E";
         }
-        conn.sendMessage(from, { image: { url: perfilft }, caption: perfin, mentions: [sender] }, { quoted: mek })
-        break
+        conn.sendMessage(
+          from,
+          { image: { url: perfilft }, caption: perfin, mentions: [sender] },
+          { quoted: mek }
+        );
+        break;
 
-      case 'level':
-        if (!isGroup) return env('Comando apenas para grupo');
-        const LevelAtual = level.getLevelingLevel(sender, _level)
+      case "level":
+        if (!isGroup) return env("Comando apenas para grupo");
+        const LevelAtual = level.getLevelingLevel(sender, _level);
         env(`*Nome:* ${pushname}\n*Level:* ${LevelAtual}\n*Patente:* ${role}`);
-        break
+        break;
 
-      case 'rankgm':
-      case 'rank':
-      case 'rankgp':
-        if (!isGroup) return env('Comando apenas para grupo');
-        var ind = groupIdscount.indexOf(from)
-        if (countMessage[ind].numbers.length < 3) return env('Necessita de registro de 3 usuarios')
-        countMessage[ind].numbers.sort((a, b) => (a.messages < b.messages) ? 1 : -1)
-        mentioned_jid = []
-        boardi = '👑 Ranking dos membros mais ativos:\n\n'
+      case "rankgm":
+      case "rank":
+      case "rankgp":
+        if (!isGroup) return env("Comando apenas para grupo");
+        var ind = groupIdscount.indexOf(from);
+        if (countMessage[ind].numbers.length < 3)
+          return env("Necessita de registro de 3 usuarios");
+        countMessage[ind].numbers.sort((a, b) =>
+          a.messages < b.messages ? 1 : -1
+        );
+        mentioned_jid = [];
+        boardi = "👑 Ranking dos membros mais ativos:\n\n";
         try {
           for (let i = 0; i < 3; i++) {
-            if (i == 0) boardi += `${i + 1}º 🥇 : @${countMessage[ind].numbers[i].jid.split('@')[0]}\nMensagens: ${countMessage[ind].numbers[i].messages}\nComandos dados: ${countMessage[ind].numbers[i].cmd_messages}\n\n`
-            else if (i == 1) boardi += `${i + 1}º 🥈 : @${countMessage[ind].numbers[i].jid.split('@')[0]}\nMensagens: ${countMessage[ind].numbers[i].messages}\nComandos dados: ${countMessage[ind].numbers[i].cmd_messages}\n\n`
-            else if (i == 2) boardi += `${i + 1}º 🥉 : @${countMessage[ind].numbers[i].jid.split('@')[0]}\nMensagens: ${countMessage[ind].numbers[i].messages}\nComandos dados: ${countMessage[ind].numbers[i].cmd_messages}\n\n`
+            if (i == 0)
+              boardi += `${i + 1}º 🥇 : @${
+                countMessage[ind].numbers[i].jid.split("@")[0]
+              }\nMensagens: ${
+                countMessage[ind].numbers[i].messages
+              }\nComandos dados: ${
+                countMessage[ind].numbers[i].cmd_messages
+              }\n\n`;
+            else if (i == 1)
+              boardi += `${i + 1}º 🥈 : @${
+                countMessage[ind].numbers[i].jid.split("@")[0]
+              }\nMensagens: ${
+                countMessage[ind].numbers[i].messages
+              }\nComandos dados: ${
+                countMessage[ind].numbers[i].cmd_messages
+              }\n\n`;
+            else if (i == 2)
+              boardi += `${i + 1}º 🥉 : @${
+                countMessage[ind].numbers[i].jid.split("@")[0]
+              }\nMensagens: ${
+                countMessage[ind].numbers[i].messages
+              }\nComandos dados: ${
+                countMessage[ind].numbers[i].cmd_messages
+              }\n\n`;
 
-            mentioned_jid.push(countMessage[ind].numbers[i].jid)
+            mentioned_jid.push(countMessage[ind].numbers[i].jid);
           }
-          mention(boardi, mentioned_jid, true)
+          mention(boardi, mentioned_jid, true);
         } catch (err) {
-          console.log(err)
-          await conn.sendMessage(from, `é necessário 3 jogadores para se construir um ranking`, text, { quoted: mek })
+          console.log(err);
+          await conn.sendMessage(
+            from,
+            `é necessário 3 jogadores para se construir um ranking`,
+            text,
+            { quoted: mek }
+          );
         }
-        break
+        break;
 
-      case 'setnome':
-        if (!texto) return env('Coloque a descrição na frente do comando')
-        if (!isGroup) return env('Comando apenas para grupo')
-        if (isMemberAdmin && isOwner) return env('voce nao é adm');
-        await conn.groupUpdateSubject(from, `${texto}`)
-        env('Nome do grupo alterado com sucesso')
-        break
+      case "setnome":
+        if (!texto) return env("Coloque a descrição na frente do comando");
+        if (!isGroup) return env("Comando apenas para grupo");
+        if (isMemberAdmin && isOwner) return env("voce nao é adm");
+        await conn.groupUpdateSubject(from, `${texto}`);
+        env("Nome do grupo alterado com sucesso");
+        break;
 
-      case 'setdesc':
-        if (!isMemberAdmin && isOwner) return env('voce nao é adm');
-        if (!isGroup) return env('Comando apenas para grupo')
-        if (!texto) return env('Coloque a descrição na frente do comando')
-        await conn.groupUpdateDescription(from, `${texto}`)
-        env('Descrição alterada com sucesso')
-        break
+      case "setdesc":
+        if (!isMemberAdmin && isOwner) return env("voce nao é adm");
+        if (!isGroup) return env("Comando apenas para grupo");
+        if (!texto) return env("Coloque a descrição na frente do comando");
+        await conn.groupUpdateDescription(from, `${texto}`);
+        env("Descrição alterada com sucesso");
+        break;
 
-      case 'rmghostoff':
-        if (args.length < 1) return env(`Determine quanta s msg mínimas para banir... Exemplo: ${prefixobot}rmghost 3`)
-        if (!isGroup) return env('Comando apenas para grupo')
-        if (!isMemberAdmin && isOwner) return env('voce nao é adm');
+      case "rmghostoff":
+        if (args.length < 1)
+          return env(
+            `Determine quanta s msg mínimas para banir... Exemplo: ${prefixobot}rmghost 3`
+          );
+        if (!isGroup) return env("Comando apenas para grupo");
+        if (!isMemberAdmin && isOwner) return env("voce nao é adm");
         if (!isBotAdm) return env("Bot nao é adm");
         if (groupIdscount.indexOf(from) >= 0) {
           for (let obj of groupMembers) {
             if (numbersIds.indexOf(obj.id) >= 0) {
-              var indnum = numbersIds.indexOf(obj.id)
+              var indnum = numbersIds.indexOf(obj.id);
               if (countMessage[ind].numbers[indnum].messages <= args[0]) {
                 if (MemberAdmin.includes(obj.id)) {
-                  mentions(`@${obj.id} ta liberado da inspeção por ser admin`, [obj.id], true)
+                  mentions(
+                    `@${obj.id} ta liberado da inspeção por ser admin`,
+                    [obj.id],
+                    true
+                  );
                 } else {
-                  conn.groupParticipantsUpdate(from, [obj.id], 'remove')
+                  conn.groupParticipantsUpdate(from, [obj.id], "remove");
                 }
               }
             } else {
               if (MemberAdmin.includes(obj.id)) {
-                mentions(`@${obj.id} ta liberado da inspeção por ser admin`, [obj.id], true)
+                mentions(
+                  `@${obj.id} ta liberado da inspeção por ser admin`,
+                  [obj.id],
+                  true
+                );
               } else {
-                conn.groupParticipantsUpdate(from, [obj.id], 'remove')
+                conn.groupParticipantsUpdate(from, [obj.id], "remove");
               }
             }
           }
         }
-        break
-      case 'open':
-      case 'abrir':
-      case 'closed':
-      case 'fechar':
-        if (!isGroup) return env('Comando apenas para grupo')
-        if (!isMemberAdmin && isOwner) return env('voce nao é adm');
+        break;
+      case "open":
+      case "abrir":
+      case "closed":
+      case "fechar":
+        if (!isGroup) return env("Comando apenas para grupo");
+        if (!isMemberAdmin && isOwner) return env("voce nao é adm");
         if (!isBotAdm) return env("Bot nao é adm");
-        if (command == 'open') { await conn.groupSettingUpdate(from, 'not_announcement') } else
-          if (command == 'closed') { await conn.groupSettingUpdate(from, 'announcement') }
-        break
+        if (command == "open") {
+          await conn.groupSettingUpdate(from, "not_announcement");
+        } else if (command == "closed") {
+          await conn.groupSettingUpdate(from, "announcement");
+        }
+        break;
 
-      case 'releaseconfig':
-      case 'notreleaseconfig':
-      case 'liberarconfig':
-      case 'naoliberarconfig':
-        if (!isGroup) return env('Comando apenas para grupo')
-        if (!isMemberAdmin && isOwner) return env('voce nao é adm');
+      case "releaseconfig":
+      case "notreleaseconfig":
+      case "liberarconfig":
+      case "naoliberarconfig":
+        if (!isGroup) return env("Comando apenas para grupo");
+        if (!isMemberAdmin && isOwner) return env("voce nao é adm");
         if (!isBotAdm) return env("Bot nao é adm");
-        if (command == 'releaseconfig') { await conn.groupSettingUpdate(from, 'unlocked') } else
-          if (command == 'notreleaseconfig') { await conn.groupSettingUpdate(from, 'locked') } else
-            if (command == 'liberarconfig') { await conn.groupSettingUpdate(from, 'unlocked') } else
-              if (command == 'naoliberarconfig') { await conn.groupSettingUpdate(from, 'locked') }
-        env('Configuração do grupo alterada com sucesso')
-        break
+        if (command == "releaseconfig") {
+          await conn.groupSettingUpdate(from, "unlocked");
+        } else if (command == "notreleaseconfig") {
+          await conn.groupSettingUpdate(from, "locked");
+        } else if (command == "liberarconfig") {
+          await conn.groupSettingUpdate(from, "unlocked");
+        } else if (command == "naoliberarconfig") {
+          await conn.groupSettingUpdate(from, "locked");
+        }
+        env("Configuração do grupo alterada com sucesso");
+        break;
 
-      case 'infogrupo':
-      case 'infogp':
-      case 'infogroup':
+      case "infogrupo":
+      case "infogp":
+      case "infogroup":
         var pinga = `Nome do grupo: ${metadata.subject}
 Id do grupo: ${metadata.id}
 Dono do grupo: ${metadata.owner}
 
 Descrição: ${metadata.desc}`;
 
-        let ppimg = '';
+        let ppimg = "";
 
         try {
           ppimg += await conn.profilePictureUrl(from);
         } catch (a) {
-          ppimg += 'https://pps.whatsapp.net/v/t61.24694-24/237308573_143481851393318_5947555802364352058_n.jpg?stp=dst-jpg_s96x96&ccb=11-4&oh=1b22f035864d9ae2eee053bba2101b85&oe=6247B04E';
+          ppimg +=
+            "https://pps.whatsapp.net/v/t61.24694-24/237308573_143481851393318_5947555802364352058_n.jpg?stp=dst-jpg_s96x96&ccb=11-4&oh=1b22f035864d9ae2eee053bba2101b85&oe=6247B04E";
         }
 
-        conn.sendMessage(from, { image: { url: ppimg }, caption: pinga, buttons: [{ buttonId: `${prefixobot}admins`, buttonText: { displayText: 'Admins' }, type: 1 }], headerType: 4 });
-        break
+        conn.sendMessage(from, {
+          image: { url: ppimg },
+          caption: pinga,
+          buttons: [
+            {
+              buttonId: `${prefixobot}admins`,
+              buttonText: { displayText: "Admins" },
+              type: 1,
+            },
+          ],
+          headerType: 4,
+        });
+        break;
 
-      case 'admins':
-        teks = `Admins do ${metadata.subject}\n\n`
-        no = 0
+      case "admins":
+        teks = `Admins do ${metadata.subject}\n\n`;
+        no = 0;
         for (let admon of isAdmins) {
-          no += 1
-          teks += `@${admon.split('@')[0]}\n`
+          no += 1;
+          teks += `@${admon.split("@")[0]}\n`;
         }
-        mention(teks, isAdmins, true)
-        break
+        mention(teks, isAdmins, true);
+        break;
 
-      case 'rstlink':
-      case 'redefinirlink':
-        if (!isGroup) return env('Comando apenas para grupo')
-        if (!isMemberAdmin && isOwner) return env('voce nao é adm');
+      case "rstlink":
+      case "redefinirlink":
+        if (!isGroup) return env("Comando apenas para grupo");
+        if (!isMemberAdmin && isOwner) return env("voce nao é adm");
         if (!isBotAdm) return env("Bot nao é adm");
-        var code = await conn.groupRevokeInvite(from)
-        env('Link do grupo alterado com sucesso✓')
-        console.log('\033[0;31m' + `Link do grupo alterado com sucesso: https://chat.whatsapp.com/${code}` + '\033[0m');
-        break
-      case 'leave':
-        if (!isGroup) return env('Comando apenas para grupo')
-        if (!isMemberAdmin && isOwner) return env('voce nao é adm');
-        conn.groupLeave(from)
-        break
-      case 'leavegp':
+        var code = await conn.groupRevokeInvite(from);
+        env("Link do grupo alterado com sucesso✓");
+        console.log(
+          "\033[0;31m" +
+            `Link do grupo alterado com sucesso: https://chat.whatsapp.com/${code}` +
+            "\033[0m"
+        );
+        break;
+      case "leave":
+        if (!isGroup) return env("Comando apenas para grupo");
+        if (!isMemberAdmin && isOwner) return env("voce nao é adm");
+        conn.groupLeave(from);
+        break;
+      case "leavegp":
         let textoleave = `Mensagem automática
  
 Ola, tempo de licença desse grupo acabou, caso queira renova-la fale com meu dono pelo número a baixo👇🏻
 https://wa.me/554497433716`;
         let groupJid = texto;
         if (!groupJid) groupJid = from;
-        if (!groupJid.endsWith('@g.us')) return env('isso não é um id de grupo!');
+        if (!groupJid.endsWith("@g.us"))
+          return env("isso não é um id de grupo!");
         try {
-          conn.sendMessage(groupJid, { text: textoleave, mentions: allMembers }, { quoted: whatsapp });
-          setTimeout(() => { conn.groupLeave(groupJid) }, 1500)
-          env('Saindo do grupo!');
+          conn.sendMessage(
+            groupJid,
+            { text: textoleave, mentions: allMembers },
+            { quoted: whatsapp }
+          );
+          setTimeout(() => {
+            conn.groupLeave(groupJid);
+          }, 1500);
+          env("Saindo do grupo!");
         } catch (err) {
-          await env('Não fui possível sair do grupo.');
+          await env("Não fui possível sair do grupo.");
         }
-        break
-
-      case 'hidetag':
-      case 'totag':
-      case 'marcar':
-
-        const toti = args.join(" ") || BotName
-        if ((isMedia && !mek.message.videoMessage || isQuotedSticker) && args.length == 0) {
-          media = isQuotedSticker ? mek.message.extendedTextMessage.contextInfo.quotedMessage.stickerMessage : mek.message.stickerMessage
-          rane = getRandom('.' + await getExtension(media.mimetype))
-          img = await getFileBuffer(media, 'sticker')
-          fs.writeFileSync(rane, img)
-          fig = fs.readFileSync(rane)
+        break;
+      case "stiker":
+      case "sticker":
+      case "stickergif":
+      case "stikergif":
+      case "fig":
+      case "fs":
+      case "gif":
+      case "figura":
+      case "figu":
+      case "figurinha":
+      case "f":
+      case "s":
+        if (isMedia || isQuotedImage) {
+          const encmedia = isQuotedImage
+            ? JSON.parse(JSON.stringify(mek).replace("quotedM", "m")).message
+                .extendedTextMessage.contextInfo
+            : mek;
+          const media = await conn.downloadAndSaveMediaMessage(
+            encmedia,
+            `./sticker/${senderfix}`
+          );
+          console.log(color("|FIG|", "cyan"), color("FIGURINHAAAA", "yellow"));
+          await ffmpeg(`${media}`)
+            .input(media)
+            .on("start", function (cmd) {})
+            .on("error", function (err) {
+              console.log(`Error : ${err}`);
+              fs.unlinkSync(media);
+              enviar("error");
+            })
+            .on("end", async function () {
+              const MatadataFix3 = {
+                type: "full",
+                pack: `${pack}`,
+                author: `${author}`,
+                categories: ["🌹"],
+              };
+              const sticker4s = await createSticker(
+                `./sticker/${senderfix}.webp`,
+                MatadataFix3
+              );
+             conn.sendMessage(from, sticker4s, MessageType.sticker, {
+                contextInfo: tome,
+                fromMe: false,
+              }); //contextInfo: {"forwardingScore": 9999, "isForwarded": true} pra desaparecer após 7 dias
+              fs.unlinkSync(media);
+              fs.unlinkSync(`./sticker/${senderfix}.webp`);
+            })
+            .addOutputOptions([
+              `-vcodec`,
+              `libwebp`,
+              `-vf`,
+              `scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`,
+            ])
+            .toFormat("webp")
+            .save(`./sticker/${senderfix}.webp`);
+        } else if ((isMedia < 11 || isQuotedVideo < 11) && args.length == 0) {
+          const encmedia = isQuotedVideo
+            ? JSON.parse(JSON.stringify(mek).replace("quotedM", "m")).message
+                .extendedTextMessage.contextInfo
+            : mek;
+          const media = await conn.downloadAndSaveMediaMessage(
+            encmedia,
+            `./sticker/${senderfix}`
+          );
+          console.log(color("|FIG|", "cyan"), color("FIGURINHAAAA", "yellow"));
+          enviar("ᴘᴏʀ ғᴀᴠᴏʀ, ᴇsᴘᴇʀᴇ..");
+          await ffmpeg(`${media}`)
+            .inputFormat(media.split(".")[4])
+            .on("start", function (cmd) {})
+            .on("error", function (err) {
+              fs.unlinkSync(media);
+              tipe = media.endsWith(".mp4") ? "video" : "gif";
+            })
+            .on("end", async function () {
+              const MatadataFix4 = {
+                type: "full",
+                pack: `${pack}`,
+                author: `${author}`,
+                categories: ["🌹"],
+              };
+              const sticker5s = await createSticker(
+                `./sticker/${senderfix}.webp`,
+                MatadataFix4
+              );
+             conn.sendMessage(from, sticker5s, MessageType.sticker, {
+                contextInfo: tome,
+                fromMe: false,
+              }); //contextInfo: {"forwardingScore": 9999, "isForwarded": true} pra desaparecer após 7 dias
+              fs.unlinkSync(media);
+              fs.unlinkSync(`./sticker/${senderfix}.webp`);
+            })
+            .addOutputOptions([
+              `-vcodec`,
+              `libwebp`,
+              `-vf`,
+              `scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`,
+            ])
+            .toFormat("webp")
+            .save(`./sticker/${senderfix}.webp`);
+        } else {
+          enviar(
+            `marque uma foto/imagem/video ou gif de até 10 segundos com o comando: /f`
+          );
+        }
+        break;
+      case "hidetag":
+      case "totag":
+      case "marcar":
+        const toti = args.join(" ") || BotName;
+        if (
+          ((isMedia && !mek.message.videoMessage) || isQuotedSticker) &&
+          args.length == 0
+        ) {
+          media = isQuotedSticker
+            ? mek.message.extendedTextMessage.contextInfo.quotedMessage
+                .stickerMessage
+            : mek.message.stickerMessage;
+          rane = getRandom("." + (await getExtension(media.mimetype)));
+          img = await getFileBuffer(media, "sticker");
+          fs.writeFileSync(rane, img);
+          fig = fs.readFileSync(rane);
           var options = {
             sticker: fig,
-            mentions: groupMembers.map(i => i.id)
-          }
-          conn.sendMessage(from, options)
-        } else if ((isMedia && !mek.message.videoMessage || isQuotedImage) && args.length == 0) {
-          media = isQuotedImage ? mek.message.extendedTextMessage.contextInfo.quotedMessage.imageMessage : mek.message.imageMessage
-          rane = getRandom('.' + await getExtension(media.mimetype))
-          img = await getFileBuffer(media, 'image')
-          fs.writeFileSync(rane, img)
-          buff = fs.readFileSync(rane)
-          conn.sendMessage(from, { image: buff, caption: toti, mentions: groupMembers.map(i => i.id) }, { quoted: mek })
-        } else if ((isMedia && !mek.message.videoMessage || isQuotedVideo) && args.length == 0) {
-          media = isQuotedVideo ? mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage : mek.message.videoMessage
-          rane = getRandom('.' + await getExtension(media.mimetype))
-          vid = await getFileBuffer(media, 'video')
-          fs.writeFileSync(rane, vid)
-          buff = fs.readFileSync(rane)
-          conn.sendMessage(from, { video: buff, caption: toti, mimetype: 'video/mp4', mentions: groupMembers.map(i => i.id) }, { quoted: mek })
-        } else if ((isMedia && !mek.message.videoMessage || isQuotedAudio) && args.length == 0) {
-          media = isQuotedAudio ? mek.message.extendedTextMessage.contextInfo.quotedMessage.audioMessage : mek.message.audioMessage
-          rane = getRandom('.' + await getExtension(media.mimetype))
-          aud = await getFileBuffer(media, 'audio')
-          fs.writeFileSync(rane, aud)
-          buff = fs.readFileSync(rane)
-          conn.sendMessage(from, { audio: buff, mimetype: 'audio/mp4', ptt: true, mentions: groupMembers.map(i => i.id) }, { quoted: mek })
-        } else if ((isMedia && !mek.message.videoMessage || isQuotedDocument) && args.length == 0) {
-          media = isQuotedDocument ? mek.message.extendedTextMessage.contextInfo.quotedMessage.documentMessage : mek.message.documentMessage
-          rane = getRandom('.' + await getExtension(media.mimetype))
-          doc = await getFileBuffer(media, 'document')
-          fs.writeFileSync(rane, doc)
-          buff = fs.readFileSync(rane)
-          conn.sendMessage(from, { document: buff, mimetype: 'text/plain', mentions: groupMembers.map(i => i.id) }, { quoted: mek })
+            mentions: groupMembers.map((i) => i.id),
+          };
+          conn.sendMessage(from, options);
+        } else if (
+          ((isMedia && !mek.message.videoMessage) || isQuotedImage) &&
+          args.length == 0
+        ) {
+          media = isQuotedImage
+            ? mek.message.extendedTextMessage.contextInfo.quotedMessage
+                .imageMessage
+            : mek.message.imageMessage;
+          rane = getRandom("." + (await getExtension(media.mimetype)));
+          img = await getFileBuffer(media, "image");
+          fs.writeFileSync(rane, img);
+          buff = fs.readFileSync(rane);
+          conn.sendMessage(
+            from,
+            {
+              image: buff,
+              caption: toti,
+              mentions: groupMembers.map((i) => i.id),
+            },
+            { quoted: mek }
+          );
+        } else if (
+          ((isMedia && !mek.message.videoMessage) || isQuotedVideo) &&
+          args.length == 0
+        ) {
+          media = isQuotedVideo
+            ? mek.message.extendedTextMessage.contextInfo.quotedMessage
+                .videoMessage
+            : mek.message.videoMessage;
+          rane = getRandom("." + (await getExtension(media.mimetype)));
+          vid = await getFileBuffer(media, "video");
+          fs.writeFileSync(rane, vid);
+          buff = fs.readFileSync(rane);
+          conn.sendMessage(
+            from,
+            {
+              video: buff,
+              caption: toti,
+              mimetype: "video/mp4",
+              mentions: groupMembers.map((i) => i.id),
+            },
+            { quoted: mek }
+          );
+        } else if (
+          ((isMedia && !mek.message.videoMessage) || isQuotedAudio) &&
+          args.length == 0
+        ) {
+          media = isQuotedAudio
+            ? mek.message.extendedTextMessage.contextInfo.quotedMessage
+                .audioMessage
+            : mek.message.audioMessage;
+          rane = getRandom("." + (await getExtension(media.mimetype)));
+          aud = await getFileBuffer(media, "audio");
+          fs.writeFileSync(rane, aud);
+          buff = fs.readFileSync(rane);
+          conn.sendMessage(
+            from,
+            {
+              audio: buff,
+              mimetype: "audio/mp4",
+              ptt: true,
+              mentions: groupMembers.map((i) => i.id),
+            },
+            { quoted: mek }
+          );
+        } else if (
+          ((isMedia && !mek.message.videoMessage) || isQuotedDocument) &&
+          args.length == 0
+        ) {
+          media = isQuotedDocument
+            ? mek.message.extendedTextMessage.contextInfo.quotedMessage
+                .documentMessage
+            : mek.message.documentMessage;
+          rane = getRandom("." + (await getExtension(media.mimetype)));
+          doc = await getFileBuffer(media, "document");
+          fs.writeFileSync(rane, doc);
+          buff = fs.readFileSync(rane);
+          conn.sendMessage(
+            from,
+            {
+              document: buff,
+              mimetype: "text/plain",
+              mentions: groupMembers.map((i) => i.id),
+            },
+            { quoted: mek }
+          );
         } else if (budy) {
-          if (q.length < 1) return env('Citar oq?')
+          if (q.length < 1) return env("Citar oq?");
           //if(q.startsWith('/'))return env('sai dae arrombado')
-          conn.sendMessage(from, { text: texto, mentions: groupMembers.map(i => i.id) }, { quoted: mek })
+          conn.sendMessage(
+            from,
+            { text: texto, mentions: groupMembers.map((i) => i.id) },
+            { quoted: mek }
+          );
         } else {
-          env(`Responder imagem/documento/gif/adesivo/áudio/vídeo com legenda ${prefixobot + command}`)
+          env(
+            `Responder imagem/documento/gif/adesivo/áudio/vídeo com legenda ${
+              prefixobot + command
+            }`
+          );
         }
-        break
+        break;
 
-      case 'notif':
-      case 'aviso':
-        if (!isGroup) return env('Comando apenas para grupo')
-        if (!isMemberAdmin && isOwner) return env('voce nao é adm');
-        if (!texto) return env(`Coloque o aviso na frente do comando.\nExemplo de como se usar: ${prefixobot + command} hoje a noite não haverá sol.`)
-        teks = `🔔 Notificação  de @${sender.split("@")[0]}\n\n📨Mensagem: *${texto}*`
+      case "notif":
+      case "aviso":
+        if (!isGroup) return env("Comando apenas para grupo");
+        if (!isMemberAdmin && isOwner) return env("voce nao é adm");
+        if (!texto)
+          return env(
+            `Coloque o aviso na frente do comando.\nExemplo de como se usar: ${
+              prefixobot + command
+            } hoje a noite não haverá sol.`
+          );
+        teks = `🔔 Notificação  de @${
+          sender.split("@")[0]
+        }\n\n📨Mensagem: *${texto}*`;
         grouup = await conn.groupMetadata(from);
-        member = grouup['participants']
+        member = grouup["participants"];
         jids = [];
-        member.map(async adm => {
-          jids.push(adm.id.replace('c.us', 's.whatsapp.net'));
-        })
-        await conn.sendMessage(from, { text: teks, mentions: jids }, { quoted: mek })
-        break
+        member.map(async (adm) => {
+          jids.push(adm.id.replace("c.us", "s.whatsapp.net"));
+        });
+        await conn.sendMessage(
+          from,
+          { text: teks, mentions: jids },
+          { quoted: mek }
+        );
+        break;
 
-      case 'demote':
-      case 'rebaixar':
-        if (!isGroup) return env('Comando apenas para grupo')
-        if (!isMemberAdmin && isOwner) return env('voce nao é adm');
-        if (!isBotAdm) return env('Bot nao é adm');;
-        num = (`${body.slice(9)}`);
-        if (mek.message.extendedTextMessage === undefined || mek.message.extendedTextMessage === null) return env('informe quem devo rebaixar de cargo, marcado a mensagem da pessoa...')
+      case "demote":
+      case "rebaixar":
+        if (!isGroup) return env("Comando apenas para grupo");
+        if (!isMemberAdmin && isOwner) return env("voce nao é adm");
+        if (!isBotAdm) return env("Bot nao é adm");
+        num = `${body.slice(9)}`;
+        if (
+          mek.message.extendedTextMessage === undefined ||
+          mek.message.extendedTextMessage === null
+        )
+          return env(
+            "informe quem devo rebaixar de cargo, marcado a mensagem da pessoa..."
+          );
         if (num.length < 1) {
-          var mentioned = mek.message.extendedTextMessage.contextInfo.participant
-          conn.groupParticipantsUpdate(from, [`${mentioned}`], 'demote');
+          var mentioned =
+            mek.message.extendedTextMessage.contextInfo.participant;
+          conn.groupParticipantsUpdate(from, [`${mentioned}`], "demote");
         } else {
-          id = ([`${num.replace('@', '')}@s.whatsapp.net`])
-          conn.groupParticipantsUpdate(from, id, 'demote')
+          id = [`${num.replace("@", "")}@s.whatsapp.net`];
+          conn.groupParticipantsUpdate(from, id, "demote");
         }
-        env('Cargo removido com sucesso')
-        break
+        env("Cargo removido com sucesso");
+        break;
 
-      case 'promote':
-      case 'promover':
-      case 'pm':
-        if (!isGroup) return env('Comando apenas para grupo')
-        if (!isMemberAdmin && isOwner) return env('voce nao é adm');
-        if (!isBotAdm) return env('Bot nao é adm');
-        if (mek.message.extendedTextMessage === undefined || mek.message.extendedTextMessage === null) return env('informe quem devo promover, marcado a mensagem da pessoa...')
-        num = (`${body.slice(9)}`);
+      case "promote":
+      case "promover":
+      case "pm":
+        if (!isGroup) return env("Comando apenas para grupo");
+        if (!isMemberAdmin && isOwner) return env("voce nao é adm");
+        if (!isBotAdm) return env("Bot nao é adm");
+        if (
+          mek.message.extendedTextMessage === undefined ||
+          mek.message.extendedTextMessage === null
+        )
+          return env(
+            "informe quem devo promover, marcado a mensagem da pessoa..."
+          );
+        num = `${body.slice(9)}`;
         if (num.length < 1) {
-          var mentioned = mek.message.extendedTextMessage.contextInfo.participant
-          conn.groupParticipantsUpdate(from, [`${mentioned}`], 'promote');
+          var mentioned =
+            mek.message.extendedTextMessage.contextInfo.participant;
+          conn.groupParticipantsUpdate(from, [`${mentioned}`], "promote");
         } else {
-          id = ([`${num.replace('@', '')}@s.whatsapp.net`])
-          conn.groupParticipantsUpdate(from, id, 'promote')
+          id = [`${num.replace("@", "")}@s.whatsapp.net`];
+          conn.groupParticipantsUpdate(from, id, "promote");
         }
-        env('Promovido cargo com sucesso')
-        break
+        env("Promovido cargo com sucesso");
+        break;
 
-      case 'ban':
-      case 'rm':
-      case 'banir':
-        if (!isGroup) return env('Comando apenas para grupo')
-        if (!isMemberAdmin && isOwner) return env('voce nao é adm');
-        if (!isBotAdm) return env('Bot nao é adm');
-        num = (`${body.slice(9)}`);
-        if (mek.message.extendedTextMessage === undefined || mek.message.extendedTextMessage === null) return env('informe quem devo banir, marcado a mensagem da pessoa...')
+      case "ban":
+      case "rm":
+      case "banir":
+        if (!isGroup) return env("Comando apenas para grupo");
+        if (!isMemberAdmin && isOwner) return env("voce nao é adm");
+        if (!isBotAdm) return env("Bot nao é adm");
+        num = `${body.slice(9)}`;
+        if (
+          mek.message.extendedTextMessage === undefined ||
+          mek.message.extendedTextMessage === null
+        )
+          return env(
+            "informe quem devo banir, marcado a mensagem da pessoa..."
+          );
         if (num.length < 1) {
-          var mentioned = mek.message.extendedTextMessage.contextInfo.participant
-          conn.groupParticipantsUpdate(from, [`${mentioned}`], 'remove');
+          var mentioned =
+            mek.message.extendedTextMessage.contextInfo.participant;
+          conn.groupParticipantsUpdate(from, [`${mentioned}`], "remove");
         } else {
-          if (num == IsDonoGo) return env('Não e possível banir o proprietário do grupo')
-          id = ([`${num.replace('@', '')}@s.whatsapp.net`])
-          conn.groupParticipantsUpdate(from, id, 'remove')
+          if (num == IsDonoGo)
+            return env("Não e possível banir o proprietário do grupo");
+          id = [`${num.replace("@", "")}@s.whatsapp.net`];
+          conn.groupParticipantsUpdate(from, id, "remove");
         }
-        env('Banido com sucesso')
-        break
-      case 'add':
-        if (!isGroup) return env('Comando apenas para grupo')
-        if (!isMemberAdmin && isOwner) return env('voce nao é adm');
-        if (!isBotAdm) return env('Bot nao é adm');
-        if (mek.message.extendedTextMessage === undefined || mek.message.extendedTextMessage === null) return env('informe quem devo adicionar no grupo novamente, marcado a mensagem da pessoa...')
-        num = (`${body.slice(9)}`);
+        env("Banido com sucesso");
+        break;
+      case "add":
+        if (!isGroup) return env("Comando apenas para grupo");
+        if (!isMemberAdmin && isOwner) return env("voce nao é adm");
+        if (!isBotAdm) return env("Bot nao é adm");
+        if (
+          mek.message.extendedTextMessage === undefined ||
+          mek.message.extendedTextMessage === null
+        )
+          return env(
+            "informe quem devo adicionar no grupo novamente, marcado a mensagem da pessoa..."
+          );
+        num = `${body.slice(9)}`;
         if (num.length < 1) {
-          var mentioned = mek.message.extendedTextMessage.contextInfo.participant
-          conn.groupParticipantsUpdate(from, [`${mentioned}`], 'add');
+          var mentioned =
+            mek.message.extendedTextMessage.contextInfo.participant;
+          conn.groupParticipantsUpdate(from, [`${mentioned}`], "add");
         } else {
-          id = ([`${num.replace('@', '')}@s.whatsapp.net`])
-          conn.groupParticipantsUpdate(from, id, 'add')
+          id = [`${num.replace("@", "")}@s.whatsapp.net`];
+          conn.groupParticipantsUpdate(from, id, "add");
         }
-        env('Adicionado com sucesso')
-        break
+        env("Adicionado com sucesso");
+        break;
       //FIM
-      case 'tomp3':
-        if (!isQuotedVideo) return env('Marque o video pfv')
-        env('perai')
-        encmedia = isQuotedVideo ? info.extendedTextMessage.contextInfo.quotedMessage.videoMessage : info.videoMessage
-        rane = getRandom('.' + await getExtension(encmedia.Mimetype))
-        buffimg = await getFileBuffer(encmedia, 'video')
-        fs.writeFileSync(rane, buffimg)
-        media = rane
-        ran = getRandom('.mp4')
+      case "tomp3":
+        if (!isQuotedVideo) return env("Marque o video pfv");
+        env("perai");
+        encmedia = isQuotedVideo
+          ? info.extendedTextMessage.contextInfo.quotedMessage.videoMessage
+          : info.videoMessage;
+        rane = getRandom("." + (await getExtension(encmedia.Mimetype)));
+        buffimg = await getFileBuffer(encmedia, "video");
+        fs.writeFileSync(rane, buffimg);
+        media = rane;
+        ran = getRandom(".mp4");
         exec(`ffmpeg -i ${media} ${ran}`, (err) => {
-          fs.unlinkSync(media)
-          if (err) return env('Falha ao converter vídeo para mp3')
-          buffer = fs.readFileSync(ran)
-          conn.sendMessage(from, { audio: buffer, mimetype: 'audio/mp4' }, { quoted: mek })
-          fs.unlinkSync(ran)
-        })
-        break
-      case 'togif':
-        if (!isQuotedSticker) return env('Marque uma figurinha');
-        buff = await getFileBuffer(info.extendedTextMessage.contextInfo.quotedMessage.stickerMessage, 'sticker')
-        env('Convertendo a figurinha em GIF...')
-        a = await webp_mp4(buff)
-        mp4 = await getBuffer(a)
-        conn.sendMessage(from, { video: mp4, gifPlayback: true, filename: `stick.gif` }, { quoted: mek })
+          fs.unlinkSync(media);
+          if (err) return env("Falha ao converter vídeo para mp3");
+          buffer = fs.readFileSync(ran);
+          conn.sendMessage(
+            from,
+            { audio: buffer, mimetype: "audio/mp4" },
+            { quoted: mek }
+          );
+          fs.unlinkSync(ran);
+        });
+        break;
+      case "togif":
+        if (!isQuotedSticker) return env("Marque uma figurinha");
+        buff = await getFileBuffer(
+          info.extendedTextMessage.contextInfo.quotedMessage.stickerMessage,
+          "sticker"
+        );
+        env("Convertendo a figurinha em GIF...");
+        a = await webp_mp4(buff);
+        mp4 = await getBuffer(a);
+        conn.sendMessage(
+          from,
+          { video: mp4, gifPlayback: true, filename: `stick.gif` },
+          { quoted: mek }
+        );
         //fs.unlinkSync(buff)
-        break
-      case 'toimg':
-        if (!isQuotedSticker) return env('Marque uma figurinha')
-        buff = await getFileBuffer(mek.message.extendedTextMessage.contextInfo.quotedMessage.stickerMessage, 'sticker')
-        env('perai')
+        break;
+      case "toimg":
+        if (!isQuotedSticker) return env("Marque uma figurinha");
+        buff = await getFileBuffer(
+          mek.message.extendedTextMessage.contextInfo.quotedMessage
+            .stickerMessage,
+          "sticker"
+        );
+        env("perai");
         try {
-          conn.sendMessage(from, { image: buff }, { quoted: whatsapp })
+          conn.sendMessage(from, { image: buff }, { quoted: whatsapp });
         } catch (e) {
-          console.log(e)
-          env('Erro ao converter figurinha para imagem')
+          console.log(e);
+          env("Erro ao converter figurinha para imagem");
         }
-        break
-      case 'packsfigu':
-      case 'packfigu':
-      case 'figupack':
-      case 'figupacks':
+        break;
+      case "packsfigu":
+      case "packfigu":
+      case "figupack":
+      case "figupacks":
         var sections = [
           {
             title: "Plaquinha",
             rows: [
-              { title: `Figurinhas aleatório de Meme`, rowId: `${prefixobot}figumeme` },
-              { title: `Figurinhas aleatório de Anime`, rowId: `${prefixobot}figuanime` },
-              { title: `Figurinhas aleatório de Sticker`, rowId: `${prefixobot}figudesenho` },
-              { title: `Figurinhas aleatório de Roblox`, rowId: `${prefixobot}figuroblox` },
-              { title: `Figurinhas aleatório de Raiva`, rowId: `${prefixobot}figuraiva` },
-              { title: `Figurinhas aleatório Engraçadas`, rowId: `${prefixobot}figuengracado` },
-              { title: `Figurinhas aleatório de Bebê`, rowId: `${prefixobot}figubb` }],
-          }
-        ]
+              {
+                title: `Figurinhas aleatório de Meme`,
+                rowId: `${prefixobot}figumeme`,
+              },
+              {
+                title: `Figurinhas aleatório de Anime`,
+                rowId: `${prefixobot}figuanime`,
+              },
+              {
+                title: `Figurinhas aleatório de Sticker`,
+                rowId: `${prefixobot}figudesenho`,
+              },
+              {
+                title: `Figurinhas aleatório de Roblox`,
+                rowId: `${prefixobot}figuroblox`,
+              },
+              {
+                title: `Figurinhas aleatório de Raiva`,
+                rowId: `${prefixobot}figuraiva`,
+              },
+              {
+                title: `Figurinhas aleatório Engraçadas`,
+                rowId: `${prefixobot}figuengracado`,
+              },
+              {
+                title: `Figurinhas aleatório de Bebê`,
+                rowId: `${prefixobot}figubb`,
+              },
+            ],
+          },
+        ];
         var listMessage = {
           text: "Escolha um tema de figurinha.",
           footer: "Selecione o tema abaixo.",
           buttonText: "Escolha o tema da sua Figurinha.",
-          sections
-        }
-        const sendfigus = await conn.sendMessage(from, listMessage, { quoted: mek })
-        break
+          sections,
+        };
+        const sendfigus = await conn.sendMessage(from, listMessage, {
+          quoted: mek,
+        });
+        break;
 
-      case 'figumeme':
-      case 'figmeme':
-        const memez = `${Math.floor(Math.random() * 130)}`
-        const memeu = `${Math.floor(Math.random() * 130)}`
-        const memep = `${Math.floor(Math.random() * 130)}`
-        const memei = `${Math.floor(Math.random() * 130)}`
+      case "figumeme":
+      case "figmeme":
+        const memez = `${Math.floor(Math.random() * 130)}`;
+        const memeu = `${Math.floor(Math.random() * 130)}`;
+        const memep = `${Math.floor(Math.random() * 130)}`;
+        const memei = `${Math.floor(Math.random() * 130)}`;
 
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figumemes/${memez}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
+        
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figumemes/${memez}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figumemes/${memeu}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figumemes/${memeu}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figumemes/${memep}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figumemes/${memep}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figumemes/${memei}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figumemes/${memei}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        setTimeout(() => { conn.sendMessage(from, { text: 'Deseja mais figurinhas de meme?', footer: `Escolha uma opção abaixo.`, buttons: [{ buttonId: `${prefixobot}figumeme`, buttonText: { displayText: 'MAIS FIGURINHA' }, type: 1 }] }, { quoted: mek }) }, 2090)
-        break
+        setTimeout(() => {
+          conn.sendMessage(
+            from,
+            {
+              text: "Deseja mais figurinhas de meme?",
+              footer: `Escolha uma opção abaixo.`,
+              buttons: [
+                {
+                  buttonId: `${prefixobot}figumeme`,
+                  buttonText: { displayText: "MAIS FIGURINHA" },
+                  type: 1,
+                },
+              ],
+            },
+            { quoted: mek }
+          );
+        }, 2090);
+        break;
 
-      case 'figudesenho':
+      case "figudesenho":
+        const desenhoa = `${Math.floor(Math.random() * 102)}`;
+        const desenhoe = `${Math.floor(Math.random() * 102)}`;
+        const desenhoi = `${Math.floor(Math.random() * 102)}`;
+        const desenhoo = `${Math.floor(Math.random() * 102)}`;
 
-        const desenhoa = `${Math.floor(Math.random() * 102)}`
-        const desenhoe = `${Math.floor(Math.random() * 102)}`
-        const desenhoi = `${Math.floor(Math.random() * 102)}`
-        const desenhoo = `${Math.floor(Math.random() * 102)}`
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figureaçõesdedesenhos/${desenhoa}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figureaçõesdedesenhos/${desenhoa}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figureaçõesdedesenhos/${desenhoe}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figureaçõesdedesenhos/${desenhoe}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figureaçõesdedesenhos/${desenhoi}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figureaçõesdedesenhos/${desenhoi}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figureaçõesdedesenhos/${desenhoo}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figureaçõesdedesenhos/${desenhoo}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
+        setTimeout(() => {
+          conn.sendMessage(
+            from,
+            {
+              text: "Deseja mais figurinhas de Desenho??",
+              footer: `Escolha uma opção abaixo.`,
+              buttons: [
+                {
+                  buttonId: `${prefixobot}figudesenho`,
+                  buttonText: { displayText: "MAIS FIGURINHA" },
+                  type: 1,
+                },
+              ],
+            },
+            { quoted: mek }
+          );
+        }, 2090);
 
-        setTimeout(() => { conn.sendMessage(from, { text: 'Deseja mais figurinhas de Desenho??', footer: `Escolha uma opção abaixo.`, buttons: [{ buttonId: `${prefixobot}figudesenho`, buttonText: { displayText: 'MAIS FIGURINHA' }, type: 1 }] }, { quoted: mek }) }, 2090)
+        break;
 
-        break
+      case "figuanime":
+        const annime = `${Math.floor(Math.random() * 77)}`;
+        const annnime = `${Math.floor(Math.random() * 77)}`;
+        const annnnime = `${Math.floor(Math.random() * 77)}`;
+        const nnnannime = `${Math.floor(Math.random() * 77)}`;
 
-      case 'figuanime':
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figuanime/${annime}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        const annime = `${Math.floor(Math.random() * 77)}`
-        const annnime = `${Math.floor(Math.random() * 77)}`
-        const annnnime = `${Math.floor(Math.random() * 77)}`
-        const nnnannime = `${Math.floor(Math.random() * 77)}`
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figuanime/${annime}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figuanime/${annnime}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figuanime/${annnnime}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figuanime/${nnnannime}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
-        setTimeout(() => { conn.sendMessage(from, { text: 'Deseja mais figurinhas de anime?', footer: `Escolha uma opção abaixo.`, buttons: [{ buttonId: `${prefixobot}figuanime`, buttonText: { displayText: 'MAIS FIGURINHA' }, type: 1 }] }, { quoted: mek }) }, 2090)
-        break
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figuanime/${annnime}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-      case 'figuraiva':
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figuanime/${annnnime}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        const raivaa = `${Math.floor(Math.random() * 29)}`
-        const raivae = `${Math.floor(Math.random() * 29)}`
-        const raivai = `${Math.floor(Math.random() * 29)}`
-        const raivao = `${Math.floor(Math.random() * 29)}`
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figuanime/${nnnannime}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
+        setTimeout(() => {
+          conn.sendMessage(
+            from,
+            {
+              text: "Deseja mais figurinhas de anime?",
+              footer: `Escolha uma opção abaixo.`,
+              buttons: [
+                {
+                  buttonId: `${prefixobot}figuanime`,
+                  buttonText: { displayText: "MAIS FIGURINHA" },
+                  type: 1,
+                },
+              ],
+            },
+            { quoted: mek }
+          );
+        }, 2090);
+        break;
 
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figuraiva/${raivaa}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
+      case "figuraiva":
+        const raivaa = `${Math.floor(Math.random() * 29)}`;
+        const raivae = `${Math.floor(Math.random() * 29)}`;
+        const raivai = `${Math.floor(Math.random() * 29)}`;
+        const raivao = `${Math.floor(Math.random() * 29)}`;
 
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figuraiva/${raivae}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figuraiva/${raivaa}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figuraiva/${raivai}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figuraiva/${raivae}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figuraiva/${raivao}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figuraiva/${raivai}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        setTimeout(() => { conn.sendMessage(from, { text: 'Deseja mais figurinhas de raiva?', footer: `Escolha uma opção abaixo.`, buttons: [{ buttonId: `${prefixobot}figuraiva`, buttonText: { displayText: 'MAIS FIGURINHA' }, type: 1 }] }, { quoted: mek }) }, 2090)
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figuraiva/${raivao}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        break
+        setTimeout(() => {
+          conn.sendMessage(
+            from,
+            {
+              text: "Deseja mais figurinhas de raiva?",
+              footer: `Escolha uma opção abaixo.`,
+              buttons: [
+                {
+                  buttonId: `${prefixobot}figuraiva`,
+                  buttonText: { displayText: "MAIS FIGURINHA" },
+                  type: 1,
+                },
+              ],
+            },
+            { quoted: mek }
+          );
+        }, 2090);
 
-      case 'figuroblox':
+        break;
 
-        const robloxa = `${Math.floor(Math.random() * 21)}`
-        const robloxe = `${Math.floor(Math.random() * 21)}`
-        const robloxi = `${Math.floor(Math.random() * 21)}`
-        const robloxo = `${Math.floor(Math.random() * 21)}`
+      case "figuroblox":
+        const robloxa = `${Math.floor(Math.random() * 21)}`;
+        const robloxe = `${Math.floor(Math.random() * 21)}`;
+        const robloxi = `${Math.floor(Math.random() * 21)}`;
+        const robloxo = `${Math.floor(Math.random() * 21)}`;
 
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figuroblox/${robloxa}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figuroblox/${robloxa}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figuroblox/${robloxe}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figuroblox/${robloxe}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figuroblox/${robloxi}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figuroblox/${robloxi}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figuroblox/${robloxo}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figuroblox/${robloxo}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        setTimeout(() => { conn.sendMessage(from, { text: 'Deseja mais figurinhas de Roblox?', footer: `Escolha uma opção abaixo.`, buttons: [{ buttonId: `${prefixobot}figuroblox`, buttonText: { displayText: 'MAIS FIGURINHA' }, type: 1 }] }, { quoted: mek }) }, 2090)
+        setTimeout(() => {
+          conn.sendMessage(
+            from,
+            {
+              text: "Deseja mais figurinhas de Roblox?",
+              footer: `Escolha uma opção abaixo.`,
+              buttons: [
+                {
+                  buttonId: `${prefixobot}figuroblox`,
+                  buttonText: { displayText: "MAIS FIGURINHA" },
+                  type: 1,
+                },
+              ],
+            },
+            { quoted: mek }
+          );
+        }, 2090);
 
-        break
+        break;
 
-      case 'figubb':
+      case "figubb":
+        const bba = `${Math.floor(Math.random() * 21)}`;
+        const bbe = `${Math.floor(Math.random() * 21)}`;
+        const bbi = `${Math.floor(Math.random() * 21)}`;
+        const bbo = `${Math.floor(Math.random() * 21)}`;
 
-        const bba = `${Math.floor(Math.random() * 21)}`
-        const bbe = `${Math.floor(Math.random() * 21)}`
-        const bbi = `${Math.floor(Math.random() * 21)}`
-        const bbo = `${Math.floor(Math.random() * 21)}`
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figubb/${bba}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figubb/${bba}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figubb/${bbe}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figubb/${bbe}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figubb/${bbi}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figubb/${bbi}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figubb/${bbo}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figubb/${bbo}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
+        setTimeout(() => {
+          conn.sendMessage(
+            from,
+            {
+              text: "Deseja mais figurinhas de Roblox?",
+              footer: `Escolha uma opção abaixo.`,
+              buttons: [
+                {
+                  buttonId: `${prefixobot}figubb`,
+                  buttonText: { displayText: "MAIS FIGURINHA" },
+                  type: 1,
+                },
+              ],
+            },
+            { quoted: mek }
+          );
+        }, 2090);
 
-        setTimeout(() => { conn.sendMessage(from, { text: 'Deseja mais figurinhas de Roblox?', footer: `Escolha uma opção abaixo.`, buttons: [{ buttonId: `${prefixobot}figubb`, buttonText: { displayText: 'MAIS FIGURINHA' }, type: 1 }] }, { quoted: mek }) }, 2090)
+        break;
 
-        break
+      case "figuengracado":
+        const engraa = `${Math.floor(Math.random() * 25)}`;
+        const engrae = `${Math.floor(Math.random() * 25)}`;
+        const engrai = `${Math.floor(Math.random() * 25)}`;
+        const engrao = `${Math.floor(Math.random() * 25)}`;
 
-      case 'figuengracado':
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figuengracado/${engraa}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        const engraa = `${Math.floor(Math.random() * 25)}`
-        const engrae = `${Math.floor(Math.random() * 25)}`
-        const engrai = `${Math.floor(Math.random() * 25)}`
-        const engrao = `${Math.floor(Math.random() * 25)}`
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figuengracado/${engrae}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figuengracado/${engraa}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figuengracado/${engrai}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figuengracado/${engrae}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
+        fig_enviar = await createSticker(`./complement/sticker/packsfigu/figuengracado/${engrao}.webp`, descFig)
+        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figuengracado/${engrai}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
+        setTimeout(() => {
+          conn.sendMessage(
+            from,
+            {
+              text: "Deseja mais figurinhas de anime?",
+              footer: `Escolha uma opção abaixo.`,
+              buttons: [
+                {
+                  buttonId: `${prefixobot}figuengracado`,
+                  buttonText: { displayText: "MAIS FIGURINHA" },
+                  type: 1,
+                },
+              ],
+            },
+            { quoted: mek }
+          );
+        }, 2090);
 
-        popopoc = fs.readFileSync(`./complement/sticker/packsfigu/figuengracado/${engrao}.webp`)
-        conn.sendMessage(from, { sticker: popopoc })
-
-        setTimeout(() => { conn.sendMessage(from, { text: 'Deseja mais figurinhas de anime?', footer: `Escolha uma opção abaixo.`, buttons: [{ buttonId: `${prefixobot}figuengracado`, buttonText: { displayText: 'MAIS FIGURINHA' }, type: 1 }] }, { quoted: mek }) }, 2090)
-
-        break
+        break;
 
       //PREMIUM
-      case 'cc':
-        const dbcc = fs.readFileSync('./db/json/db-cc.json');
+      case "cc":
+        const dbcc = fs.readFileSync("./db/json/db-cc.json");
         var dbjson = JSON.parse(dbcc);
         var pinga = Math.floor(Math.random() * dbjson.length);
-
 
         let codee = res.code;
         let mes = res.dateMonth;
         let ano = res.dateYear;
         let cvv = res.cvv;
-        let cpfcc = Math.floor((Math.random() * 999) + 100)
-        let cpf2cc = Math.floor((Math.random() * 999) + 100)
-        let cpf3cc = Math.floor((Math.random() * 999) + 100)
-        let cpf4cc = Math.floor((Math.random() * 99) + 00)
-        let bandeiraacc = ['Visa', 'Mastercard', 'Hipercard', 'Elo', 'American Express']
-        let bandeiracc = bandeiraacc[Math.floor(Math.random() * bandeiraacc.length)]
-        let categoriaacc = ['Gold', 'Platinum', 'Black'];
-        let categoriacc = categoriaacc[Math.floor(Math.random() * categoriaacc.length)]
-        let bancoocc = ['BRADESCO', 'CAIXA', 'NUBANK', 'C6 BANK', 'MERCADO PAGO', 'ORIGINAL', 'PAGBANK', 'INTER', 'SANTANDER', 'NEON', 'PAN']
-        let bancocc = bancoocc[Math.floor(Math.random() * bancoocc.length)]
+        let cpfcc = Math.floor(Math.random() * 999 + 100);
+        let cpf2cc = Math.floor(Math.random() * 999 + 100);
+        let cpf3cc = Math.floor(Math.random() * 999 + 100);
+        let cpf4cc = Math.floor(Math.random() * 99 + 00);
+        let bandeiraacc = [
+          "Visa",
+          "Mastercard",
+          "Hipercard",
+          "Elo",
+          "American Express",
+        ];
+        let bandeiracc =
+          bandeiraacc[Math.floor(Math.random() * bandeiraacc.length)];
+        let categoriaacc = ["Gold", "Platinum", "Black"];
+        let categoriacc =
+          categoriaacc[Math.floor(Math.random() * categoriaacc.length)];
+        let bancoocc = [
+          "BRADESCO",
+          "CAIXA",
+          "NUBANK",
+          "C6 BANK",
+          "MERCADO PAGO",
+          "ORIGINAL",
+          "PAGBANK",
+          "INTER",
+          "SANTANDER",
+          "NEON",
+          "PAN",
+        ];
+        let bancocc = bancoocc[Math.floor(Math.random() * bancoocc.length)];
 
         let cc = `CARTÃO CC GERADO POR @${sender.split("@")[0]}
 
@@ -3512,27 +5226,53 @@ NÃO GARANTIMOS SALDO!.
 
 ✅ Status: #Aprovado - Retorno: Transação Capturada com sucesso.
 `;
-        conn.sendMessage(from, { text: cc.trim(), mentions: [sender] }, { quoted: mek })
-        break
+        conn.sendMessage(
+          from,
+          { text: cc.trim(), mentions: [sender] },
+          { quoted: mek }
+        );
+        break;
 
-      case 'cc2':
-        if (!isPremium && isOwner) return env('vc nn e Premium;-;')
-        let mescc = Math.floor((Math.random() * 12) + 1)
-        mescc = mescc < 10 ? '0' + mescc : mescc;
-        let diacc = Math.floor((Math.random() * 30) + 1)
-        diacc = diacc < 10 ? '0' + diacc : diacc;
-        let cvvcc = Math.floor((Math.random() * 999) + 102)
-        let cardcc = Math.floor((Math.random() * 9999999999999999) + 0000000000000000)
-        let cpffcc = Math.floor((Math.random() * 999) + 100)
-        let cpff2cc = Math.floor((Math.random() * 999) + 100)
-        let cpff3cc = Math.floor((Math.random() * 999) + 100)
-        let cpff4cc = Math.floor((Math.random() * 99) + 00)
-        let banddeiraacc = ['Visa', 'Mastercard', 'Hipercard', 'Elo', 'American Express']
-        let banddeiracc = banddeiraacc[Math.floor(Math.random() * banddeiraacc.length)]
-        let categgoriaacc = ['Gold', 'Platinum', 'Black'];
-        let categgoriacc = categgoriaacc[Math.floor(Math.random() * categgoriaacc.length)]
-        let banccoocc = ['BRADESCO', 'CAIXA', 'NUBANK', 'C6 BANK', 'MERCADO PAGO', 'ORIGINAL', 'PAGBANK', 'INTER', 'SANTANDER', 'NEON', 'PAN']
-        let banccocc = banccoocc[Math.floor(Math.random() * banccoocc.length)]
+      case "cc2":
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        let mescc = Math.floor(Math.random() * 12 + 1);
+        mescc = mescc < 10 ? "0" + mescc : mescc;
+        let diacc = Math.floor(Math.random() * 30 + 1);
+        diacc = diacc < 10 ? "0" + diacc : diacc;
+        let cvvcc = Math.floor(Math.random() * 999 + 102);
+        let cardcc = Math.floor(
+          Math.random() * 9999999999999999 + 0000000000000000
+        );
+        let cpffcc = Math.floor(Math.random() * 999 + 100);
+        let cpff2cc = Math.floor(Math.random() * 999 + 100);
+        let cpff3cc = Math.floor(Math.random() * 999 + 100);
+        let cpff4cc = Math.floor(Math.random() * 99 + 00);
+        let banddeiraacc = [
+          "Visa",
+          "Mastercard",
+          "Hipercard",
+          "Elo",
+          "American Express",
+        ];
+        let banddeiracc =
+          banddeiraacc[Math.floor(Math.random() * banddeiraacc.length)];
+        let categgoriaacc = ["Gold", "Platinum", "Black"];
+        let categgoriacc =
+          categgoriaacc[Math.floor(Math.random() * categgoriaacc.length)];
+        let banccoocc = [
+          "BRADESCO",
+          "CAIXA",
+          "NUBANK",
+          "C6 BANK",
+          "MERCADO PAGO",
+          "ORIGINAL",
+          "PAGBANK",
+          "INTER",
+          "SANTANDER",
+          "NEON",
+          "PAN",
+        ];
+        let banccocc = banccoocc[Math.floor(Math.random() * banccoocc.length)];
 
         let cc2 = `CARTÃO CC2 GERADO POR @${sender.split("@")[0]}
 
@@ -3552,8 +5292,12 @@ NÃO GARANTIMOS SALDO!.
 
 ✅ Status: #Aprovado - Retorno: Transação Capturada com sucesso.
 `;
-        conn.sendMessage(from, { text: cc2.trim(), mentions: [sender] }, { quoted: mek })
-        break
+        conn.sendMessage(
+          from,
+          { text: cc2.trim(), mentions: [sender] },
+          { quoted: mek }
+        );
+        break;
       /*
       case 'delete':
       case 'del':
@@ -3572,412 +5316,840 @@ NÃO GARANTIMOS SALDO!.
       await env('Marque uma mensagem.');
       }
       */
-      case 'tempmail':
-        if (!isPremium && isOwner) return env('vc nn e Premium;-;')
-        const tmmpz = Math.floor(Math.random() * 20 + 8)
+      case "tempmail":
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        const tmmpz = Math.floor(Math.random() * 20 + 8);
         const generateRandomString2 = (num) => {
-          const characters2 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-          let result1 = '';
+          const characters2 =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+          let result1 = "";
           const characters2Length = characters2.length;
           for (let i = 0; i < num; i++) {
-            result1 += characters2.charAt(Math.floor(Math.random() * characters2Length));
+            result1 += characters2.charAt(
+              Math.floor(Math.random() * characters2Length)
+            );
           }
 
           return result1;
-        }
+        };
 
         const displayRandomString2 = () => {
-          let randomStringContainer = document.getElementById('random_string');
+          let randomStringContainer = document.getElementById("random_string");
           randomStringContainer.innerHTML = generateRandomString2(8);
-        }
+        };
         console.log(generateRandomString2(tmmpz));
-        env(`*Email solicitado por:* ${sender.split('@')[0]}
-*Email:* ${generateRandomString2(9)}@gmail.com`)
-        break
+        env(`*Email solicitado por:* ${sender.split("@")[0]}
+*Email:* ${generateRandomString2(9)}@gmail.com`);
+        break;
 
-      case 'gnum':
-        if (!isPremium && isOwner) return env('vc nn e Premium;-;')
-        if (!texto) return env(`Qual o DDD? Exemplo: ${prefix + command} 77`)
+      case "gnum":
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!texto) return env(`Qual o DDD? Exemplo: ${prefix + command} 77`);
         var num = Math.floor(Math.random() * 3000) + 6000;
-        let obs = ['98444', '99600', '99265', '99623']
-        let obs2 = obs[Math.floor(Math.random() * obs.length)]
-        if (isNaN(texto)) return env('O DDD tem que está em número...')
-        if (texto.length > 2) return env('DDD brasileiro e no máximo 2 dígitos...')
-        if (texto == '00') return env('00 sério mesmo?')
+        let obs = ["98444", "99600", "99265", "99623"];
+        let obs2 = obs[Math.floor(Math.random() * obs.length)];
+        if (isNaN(texto)) return env("O DDD tem que está em número...");
+        if (texto.length > 2)
+          return env("DDD brasileiro e no máximo 2 dígitos...");
+        if (texto == "00") return env("00 sério mesmo?");
         env(`*DDD:* ${texto}
 *Seu Número:* +55 ${texto} ${obs2}-${num}`);
 
         setTimeout(() => {
-          ab = Math.floor(Math.random() * 999 + 000)
-          ac = Math.floor(Math.random() * 999 + 000)
-          env(`Seu código de verificação e: ${ab}-${ac}`)
-        }, 35060)
-        break
+          ab = Math.floor(Math.random() * 999 + 000);
+          ac = Math.floor(Math.random() * 999 + 000);
+          env(`Seu código de verificação e: ${ab}-${ac}`);
+        }, 35060);
+        break;
 
-      case 'formatnum':
-        if (!texto) return env('cadê o número?')
-        if (isNaN(texto)) return env('O DDD tem que está em número...')
-        if (texto.length > 13) return env('DDD brasileiro e no máximo 13 dígitos...')
-        if (texto == '00') return env('00 sério mesmo?')
+      case "formatnum":
+        if (!texto) return env("cadê o número?");
+        if (isNaN(texto)) return env("O DDD tem que está em número...");
+        if (texto.length > 13)
+          return env("DDD brasileiro e no máximo 13 dígitos...");
+        if (texto == "00") return env("00 sério mesmo?");
         var num = `${prefixobot}`;
         let dddi = num.substring(2, 4);
         let ddi = num.substring(0, 2);
         let endnum = num.substring(num.length - 4);
 
-        [ddi, dddi, endnum].map(i => {
-          num = num.replace(i, '');
+        [ddi, dddi, endnum].map((i) => {
+          num = num.replace(i, "");
         });
 
-        env('+' + ddi + ' ' + dddi + ' ' + num + '-' + endnum);
-        break
-      case 'gerarcpf':
-      case 'gcpf':
-        cp1 = `${Math.floor(Math.random() * 300) + 600}`
-        cp2 = `${Math.floor(Math.random() * 300) + 600}`
-        cp3 = `${Math.floor(Math.random() * 300) + 600}`
-        cp4 = `${Math.floor(Math.random() * 30) + 60}`
-        cpff = `${cp1}.${cp2}.${cp3}-${cp4}`
-        env(cpff)
-        break
+        env("+" + ddi + " " + dddi + " " + num + "-" + endnum);
+        break;
+      case "gerarcpf":
+      case "gcpf":
+        cp1 = `${Math.floor(Math.random() * 300) + 600}`;
+        cp2 = `${Math.floor(Math.random() * 300) + 600}`;
+        cp3 = `${Math.floor(Math.random() * 300) + 600}`;
+        cp4 = `${Math.floor(Math.random() * 30) + 60}`;
+        cpff = `${cp1}.${cp2}.${cp3}-${cp4}`;
+        env(cpff);
+        break;
 
       //FIM
       // LOGOS/ESCRITAS
 
-      case 'loli':
-        if (!texto) return env('Escreva uma frase na frente!\nExemplo: /loli Toki Bot');
+      case "loli":
+        if (!texto)
+          return env("Escreva uma frase na frente!\nExemplo: /loli Toki Bot");
         try {
           env(mensagem[0].espere);
-          let lodd = await fetchJson(`https://nekobot.xyz/api/imagegen?type=kannagen&text=${texto}`);
-          sendStickerFromUrl(from, lodd.message, mek)
+          let lodd = await fetchJson(
+            `https://nekobot.xyz/api/imagegen?type=kannagen&text=${texto}`
+          );
+          sendStickerFromUrl(from, lodd.message, mek);
         } catch (err) {
           env(mensagem[0].erro);
         }
-        break
-      case 'create-neon-devil-wings-text-effect-online-free-1014.html': //DEVIL
-      case 'make-a-batman-logo-online-free-1066.html': //BATMAN
-      case 'toxic-text-effect-online-901.html': //TOXIC
-      case 'create-logo-joker-online-934.html': //JOKER
-      case '3d-golden-ancient-text-effect-online-free-1060.html': // GOLD
-      case '3d-christmas-text-effect-by-name-1055.html': //NATAL
-      case 'create-thunder-text-effect-online-881.html': //Thunder
-      case 'neon-text-effect-online-879.html': //NEON
-      case 'matrix-style-text-effect-online-884.html': //MATRIX
-      case 'online-thunder-text-effect-generator-1031.html': //Thunder 2
-      case 'create-impressive-glitch-text-effects-online-1027.html': //Falha
-      case 'create-american-flag-3d-text-effect-online-1051.html': //AMÉRICA
-      case 'minion-text-effect-3d-online-978.html': //MINIONS
-      case 'create-a-magma-hot-text-effect-online-1030.html': //MAGMA
-      case '1917-style-text-effect-online-980.html': //1917
-      case 'online-black-and-white-bear-mascot-logo-creation-1012.html': //LOBO
-      case 'dropwater-text-effect-872.html': //ESPELHO
-      case 'halloween-fire-text-effect-940.html': // HALLOWEEN
-      case 'create-a-sketch-text-effect-online-1044.html': //LÁPIS
-      case 'create-a-transformer-text-effect-online-1035.html': //TRANSFORMER
-      case 'create-green-horror-style-text-effect-online-1036.html': //DEMON
-        if (!texto) return env('Coloque o seu nome na frente do comando');
-        env('Espere um pouquinho');
-        thiccysapi.textpro(`https://textpro.me/${command}`,
-          texto
-        ).then(async (data) => {
-          try {
-            console.log(data)
-            conn.sendMessage(from, { image: { url: data }, caption: '✅' }, { quoted: mek })
-          } catch (err) {
-            console.log(err)
-          }
-        });
-        break
+        break;
+      case "create-neon-devil-wings-text-effect-online-free-1014.html": //DEVIL
+      case "make-a-batman-logo-online-free-1066.html": //BATMAN
+      case "toxic-text-effect-online-901.html": //TOXIC
+      case "create-logo-joker-online-934.html": //JOKER
+      case "3d-golden-ancient-text-effect-online-free-1060.html": // GOLD
+      case "3d-christmas-text-effect-by-name-1055.html": //NATAL
+      case "create-thunder-text-effect-online-881.html": //Thunder
+      case "neon-text-effect-online-879.html": //NEON
+      case "matrix-style-text-effect-online-884.html": //MATRIX
+      case "online-thunder-text-effect-generator-1031.html": //Thunder 2
+      case "create-impressive-glitch-text-effects-online-1027.html": //Falha
+      case "create-american-flag-3d-text-effect-online-1051.html": //AMÉRICA
+      case "minion-text-effect-3d-online-978.html": //MINIONS
+      case "create-a-magma-hot-text-effect-online-1030.html": //MAGMA
+      case "1917-style-text-effect-online-980.html": //1917
+      case "online-black-and-white-bear-mascot-logo-creation-1012.html": //LOBO
+      case "dropwater-text-effect-872.html": //ESPELHO
+      case "halloween-fire-text-effect-940.html": // HALLOWEEN
+      case "create-a-sketch-text-effect-online-1044.html": //LÁPIS
+      case "create-a-transformer-text-effect-online-1035.html": //TRANSFORMER
+      case "create-green-horror-style-text-effect-online-1036.html": //DEMON
+        if (!texto) return env("Coloque o seu nome na frente do comando");
+        env("Espere um pouquinho");
+        thiccysapi
+          .textpro(`https://textpro.me/${command}`, texto)
+          .then(async (data) => {
+            try {
+              console.log(data);
+              conn.sendMessage(
+                from,
+                { image: { url: data }, caption: "✅" },
+                { quoted: mek }
+              );
+            } catch (err) {
+              console.log(err);
+            }
+          });
+        break;
 
-      case 'logos':
-        if (!texto) return env('Coloque o seu nome na frente do comando');
+      case "logos":
+        if (!texto) return env("Coloque o seu nome na frente do comando");
         var sections = [
           {
             title: "Logos disponível",
             rows: [
-              { title: `Logo com o tema Devil escrito "${texto}"`, rowId: `${prefixobot}create-neon-devil-wings-text-effect-online-free-1014.html ${texto}` },
+              {
+                title: `Logo com o tema Devil escrito "${texto}"`,
+                rowId: `${prefixobot}create-neon-devil-wings-text-effect-online-free-1014.html ${texto}`,
+              },
 
-              { title: `Logo com o tema do Batman escrito "${texto}"`, rowId: `${prefixobot}make-a-batman-logo-online-free-1066.html ${texto}` },
+              {
+                title: `Logo com o tema do Batman escrito "${texto}"`,
+                rowId: `${prefixobot}make-a-batman-logo-online-free-1066.html ${texto}`,
+              },
 
-              { title: `Logo com o tema Toxic escrito "${texto}"`, rowId: `${prefixobot}toxic-text-effect-online-901.html ${texto}` },
+              {
+                title: `Logo com o tema Toxic escrito "${texto}"`,
+                rowId: `${prefixobot}toxic-text-effect-online-901.html ${texto}`,
+              },
 
-              { title: `Logo com tema de terro demo "${texto}"`, rowId: `${prefixobot}create-green-horror-style-text-effect-online-1036.html ${texto}` },
+              {
+                title: `Logo com tema de terro demo "${texto}"`,
+                rowId: `${prefixobot}create-green-horror-style-text-effect-online-1036.html ${texto}`,
+              },
 
-              { title: `Logo do Joker escrito "${texto}"`, rowId: `${prefixobot}create-logo-joker-online-934.html ${texto}` },
+              {
+                title: `Logo do Joker escrito "${texto}"`,
+                rowId: `${prefixobot}create-logo-joker-online-934.html ${texto}`,
+              },
 
-              { title: `Logo com o tema Gold escrito "${texto}"`, rowId: `${prefixobot}3d-golden-ancient-text-effect-online-free-1060.html ${texto}` },
+              {
+                title: `Logo com o tema Gold escrito "${texto}"`,
+                rowId: `${prefixobot}3d-golden-ancient-text-effect-online-free-1060.html ${texto}`,
+              },
 
-              { title: `Logo com o tema de Natal escrito "${texto}"`, rowId: `${prefixobot}3d-christmas-text-effect-by-name-1055.html ${texto}` },
+              {
+                title: `Logo com o tema de Natal escrito "${texto}"`,
+                rowId: `${prefixobot}3d-christmas-text-effect-by-name-1055.html ${texto}`,
+              },
 
-              { title: `Logo com o tema Relâmpago escrito "${texto}"`, rowId: `${prefixobot}create-thunder-text-effect-online-881.html ${texto}` },
+              {
+                title: `Logo com o tema Relâmpago escrito "${texto}"`,
+                rowId: `${prefixobot}create-thunder-text-effect-online-881.html ${texto}`,
+              },
 
-              { title: `Logo com o tema Neon escrito "${texto}"`, rowId: `${prefixobot}neon-text-effect-online-879.html ${texto}` },
+              {
+                title: `Logo com o tema Neon escrito "${texto}"`,
+                rowId: `${prefixobot}neon-text-effect-online-879.html ${texto}`,
+              },
 
-              { title: `Logo com o tema Matrix escrito "${texto}"`, rowId: `${prefixobot}matrix-style-text-effect-online-884.html ${texto}` },
+              {
+                title: `Logo com o tema Matrix escrito "${texto}"`,
+                rowId: `${prefixobot}matrix-style-text-effect-online-884.html ${texto}`,
+              },
 
-              { title: `Logo com o tema de Relâmpago escrito "${texto}"`, rowId: `${prefixobot}online-thunder-text-effect-generator-1031.html ${texto}` },
+              {
+                title: `Logo com o tema de Relâmpago escrito "${texto}"`,
+                rowId: `${prefixobot}online-thunder-text-effect-generator-1031.html ${texto}`,
+              },
 
-              { title: `Logo com a letra falhando escrito "${texto}"`, rowId: `${prefixobot}create-impressive-glitch-text-effects-online-1027.html ${texto}` },
+              {
+                title: `Logo com a letra falhando escrito "${texto}"`,
+                rowId: `${prefixobot}create-impressive-glitch-text-effects-online-1027.html ${texto}`,
+              },
 
-              { title: `Logo da América escrito "${texto}"`, rowId: `${prefixobot}create-american-flag-3d-text-effect-online-1051.html ${texto}` },
+              {
+                title: `Logo da América escrito "${texto}"`,
+                rowId: `${prefixobot}create-american-flag-3d-text-effect-online-1051.html ${texto}`,
+              },
 
-              { title: `Logo com o tema de Minions escrito "${texto}"`, rowId: `${prefixobot}minion-text-effect-3d-online-978.html ${texto}` },
+              {
+                title: `Logo com o tema de Minions escrito "${texto}"`,
+                rowId: `${prefixobot}minion-text-effect-3d-online-978.html ${texto}`,
+              },
 
-              { title: `Logo com o tema de Magma escrito "${texto}"`, rowId: `${prefixobot}create-a-magma-hot-text-effect-online-1030.html ${texto}` },
+              {
+                title: `Logo com o tema de Magma escrito "${texto}"`,
+                rowId: `${prefixobot}create-a-magma-hot-text-effect-online-1030.html ${texto}`,
+              },
 
-              { title: `Logo com o tema de 1917 escrito "${texto}"`, rowId: `${prefixobot}1917-style-text-effect-online-980.html ${texto}` },
+              {
+                title: `Logo com o tema de 1917 escrito "${texto}"`,
+                rowId: `${prefixobot}1917-style-text-effect-online-980.html ${texto}`,
+              },
 
-              { title: `Logo com o tema de Lobo escrito "${texto}"`, rowId: `${prefixobot}online-black-and-white-bear-mascot-logo-creation-1012.html ${texto}` },
+              {
+                title: `Logo com o tema de Lobo escrito "${texto}"`,
+                rowId: `${prefixobot}online-black-and-white-bear-mascot-logo-creation-1012.html ${texto}`,
+              },
 
-              { title: `Logo com o tema de Marca no vidro escrito "${texto}"`, rowId: `${prefixobot}dropwater-text-effect-872.html ${texto}` },
+              {
+                title: `Logo com o tema de Marca no vidro escrito "${texto}"`,
+                rowId: `${prefixobot}dropwater-text-effect-872.html ${texto}`,
+              },
 
-              { title: `Logo com o tema de Halloween escrito "${texto}"`, rowId: `${prefixobot}halloween-fire-text-effect-940.html ${texto}` },
+              {
+                title: `Logo com o tema de Halloween escrito "${texto}"`,
+                rowId: `${prefixobot}halloween-fire-text-effect-940.html ${texto}`,
+              },
 
-              { title: `Logo com o tema escrito de lápis escrito "${texto}"`, rowId: `${prefixobot}create-a-sketch-text-effect-online-1044.html ${texto}` },
+              {
+                title: `Logo com o tema escrito de lápis escrito "${texto}"`,
+                rowId: `${prefixobot}create-a-sketch-text-effect-online-1044.html ${texto}`,
+              },
 
-              { title: `Logo com o tema de Transformes escrito "${texto}"`, rowId: `${prefixobot}create-a-transformer-text-effect-online-1035.html ${texto}` }
+              {
+                title: `Logo com o tema de Transformes escrito "${texto}"`,
+                rowId: `${prefixobot}create-a-transformer-text-effect-online-1035.html ${texto}`,
+              },
             ],
-          }
-        ]
+          },
+        ];
         var listMessage = {
           text: "Escolha uma fonte para usar no logo.",
           footer: "Selecione o tema abaixo",
           buttonText: "Escolha a fonte do logo",
-          sections
-        }
-        const loggo = await conn.sendMessage(from, listMessage, { quoted: whatsapp })
-        break
+          sections,
+        };
+        const loggo = await conn.sendMessage(from, listMessage, {
+          quoted: whatsapp,
+        });
+        break;
 
-      case 'papel':
-        if (args.length < 1) return env(`Digite a frase na frente do comando \nExemplo de como se usar: ${prefixobot + command} Toki Bot`)
-        teks = body.slice(7)
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: { url: `https://rsymenti.sirv.com/1627185297858.jpg?text.0.text=${teks}&text.0.position.x=-35%25&text.0.position.y=-44%25&text.0.size=45&text.0.color=000000&text.0.font.family=Playfair%20Display&text.0.background.opacity=100` }, quoted: mek, caption: '✓' }, { quoted: mek });
-        break
+      case "papel":
+        if (args.length < 1)
+          return env(
+            `Digite a frase na frente do comando \nExemplo de como se usar: ${
+              prefixobot + command
+            } Toki Bot`
+          );
+        teks = body.slice(7);
+        env(mensagem[0].espere);
+        conn.sendMessage(
+          from,
+          {
+            image: {
+              url: `https://rsymenti.sirv.com/1627185297858.jpg?text.0.text=${teks}&text.0.position.x=-35%25&text.0.position.y=-44%25&text.0.size=45&text.0.color=000000&text.0.font.family=Playfair%20Display&text.0.background.opacity=100`,
+            },
+            quoted: mek,
+            caption: "✓",
+          },
+          { quoted: mek }
+        );
+        break;
 
-      case 'bart':
-        if (args.length < 1) return env(`Digite a frase na frente do comando \nExemplo de como se usar: ${prefixobot + command} Toki Bot`)
-        teks = body.slice(6)
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: { url: `https://rsymenti.sirv.com/1628972007952.jpg?text.0.text=${teks}&text.0.position.x=-37%25&text.0.position.y=-53%25&text.0.size=50&text.0.color=ffffff&text.0.font.family=Shadows%20Into%20Light%20Two&text.0.background.opacity=67` }, caption: '✓' }, { quoted: mek });
-        break
+      case "bart":
+        if (args.length < 1)
+          return env(
+            `Digite a frase na frente do comando \nExemplo de como se usar: ${
+              prefixobot + command
+            } Toki Bot`
+          );
+        teks = body.slice(6);
+        env(mensagem[0].espere);
+        conn.sendMessage(
+          from,
+          {
+            image: {
+              url: `https://rsymenti.sirv.com/1628972007952.jpg?text.0.text=${teks}&text.0.position.x=-37%25&text.0.position.y=-53%25&text.0.size=50&text.0.color=ffffff&text.0.font.family=Shadows%20Into%20Light%20Two&text.0.background.opacity=67`,
+            },
+            caption: "✓",
+          },
+          { quoted: mek }
+        );
+        break;
 
-      case 'liza':
-        if (args.length < 1) return env(`Digite a frase na frente do comando \nExemplo de como se usar: ${prefixobot + command} Toki Bot`)
-        teks = body.slice(6)
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: { url: `https://janbot-api.herokuapp.com/api/imgedit/presentasi?text=${teks}` }, caption: '✓' }, { quoted: mek });
-        break
+      case "liza":
+        if (args.length < 1)
+          return env(
+            `Digite a frase na frente do comando \nExemplo de como se usar: ${
+              prefixobot + command
+            } Toki Bot`
+          );
+        teks = body.slice(6);
+        env(mensagem[0].espere);
+        conn.sendMessage(
+          from,
+          {
+            image: {
+              url: `https://janbot-api.herokuapp.com/api/imgedit/presentasi?text=${teks}`,
+            },
+            caption: "✓",
+          },
+          { quoted: mek }
+        );
+        break;
 
-      case 'monica':
-        if (args.length < 1) return env(`Digite a frase na frente do comando \nExemplo de como se usar: ${prefixobot + command} Toki Bot`)
-        teks = body.slice(8)
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: { url: `https://rsymenti.sirv.com/images%20(1).jpeg?text.0.text=${teks}&text.0.position.gravity=south&text.0.position.x=20%25&text.0.position.y=-68%25&text.0.size=45&text.0.color=000000&text.0.opacity=94&text.0.background.opacity=93&text.0.outline.blur=28&text.0.outline.opacity=37` }, caption: '✓' }, { quoted: mek });
-        break
+      case "monica":
+        if (args.length < 1)
+          return env(
+            `Digite a frase na frente do comando \nExemplo de como se usar: ${
+              prefixobot + command
+            } Toki Bot`
+          );
+        teks = body.slice(8);
+        env(mensagem[0].espere);
+        conn.sendMessage(
+          from,
+          {
+            image: {
+              url: `https://rsymenti.sirv.com/images%20(1).jpeg?text.0.text=${teks}&text.0.position.gravity=south&text.0.position.x=20%25&text.0.position.y=-68%25&text.0.size=45&text.0.color=000000&text.0.opacity=94&text.0.background.opacity=93&text.0.outline.blur=28&text.0.outline.opacity=37`,
+            },
+            caption: "✓",
+          },
+          { quoted: mek }
+        );
+        break;
 
-      case 'bolsonaro':
-        if (args.length < 1) return env(`Digite a frase na frente do comando \nExemplo de como se usar: ${prefixobot + command} Toki Bot`)
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: { url: `https://rsymenti.sirv.com/1626624476633.jpg?text.0.text=${texto}&text.0.position.x=-13%25&text.0.position.y=-52%25&text.0.size=55&text.0.color=000000&text.0.background.opacity=100` }, caption: '✓' }, { quoted: mek });
-        break
+      case "bolsonaro":
+        if (args.length < 1)
+          return env(
+            `Digite a frase na frente do comando \nExemplo de como se usar: ${
+              prefixobot + command
+            } Toki Bot`
+          );
+        env(mensagem[0].espere);
+        conn.sendMessage(
+          from,
+          {
+            image: {
+              url: `https://rsymenti.sirv.com/1626624476633.jpg?text.0.text=${texto}&text.0.position.x=-13%25&text.0.position.y=-52%25&text.0.size=55&text.0.color=000000&text.0.background.opacity=100`,
+            },
+            caption: "✓",
+          },
+          { quoted: mek }
+        );
+        break;
 
       //FIM
       //VIDEOS
 
-      case 'saycat':
-        let datas = await fetchJson(`https://pastebin.com/raw/cVDj0qz6`)
+      case "saycat":
+        let datas = await fetchJson(`https://pastebin.com/raw/cVDj0qz6`);
         let nss = JSON.parse(JSON.stringify(datas));
         let nimeks = nss[Math.floor(Math.random() * nss.length)];
-        let buffesay = await getBuffer(nimeks.result)
-        conn.sendMessage(from, { video: buffesay, caption: 'SayCat', gifPlayback: true }, { quoted: mek })
-        break
+        let buffesay = await getBuffer(nimeks.result);
+        conn.sendMessage(
+          from,
+          { video: buffesay, caption: "SayCat", gifPlayback: true },
+          { quoted: mek }
+        );
+        break;
 
       //FIM
       //IMAGENS
 
-      case 'floppa':
+      case "floppa":
         try {
-          conn.sendMessage(from, { image: { url: 'https://api.jbh.rocks/image' } }, { quoted: mek });
+          conn.sendMessage(
+            from,
+            { image: { url: "https://api.jbh.rocks/image" } },
+            { quoted: mek }
+          );
         } catch (err) {
-          env('Erro ao enviar');
+          env("Erro ao enviar");
         }
-        break
-      case 'coffee':
-      case 'cafe':
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: { url: 'https://coffee.alexflipnote.dev/random' }, caption: 'Cafezinho!', buttons: [{ buttonId: `${prefixobot}coffee`, buttonText: { displayText: 'Coffee☕' }, type: 1 }], headerType: 4 });
-        break
-      case 'metadinha':
-      case 'couple':
-        const metadinha = fs.readFileSync('./db/js/couple.js');
+        break;
+      case "coffee":
+      case "cafe":
+        env(mensagem[0].espere);
+        conn.sendMessage(from, {
+          image: { url: "https://coffee.alexflipnote.dev/random" },
+          caption: "Cafezinho!",
+          buttons: [
+            {
+              buttonId: `${prefixobot}coffee`,
+              buttonText: { displayText: "Coffee☕" },
+              type: 1,
+            },
+          ],
+          headerType: 4,
+        });
+        break;
+      case "metadinha":
+      case "couple":
+        const metadinha = fs.readFileSync("./db/js/couple.js");
         var jsonData = JSON.parse(metadinha);
         var pinga = Math.floor(Math.random() * jsonData.length);
-        conn.sendMessage(from, { image: { url: res.male, caption: 'Lado Masculino' } }, { quoted: mek });
-        conn.sendMessage(from, { image: { url: res.female, caption: 'Lado Feminino' } }, { quoted: mek });
-        break
+        conn.sendMessage(
+          from,
+          { image: { url: res.male, caption: "Lado Masculino" } },
+          { quoted: mek }
+        );
+        conn.sendMessage(
+          from,
+          { image: { url: res.female, caption: "Lado Feminino" } },
+          { quoted: mek }
+        );
+        break;
 
       //FIM
       //BÁSICOS
 
-      case 'diga':
-      case 'dizer':
-        if (!texto) return env('Exemplo: /diga Toki Bot');
+      case "diga":
+      case "dizer":
+        if (!texto) return env("Exemplo: /diga Toki Bot");
         mention(`${texto}`);
-        break
+        break;
 
-      case 'simi':
-        if (args.length < 1) return env('Simi não saber lê pensamentos não amigo...')
-        teks = body.slice(6)
-        res = await fetchJson(`https://api-sv2.simsimi.net/v2/?text=${teks}&lc=pt&cf=false`)
+      case "simi":
+        if (args.length < 1)
+          return env("Simi não saber lê pensamentos não amigo...");
+        teks = body.slice(6);
+        res = await fetchJson(
+          `https://api-sv2.simsimi.net/v2/?text=${teks}&lc=pt&cf=false`
+        );
         env(res.success);
-        break
+        break;
 
       //FIM
       //+18
 
-      case 'utaka':
+      case "utaka":
         if (!isNsfw) return env(mensagem[0].nsfw);
-        if (!isPremium && isOwner) return env('vc nn e Premium;-;')
-        res = await fetchJson('https://slazinnn.herokuapp.com/api/nsfw/cosplay&token=slazinnnn')
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: { url: res[0].result }, caption: '先輩🥵', buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'Próxima imagem' }, type: 1 }], headerType: 4 }, { quoted: whatsapp });
-        break
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        res = await fetchJson(
+          "https://slazinnn.herokuapp.com/api/nsfw/cosplay&token=slazinnnn"
+        );
+        env(mensagem[0].espere);
+        conn.sendMessage(
+          from,
+          {
+            image: { url: res[0].result },
+            caption: "先輩🥵",
+            buttons: [
+              {
+                buttonId: `${prefixobot + command}`,
+                buttonText: { displayText: "Próxima imagem" },
+                type: 1,
+              },
+            ],
+            headerType: 4,
+          },
+          { quoted: whatsapp }
+        );
+        break;
 
-      case 'pussy':
-        if (!isPremium && isOwner) return env('vc nn e Premium;-;');
+      case "pussy":
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
-        const pussy = await fetchJson('https://slazinnn.herokuapp.com/api/nsfw/pussy&token=slazinnnn')
+        const pussy = await fetchJson(
+          "https://slazinnn.herokuapp.com/api/nsfw/pussy&token=slazinnnn"
+        );
         n = JSON.parse(JSON.stringify(pussy));
         nimek = n[Math.floor(Math.random() * n.length)];
-        pussyf = await getBuffer(nimek.result)
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: pussyf, caption: 'Pussy!', buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'Próxima imagem' }, type: 1 }], headerType: 4 }, { quoted: mek });
+        pussyf = await getBuffer(nimek.result);
+        env(mensagem[0].espere);
+        conn.sendMessage(
+          from,
+          {
+            image: pussyf,
+            caption: "Pussy!",
+            buttons: [
+              {
+                buttonId: `${prefixobot + command}`,
+                buttonText: { displayText: "Próxima imagem" },
+                type: 1,
+              },
+            ],
+            headerType: 4,
+          },
+          { quoted: mek }
+        );
         break;
 
-      case 'mia':
-      case 'khalifa':
-        if (!isPremium && isOwner) return env('vc nn e Premium;-;')
+      case "mia":
+      case "khalifa":
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
-        const miaa = await fetchJson('https://pastebin.com/raw/Th48gbKg')
+        const miaa = await fetchJson("https://pastebin.com/raw/Th48gbKg");
         n = JSON.parse(JSON.stringify(miaa));
         miao = n[Math.floor(Math.random() * n.length)];
-        miap = await getBuffer(miao.result)
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: miap, caption: 'Mia Khalifa', buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'Próxima imagem' }, type: 1 }], headerType: 4 }, { quoted: whatsapp });
+        miap = await getBuffer(miao.result);
+        env(mensagem[0].espere);
+        conn.sendMessage(
+          from,
+          {
+            image: miap,
+            caption: "Mia Khalifa",
+            buttons: [
+              {
+                buttonId: `${prefixobot + command}`,
+                buttonText: { displayText: "Próxima imagem" },
+                type: 1,
+              },
+            ],
+            headerType: 4,
+          },
+          { quoted: whatsapp }
+        );
         break;
 
-      case 'malkova':
-        if (!isPremium && isOwner) return env('vc nn e Premium;-;')
+      case "malkova":
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
-        const malkova = await fetchJson('https://slazinnn.herokuapp.com/api/nsfw/miamalkova&token=slazinnnn')
+        const malkova = await fetchJson(
+          "https://slazinnn.herokuapp.com/api/nsfw/miamalkova&token=slazinnnn"
+        );
         n = JSON.parse(JSON.stringify(malkova));
         miao = n[Math.floor(Math.random() * n.length)];
-        malkovap = await getBuffer(miao.result)
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: malkovap, caption: 'Mia Malkova', buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'Próxima imagem' }, type: 1 }], headerType: 4 }, { quoted: whatsapp });
+        malkovap = await getBuffer(miao.result);
+        env(mensagem[0].espere);
+        conn.sendMessage(
+          from,
+          {
+            image: malkovap,
+            caption: "Mia Malkova",
+            buttons: [
+              {
+                buttonId: `${prefixobot + command}`,
+                buttonText: { displayText: "Próxima imagem" },
+                type: 1,
+              },
+            ],
+            headerType: 4,
+          },
+          { quoted: whatsapp }
+        );
         break;
 
-      case 'belle':
-      case 'delphine':
-        if (!isPremium && isOwner) return env('vc nn e Premium;-;')
+      case "belle":
+      case "delphine":
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
-        const belle = await fetchJson('https://slazinnn.herokuapp.com/api/nsfw/belle&token=slazinnnn')
+        const belle = await fetchJson(
+          "https://slazinnn.herokuapp.com/api/nsfw/belle&token=slazinnnn"
+        );
         n = JSON.parse(JSON.stringify(belle));
         miao = n[Math.floor(Math.random() * n.length)];
-        bellep = await getBuffer(miao.result)
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: bellep, caption: 'Belle Delphine', buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'Próxima imagem' }, type: 1 }], headerType: 4 }, { quoted: whatsapp });
+        bellep = await getBuffer(miao.result);
+        env(mensagem[0].espere);
+        conn.sendMessage(
+          from,
+          {
+            image: bellep,
+            caption: "Belle Delphine",
+            buttons: [
+              {
+                buttonId: `${prefixobot + command}`,
+                buttonText: { displayText: "Próxima imagem" },
+                type: 1,
+              },
+            ],
+            headerType: 4,
+          },
+          { quoted: whatsapp }
+        );
         break;
 
       //Fim
       //HENTAI && HENTAI LITE
 
-      case 'masturbation':
-        if (!isPremium && isOwner) return env('vc nn e Premium;-;')
+      case "masturbation":
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
-        res = await fetchJson('https://janbot-api.herokuapp.com/api/nsfw/masturbation')
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: { url: res.result }, caption: `Aperte o botão a baixo para mais um ${command}.`, buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'Próxima imagem' }, type: 1 }], headerType: 4 }, { quoted: whatsapp });
-        break
+        res = await fetchJson(
+          "https://janbot-api.herokuapp.com/api/nsfw/masturbation"
+        );
+        env(mensagem[0].espere);
+        conn.sendMessage(
+          from,
+          {
+            image: { url: res.result },
+            caption: `Aperte o botão a baixo para mais um ${command}.`,
+            buttons: [
+              {
+                buttonId: `${prefixobot + command}`,
+                buttonText: { displayText: "Próxima imagem" },
+                type: 1,
+              },
+            ],
+            headerType: 4,
+          },
+          { quoted: whatsapp }
+        );
+        break;
 
-      case 'thighs':
-        if (!isPremium && isOwner) return env('vc nn e Premium;-;')
+      case "thighs":
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
-        res = await fetchJson('https://janbot-api.herokuapp.com/api/nsfw/thighs')
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: { url: res.result }, caption: `Aperte o botão a baixo para mais um ${command}.`, buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'Próxima imagem' }, type: 1 }], headerType: 4 }, { quoted: whatsapp });
-        break
+        res = await fetchJson(
+          "https://janbot-api.herokuapp.com/api/nsfw/thighs"
+        );
+        env(mensagem[0].espere);
+        conn.sendMessage(
+          from,
+          {
+            image: { url: res.result },
+            caption: `Aperte o botão a baixo para mais um ${command}.`,
+            buttons: [
+              {
+                buttonId: `${prefixobot + command}`,
+                buttonText: { displayText: "Próxima imagem" },
+                type: 1,
+              },
+            ],
+            headerType: 4,
+          },
+          { quoted: whatsapp }
+        );
+        break;
 
-      case 'megumin':
+      case "megumin":
         if (!isNsfw) return env(mensagem[0].nsfw);
-        if (!isPremium && isOwner) return env('vc nn e Premium;-;')
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: { url: 'https://janbot-api.herokuapp.com/api/sfw/megumin' }, caption: `Aperte o botão a baixo para mais um ${command}.`, buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'Próxima imagem' }, type: 1 }], headerType: 4 }, { quoted: whatsapp });
-        break
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        env(mensagem[0].espere);
+        conn.sendMessage(
+          from,
+          {
+            image: { url: "https://janbot-api.herokuapp.com/api/sfw/megumin" },
+            caption: `Aperte o botão a baixo para mais um ${command}.`,
+            buttons: [
+              {
+                buttonId: `${prefixobot + command}`,
+                buttonText: { displayText: "Próxima imagem" },
+                type: 1,
+              },
+            ],
+            headerType: 4,
+          },
+          { quoted: whatsapp }
+        );
+        break;
 
-      case 'shinobu':
-        if (!isPremium && isOwner) return env('vc nn e Premium;-;')
+      case "shinobu":
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: { url: 'https://janbot-api.herokuapp.com/api/sfw/shinobu' }, caption: `Aperte o botão a baixo para mais um ${command}.`, buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'Próxima imagem' }, type: 1 }], headerType: 4 }, { quoted: whatsapp });
-        break
+        env(mensagem[0].espere);
+        conn.sendMessage(
+          from,
+          {
+            image: { url: "https://janbot-api.herokuapp.com/api/sfw/shinobu" },
+            caption: `Aperte o botão a baixo para mais um ${command}.`,
+            buttons: [
+              {
+                buttonId: `${prefixobot + command}`,
+                buttonText: { displayText: "Próxima imagem" },
+                type: 1,
+              },
+            ],
+            headerType: 4,
+          },
+          { quoted: whatsapp }
+        );
+        break;
 
-      case 'neko':
-        if (!isPremium && isOwner) return env('vc nn e Premium;-;');
+      case "neko":
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: { url: 'https://janbot-api.herokuapp.com/api/sfw/neko' }, caption: `Aperte o botão a baixo para mais um ${command}.`, buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'Próxima imagem' }, type: 1 }], headerType: 4 }, { quoted: whatsapp });
-        break
+        env(mensagem[0].espere);
+        conn.sendMessage(
+          from,
+          {
+            image: { url: "https://janbot-api.herokuapp.com/api/sfw/neko" },
+            caption: `Aperte o botão a baixo para mais um ${command}.`,
+            buttons: [
+              {
+                buttonId: `${prefixobot + command}`,
+                buttonText: { displayText: "Próxima imagem" },
+                type: 1,
+              },
+            ],
+            headerType: 4,
+          },
+          { quoted: whatsapp }
+        );
+        break;
 
-      case 'waifu':
-        if (!isPremium && isOwner) return env('vc nn e Premium;-;')
+      case "waifu":
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: { url: 'https://janbot-api.herokuapp.com/api/sfw/waifu' }, caption: `Aperte o botão a baixo para mais um ${command}.`, buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'Próxima imagem' }, type: 1 }], headerType: 4 }, { quoted: whatsapp });
-        break
+        env(mensagem[0].espere);
+        conn.sendMessage(
+          from,
+          {
+            image: { url: "https://janbot-api.herokuapp.com/api/sfw/waifu" },
+            caption: `Aperte o botão a baixo para mais um ${command}.`,
+            buttons: [
+              {
+                buttonId: `${prefixobot + command}`,
+                buttonText: { displayText: "Próxima imagem" },
+                type: 1,
+              },
+            ],
+            headerType: 4,
+          },
+          { quoted: whatsapp }
+        );
+        break;
 
-      case 'hentai':
-        if (!isPremium && isOwner) return env('vc nn e Premium;-;')
+      case "hentai":
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
-        res = await fetchJson('https://janbot-api.herokuapp.com/api/nsfw/hentai')
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: { url: res.result }, caption: `Aperte o botão a baixo para mais um ${command}.`, buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'Próxima imagem' }, type: 1 }], headerType: 4 }, { quoted: whatsapp });
-        break
+        res = await fetchJson(
+          "https://janbot-api.herokuapp.com/api/nsfw/hentai"
+        );
+        env(mensagem[0].espere);
+        conn.sendMessage(
+          from,
+          {
+            image: { url: res.result },
+            caption: `Aperte o botão a baixo para mais um ${command}.`,
+            buttons: [
+              {
+                buttonId: `${prefixobot + command}`,
+                buttonText: { displayText: "Próxima imagem" },
+                type: 1,
+              },
+            ],
+            headerType: 4,
+          },
+          { quoted: whatsapp }
+        );
+        break;
 
-      case 'ero':
-        if (!isPremium && isOwner) return env('vc nn e Premium;-;')
+      case "ero":
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
-        res = await fetchJson('https://janbot-api.herokuapp.com/api/nsfw/ero')
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: { url: res.result }, caption: `Aperte o botão a baixo para mais um ${command}.`, buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'Próxima imagem' }, type: 1 }], headerType: 4 }, { quoted: whatsapp });
-        break
+        res = await fetchJson("https://janbot-api.herokuapp.com/api/nsfw/ero");
+        env(mensagem[0].espere);
+        conn.sendMessage(
+          from,
+          {
+            image: { url: res.result },
+            caption: `Aperte o botão a baixo para mais um ${command}.`,
+            buttons: [
+              {
+                buttonId: `${prefixobot + command}`,
+                buttonText: { displayText: "Próxima imagem" },
+                type: 1,
+              },
+            ],
+            headerType: 4,
+          },
+          { quoted: whatsapp }
+        );
+        break;
 
-      case 'ahegao':
-        if (!isPremium && isOwner) return env('vc nn e Premium;-;');
+      case "ahegao":
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
-        res = await fetchJson('https://janbot-api.herokuapp.com/api/nsfw/ahegao')
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: { url: res.result }, caption: `Aperte o botão a baixo para mais um ${command}.`, buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'Próxima imagem' }, type: 1 }], headerType: 4 }, { quoted: whatsapp });
-        break
+        res = await fetchJson(
+          "https://janbot-api.herokuapp.com/api/nsfw/ahegao"
+        );
+        env(mensagem[0].espere);
+        conn.sendMessage(
+          from,
+          {
+            image: { url: res.result },
+            caption: `Aperte o botão a baixo para mais um ${command}.`,
+            buttons: [
+              {
+                buttonId: `${prefixobot + command}`,
+                buttonText: { displayText: "Próxima imagem" },
+                type: 1,
+              },
+            ],
+            headerType: 4,
+          },
+          { quoted: whatsapp }
+        );
+        break;
 
-      case 'pussyanime':
-        if (!isPremium && isOwner) return env('vc nn e Premium;-;')
+      case "pussyanime":
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
-        res = await fetchJson('https://janbot-api.herokuapp.com/api/nsfw/pussy')
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: { url: res.result }, caption: `Aperte o botão a baixo para mais um ${command}.`, buttons: [{ buttonId: `${prefixobot}hentai`, buttonText: { displayText: 'Próxima imagem' }, type: 1 }], headerType: 4 }, { quoted: whatsapp });
-        break
+        res = await fetchJson(
+          "https://janbot-api.herokuapp.com/api/nsfw/pussy"
+        );
+        env(mensagem[0].espere);
+        conn.sendMessage(
+          from,
+          {
+            image: { url: res.result },
+            caption: `Aperte o botão a baixo para mais um ${command}.`,
+            buttons: [
+              {
+                buttonId: `${prefixobot}hentai`,
+                buttonText: { displayText: "Próxima imagem" },
+                type: 1,
+              },
+            ],
+            headerType: 4,
+          },
+          { quoted: whatsapp }
+        );
+        break;
 
       //FIM
       //PESQUISAR
 
-      case 'jogo':
-      case 'gamer':
-        if (!texto) return env(`Digite o nome do jogo, pra mim pesquisar!\nExemplo: ${prefixobot + command} Gta V`);
-        env('Pesquisando jogo...');
-        phaticusthiccy.system_requirements(`${texto}`).then(async (res) => {
-          //envJSON(data)
-          let dadosjogo = `\t\t\t\t*${texto}*
+      case "jogo":
+      case "gamer":
+        if (!texto)
+          return env(
+            `Digite o nome do jogo, pra mim pesquisar!\nExemplo: ${
+              prefixobot + command
+            } Gta V`
+          );
+        env("Pesquisando jogo...");
+        phaticusthiccy
+          .system_requirements(`${texto}`)
+          .then(async (res) => {
+            //envJSON(data)
+            let dadosjogo = `\t\t\t\t*${texto}*
 
 *Nome:* ${res.game.name}
 *Lançamento:* ${res.game.release_date}
@@ -4014,68 +6186,104 @@ NÃO GARANTIMOS SALDO!.
 *Inovações:* ${res.reviews.innovations}
 *Geral:* ${res.reviews.overall}
 
-`
-          conn.sendMessage(from, { image: { url: res.game.avatar }, caption: dadosjogo }, { quoted: mek });
-        }).catch(e => {
-          env('Jogo não encontrando.')
-          console.log(e)
-        })
-        break
-      case 'google':
-      case 'google-it':
-      case 'googleit':
-        if (!texto) return env('Digite o tema da pesquisar pra pesquisar.');
-        googleIt({ 'query': texto }).then(results => {
-          let gogl = `🔎 ⟪ *${texto}* ⟫ 🔍\n\n`;
+`;
+            conn.sendMessage(
+              from,
+              { image: { url: res.game.avatar }, caption: dadosjogo },
+              { quoted: mek }
+            );
+          })
+          .catch((e) => {
+            env("Jogo não encontrando.");
+            console.log(e);
+          });
+        break;
+      case "google":
+      case "google-it":
+      case "googleit":
+        if (!texto) return env("Digite o tema da pesquisar pra pesquisar.");
+        googleIt({ query: texto })
+          .then((results) => {
+            let gogl = `🔎 ⟪ *${texto}* ⟫ 🔍\n\n`;
 
-          for (let { title, link, snippet } of results) {
-            gogl += `Titulo: *${title}*\n\nLink: ${link}\n\n*Snippet:* ${snippet}\n\n──────────────\n\n`
-          }
-          env(gogl);
+            for (let { title, link, snippet } of results) {
+              gogl += `Titulo: *${title}*\n\nLink: ${link}\n\n*Snippet:* ${snippet}\n\n──────────────\n\n`;
+            }
+            env(gogl);
+          })
+          .catch((e) => {
+            env(mensagem[0].erro);
+            console.log("❌ Erro ao pesquisa. ❌");
+          });
+        break;
 
-        }).catch(e => {
-          env(mensagem[0].erro)
-          console.log('❌ Erro ao pesquisa. ❌');
-        })
-        break
-
-      case 'achar':
-      case 'gis':
-        if (!texto) return env('Digite o tema da pesquisar pra pesquisar a imagem.');
+      case "achar":
+      case "gis":
+        if (!texto)
+          return env("Digite o tema da pesquisar pra pesquisar a imagem.");
         gis(texto, logResults);
 
         function logResults(error, results) {
           if (error) {
             console.log(error);
-            env('❌ Erro ao pesquisar. ❌');
-          }
-          else {
-            conn.sendMessage(from, { image: { url: results[0].url }, caption: texto }, { quoted: mek });
+            env("❌ Erro ao pesquisar. ❌");
+          } else {
+            conn.sendMessage(
+              from,
+              { image: { url: results[0].url }, caption: texto },
+              { quoted: mek }
+            );
           }
         }
-        break
-
-      /*case 'tiktok':
-      if (!texto) return env(`Cade o link?\Exemplo de como ser usar: ${prefixobot + command} https://www.tiktok.com/@mooncatv/video/7060490247498484998`);
-      if (!isUrl(args[0]) && !args[0].includes('https://vm.tiktok')) return env('Cadê o url do vídeo do Tik Tok?');   
-      
-      break
-      case 'instagram':
-      if (!texto) return env(`Cade o link?\Exemplo de como ser usar: ${prefixobot + command} https://www.instagram.com/reel/CbNPcCFFrV0/?utm_source=ig_web_copy_link`);
-      if (!isUrl(args[0]) && !args[0].includes('https://www.instagram')) return env('Cadê o url do vídeo do Instagram?');
-      break*/
-      case 'igstalk':
-        if (!texto) return env('Onde está o nome do usuário?')
+        break;
+      case "igstalk":
+        if (!texto) return env("Onde está o nome do usuário?");
         ig.fetchUser(texto).then((res) => {
           //envJson(res);
-          let inffoinsta = `*Nome:* ${res.username}\n*Apelidos:* ${res.fullname}\n*ID do Perfil:* ${res.id}\n*Biografia:* ${res.biography}\n*Privado:* ${res.is_private}\n*Verificado:* ${res.is_verified}\n*Seguidores:* ${res.followers}\n*Seguido:* ${res.following}\n*Postagens:* ${res.post_count}\n*IGTV:* ${res.total_igtv_videos}\n*Conta comercial:* ${res.is_business}\n*Email:* ${res.public_email || 'Não possui'}\n*Número:* ${res.contact_phone_number || 'Não possui'}`
-          conn.sendMessage(from, { image: { url: res.hd_profile_pic_url_info.url }, caption: inffoinsta, footer: 'Link do perfil no botão abaixo:', templateButtons: [{ index: 1, urlButton: { displayText: 'Link do Perfil', url: `https://www.instagram.com/${res.username}/` } }] }, { quoted: mek });
+          let inffoinsta = `*Nome:* ${res.username}\n*Apelidos:* ${
+            res.fullname
+          }\n*ID do Perfil:* ${res.id}\n*Biografia:* ${
+            res.biography
+          }\n*Privado:* ${res.is_private}\n*Verificado:* ${
+            res.is_verified
+          }\n*Seguidores:* ${res.followers}\n*Seguido:* ${
+            res.following
+          }\n*Postagens:* ${res.post_count}\n*IGTV:* ${
+            res.total_igtv_videos
+          }\n*Conta comercial:* ${res.is_business}\n*Email:* ${
+            res.public_email || "Não possui"
+          }\n*Número:* ${res.contact_phone_number || "Não possui"}`;
+          conn.sendMessage(
+            from,
+            {
+              image: { url: res.hd_profile_pic_url_info.url },
+              caption: inffoinsta,
+              footer: "Link do perfil no botão abaixo:",
+              templateButtons: [
+                {
+                  index: 1,
+                  urlButton: {
+                    displayText: "Link do Perfil",
+                    url: `https://www.instagram.com/${res.username}/`,
+                  },
+                },
+              ],
+            },
+            { quoted: mek }
+          );
         });
-        break
-      case 'celular':
-        if (!texto) return env(`Coloque na frente do comando o celular que você desejar buscar.\nExemplo: ${prefixobot + command} Moto G 100`)
-        env('Estou buscando o dispositivo...')
-        anu = await fetchJson(`https://api-yogipw.herokuapp.com/api/search/gsmarena?query=${texto}`)
+        break;
+      case "celular":
+        if (!texto)
+          return env(
+            `Coloque na frente do comando o celular que você desejar buscar.\nExemplo: ${
+              prefixobot + command
+            } Moto G 100`
+          );
+        env("Estou buscando o dispositivo...");
+        anu = await fetchJson(
+          `https://api-yogipw.herokuapp.com/api/search/gsmarena?query=${texto}`
+        );
         pinga = ` 
 ╭────────⟨ *FICHA TÉCNICA* ⟩────────╮
 │╭──
@@ -4094,21 +6302,31 @@ NÃO GARANTIMOS SALDO!.
 │✳️ Tipo da bateria: ${anu.merek_batre}
 │╰──
 ╰──────────────────────╯
-`
-        conn.sendMessage(from, { image: { url: anu.thumb }, quoted: mek, caption: pinga }, { quoted: mek });
-        break
+`;
+        conn.sendMessage(
+          from,
+          { image: { url: anu.thumb }, quoted: mek, caption: pinga },
+          { quoted: mek }
+        );
+        break;
 
-      case 'traduzir':
-        if (args.length < 1) return env(`Cade o ip? exemplo ${prefixobot}ip da pessoa`)
-        teks = body.slice(10)
-        anu = await fetchJson(`https://docs-jojo.herokuapp.com/api/translate?text=${teks}&from=id&to=pt`)
-        env(anu.translated_text)
-        break
-      case 'ip':
-        if (args.length < 1) return env(`Cade o ip? exemplo ${prefixobot} 11414216938 `)
-        teks = body.slice(4)
-        env('*Estou fazendo, se der erro tente novamente ✓*')
-        anu = await fetchJson(`https://mnazria.herokuapp.com/api/check?ip=${teks}`)
+      case "traduzir":
+        if (args.length < 1)
+          return env(`Cade o ip? exemplo ${prefixobot}ip da pessoa`);
+        teks = body.slice(10);
+        anu = await fetchJson(
+          `https://docs-jojo.herokuapp.com/api/translate?text=${teks}&from=id&to=pt`
+        );
+        env(anu.translated_text);
+        break;
+      case "ip":
+        if (args.length < 1)
+          return env(`Cade o ip? exemplo ${prefixobot} 11414216938 `);
+        teks = body.slice(4);
+        env("*Estou fazendo, se der erro tente novamente ✓*");
+        anu = await fetchJson(
+          `https://mnazria.herokuapp.com/api/check?ip=${teks}`
+        );
         hasil = ` *🔍CONSULTA REALIZADA🔍* 
 				    
 				      ➸ *CIDADE:* quer sequestra a pessoa?
@@ -4122,41 +6340,55 @@ NÃO GARANTIMOS SALDO!.
 				      ➸ *LOCALIDADE* : ${anu.geoname_id}
 				      ➸ *CAPITAL* : ${anu.capital}
 				      ➸ *DDD* : ${anu.calling_code}
-				      ➸ *PAÍS* : ${anu.country_flag_emoji}`
-        env(hasil)
-        break
-      case 'cep':
-        if (args.length < 1) return env('digite o cep que deseja buscar Exemplo: 082*****')
-        cep = body.slice(4)
-        hehe = await fetchJson(`https://brasilapi.com.br/api/cep/v1/${cep}`)
-        if (hehe.error) return env(hehe.error)
-        ccg =
-          ` INFORMAÇÕES DO CEP
+				      ➸ *PAÍS* : ${anu.country_flag_emoji}`;
+        env(hasil);
+        break;
+      case "cep":
+        if (args.length < 1)
+          return env("digite o cep que deseja buscar Exemplo: 082*****");
+        cep = body.slice(4);
+        hehe = await fetchJson(`https://brasilapi.com.br/api/cep/v1/${cep}`);
+        if (hehe.error) return env(hehe.error);
+        ccg = ` INFORMAÇÕES DO CEP
   ‣ Cep: ${hehe.cep}
   ‣ Estado: ${hehe.state}
   ‣ Cidade: ${hehe.city}
-  Rua : ${hehe.street}`
-        env(ccg)
-        break
-      case 'ddd':
-        if (args.length < 1) return env(`Digite o ddd na frente do comando.\nExemplo: ${command + prefix} 77`);
-        dddd = body.slice(5)
-        if (isNaN(dddd)) return env('O DDD tem que está em número...')
-        if (dddd.length > 2) return env('O máximo de um DDD Brasíleiro e 2 número.')
-        let didd = await fetchJson(`https://brasilapi.com.br/api/ddd/v1/${dddd}`);
-        if (didd.error) return env('Não encontrei o DDD na minha Database.')
-        var result = `╭──────────────╮\n│ *Estado:* ${didd.state}\n│ *Cidades usando DDD:* ${dddd}\n╞─────╮ ▽ ╭──────╯\n│\n`
+  Rua : ${hehe.street}`;
+        env(ccg);
+        break;
+      case "ddd":
+        if (args.length < 1)
+          return env(
+            `Digite o ddd na frente do comando.\nExemplo: ${
+              command + prefix
+            } 77`
+          );
+        dddd = body.slice(5);
+        if (isNaN(dddd)) return env("O DDD tem que está em número...");
+        if (dddd.length > 2)
+          return env("O máximo de um DDD Brasíleiro e 2 número.");
+        let didd = await fetchJson(
+          `https://brasilapi.com.br/api/ddd/v1/${dddd}`
+        );
+        if (didd.error) return env("Não encontrei o DDD na minha Database.");
+        var result = `╭──────────────╮\n│ *Estado:* ${didd.state}\n│ *Cidades usando DDD:* ${dddd}\n╞─────╮ ▽ ╭──────╯\n│\n`;
         for (i = didd.cities.length - 1; i > 0; i--) {
-          result += `│ ${didd.cities[i]}\n`
+          result += `│ ${didd.cities[i]}\n`;
         }
         result += `│\n│ *Total de Cidades:* ${didd.cities.length}\n╰──────────────╯`;
         env(result);
-        break
-      case 'cnpj':
-        if (args.length < 1) return env(`Coloque o número do cnpj na frente do comando\nExemplo: ${prefixobot + command} 59291534000167`)
-        cnpj = body.slice(6)
-        if (isNaN(cnpj)) return env('O cnpj precisa estar no formato de número')
-        res = await fetchJson(`https://www.receitaws.com.br/v1/cnpj/${cnpj}`)
+        break;
+      case "cnpj":
+        if (args.length < 1)
+          return env(
+            `Coloque o número do cnpj na frente do comando\nExemplo: ${
+              prefixobot + command
+            } 59291534000167`
+          );
+        cnpj = body.slice(6);
+        if (isNaN(cnpj))
+          return env("O cnpj precisa estar no formato de número");
+        res = await fetchJson(`https://www.receitaws.com.br/v1/cnpj/${cnpj}`);
         cnpj = `
 CONSULTA CNPJ 👨‍💻
 
@@ -4180,101 +6412,148 @@ CONSULTA CNPJ 👨‍💻
  ➸ *ÚLTIMA ATUALIZAÇÃO:* ${res.ultima_atualizacao}
  ➸ *STATUS:* ${res.status}
  ➸ *COMPLEMENTO:* ${res.complemento}
- ➸ *EMAIL:* ${res.email}`
-        if (res.Erro) return env(`Não achei nenhum resultado sobre o cnpj: ${teks}!`)
+ ➸ *EMAIL:* ${res.email}`;
+        if (res.Erro)
+          return env(`Não achei nenhum resultado sobre o cnpj: ${teks}!`);
         env(cnpj);
-        break
-      case 'github':
-        if (args.length < 1) return env(`Coloque o nome do perfil na frente do comando\nExemplo: ${prefixobot + command} coelho`)
-        perfil = body.slice(8)
-        anu = await fetchJson(`https://www.luc4rio-rest-api.tk/api/social/github?nomedeusuario=${perfil}`)
-        GitHub = `🏷️ Nome : ${anu.Nome_De_Usuario}\n📆 Criada em : *${anu.Criada_Em}*\n💫 Ultima atualização : *${anu.Ultima_Atualizacao}*\n👤 Seguidores : *${anu.Total_De_Seguidores}*\n👥 Total de Repositorios : *${anu.Total_De_Seguidores}*\n🌍 Seguindo : *${anu.Total_Seguindo} Pessoas*\n📊 Seguidores : \n*${anu.Link_De_Seguidores}*\n📁 Repositório : \n*${anu.Link_Do_Repositorios}*`
-        if (anu.Erro) return env(`Não achei nenhum resultado sobre: ${perfil}!`)
+        break;
+      case "github":
+        if (args.length < 1)
+          return env(
+            `Coloque o nome do perfil na frente do comando\nExemplo: ${
+              prefixobot + command
+            } coelho`
+          );
+        perfil = body.slice(8);
+        anu = await fetchJson(
+          `https://www.luc4rio-rest-api.tk/api/social/github?nomedeusuario=${perfil}`
+        );
+        GitHub = `🏷️ Nome : ${anu.Nome_De_Usuario}\n📆 Criada em : *${anu.Criada_Em}*\n💫 Ultima atualização : *${anu.Ultima_Atualizacao}*\n👤 Seguidores : *${anu.Total_De_Seguidores}*\n👥 Total de Repositorios : *${anu.Total_De_Seguidores}*\n🌍 Seguindo : *${anu.Total_Seguindo} Pessoas*\n📊 Seguidores : \n*${anu.Link_De_Seguidores}*\n📁 Repositório : \n*${anu.Link_Do_Repositorios}*`;
+        if (anu.Erro)
+          return env(`Não achei nenhum resultado sobre: ${perfil}!`);
         env(GitHub);
-        break
-      case 'wikipedia':
-        teks = body.slice(11)
-        res = await fetchJson(`https://www.luc4rio-rest-api.tk/api/educacional/wikipedia?pergunta=${teks}`)
-        Wikipedia = `${res.Resultado}`
-        if (res.Erro) return env(`Não achei nenhum resultado sobre: ${teks}!`)
+        break;
+      case "wikipedia":
+        teks = body.slice(11);
+        res = await fetchJson(
+          `https://www.luc4rio-rest-api.tk/api/educacional/wikipedia?pergunta=${teks}`
+        );
+        Wikipedia = `${res.Resultado}`;
+        if (res.Erro) return env(`Não achei nenhum resultado sobre: ${teks}!`);
         env(Wikipedia);
-        break
+        break;
       //FIM
       //DONWLOADS
-      case 'ytdoc':
-        if (!args || !args[0]) env(`*[❗𝐈𝐍𝐅𝐎❗] ESCREVA O COMANDO DEPOIS O LINK A FRENTE*`)
-        const isY = /y(es)/gi.test(args[1])
-        if (!isY) return
-        env(`*_⏳𝓮𝓼𝓽𝓪́ 𝓹𝓻𝓸𝓬𝓮𝓼𝓼𝓪𝓷𝓭𝓸 𝓼𝓮𝓾 𝓿𝓲𝓭𝓮𝓸ᴏ...⏳_*\n\n*◉ 𝙨𝙚 𝙨𝙚𝙪 𝙫𝙞𝙙𝙚𝙤 𝙣𝙖𝙤 𝙛𝙤𝙧 𝙚𝙣𝙫𝙞𝙖𝙙𝙤 𝙪𝙨𝙚 𝙚𝙨𝙨𝙚𝙨 𝙤𝙪𝙩𝙧𝙤𝙨 𝙘𝙤𝙢𝙖𝙣𝙙𝙤𝙨 /play`)
-        let { thumbnail, video: _video, title } = await youtubedl(args[0]).catch(async _ => await youtubedlv2(args[0])).catch(async _ => await youtubedlv3(args[0]))
-        const limitedSize = (isPremium || isOwner ? 350 : limit) * 3074
-        let video, source, res, link, lastError, isLimit
-        for (let i in _video) {
-          try {
-            video = _video[i]
-            isLimit = limitedSize < video.fileSizeH
-            if (isLimit) continue
-            link = await video.download()
-            if (link) res = await fetch(link)
-            isLimit = res?.headers.get('content-length') && parseInt(res.headers.get('content-length')) < limitedSize
-            if (isLimit) continue
-            if (res) source = await res.arrayBuffer()
-            if (source instanceof ArrayBuffer) break
-          } catch (e) {
-            video = source = link = null
-            lastError = e
+      case 'twitter':
+if(!q.includes("twitter")) return env('vc precisa inserir um link a frente do comando (twitter)')
+sendBtext(from, "✔️ Download De Vídeo / Audio [ TWITTER ]\nEscolha uma opção que deseja baixar.", `escolha uma das opções abaixo..`, [
+{buttonId: `${prefix}down_v ${q}`, buttonText: {displayText: `🎥 Video`}, type: 1},
+{buttonId: `${prefix}down_a ${q}`, buttonText: {displayText: `🎵 Audio`}, type: 1}], mek)
+break 
+
+case 'facebook':
+if(!q.includes("fb.watch")) return env(`vc tem que inserir um link do fb.watch na frente do comando`)
+sendBtext(from, "✔️ Download De Vídeo / Audio [ FACEBOOK ]\nEscolha uma opção que deseja.", `escolha uma das opções abaixo..`, [
+{buttonId: `${prefix}down_v ${q}`, buttonText: {displayText: `🎥 Video`}, type: 1},
+{buttonId: `${prefix}down_a ${q}`, buttonText: {displayText: `🎵 Audio`}, type: 1}], mek)
+if(botoes === false) {
+  rply(`Se essa mensagem está sendo enviada, provavelmente os botões estão desligado, caso queira baixar um vídeo ou audio do Facebook, vou da os exemplos ->\n\nExemplo_video: ${prefix}face_video ${q}\n\nExemplo_audio: ${prefix}face_audio ${q}`)
+}
+break 
+      case 'instagram':
+case 'instadw':  
+if(!q.includes("instagram")) return reply(`Ops, insira o link, só baixo vídeos / audios do ${command} com link`)
+sendBtext(from, "Download de video e audio do insta", `escolha uma das opções abaixo..`, [
+{buttonId: `${prefix}down_v ${q}`, buttonText: {displayText: `🎥 Video`}, type: 1},
+{buttonId: `${prefix}down_a ${q}`, buttonText: {displayText: `🎵 Audio`}, type: 1}], mek)
+break
+
+        case 'tiktok': case 'tk':
+if(!q.includes("tiktok")) return env(`Ops, insira o link, só baixo vídeos / audios do ${command} com link`)
+sendBtext(from, "✔️ Download De Vídeo / Audio [ TIKTOK ]\nEscolha uma opção que deseja.", `escolha uma das opções abaixo..`, [
+{buttonId: `${prefix}down_v ${q}`, buttonText: {displayText: `🎥 Video`}, type: 1},
+{buttonId: `${prefix}down_a ${q}`, buttonText: {displayText: `🎵 Audio`}, type: 1}], mek)
+break 
+case 'ytmp4':
+case 'down_v':
+case 'face_video': 
+case 'tiktok_video':  
+case 'insta_video':
+case 'twitter_video':
+case 'play_video':
+try {
+var qd = args.join(" ")
+if(!qd) return
+if(qd.includes("facebook")) return reply("Por enquanto só fb.watch")
+var res = await yts(q)
+if(qd.includes("youtu") && !qd.includes("share")) {
+if(res.all[0].timestamp.length >= 7) return reply("Desculpe, este video ou audio é muito grande, não poderei realizar este pedido, peça outra música abaixo de uma hora.")
+}
+if(command === "play_video") {
+var qd = res.all[0].url
+var nome = res.all[0].title
+}
+env("espere um toco")
+conn.sendMessage(from, {video: {url:`http://aleatoryapi.herokuapp.com/api/download/?url=${qd}&apikey=${keyale}`}, mimetype: 'video/mp4',contextInfo: {
+externalAdReply: {
+title: `${nome}`,
+body: "ESPERO QUE GOSTE DO BOT",
+mediaType: 2,
+mediaUrl: `${qd}`,
+sourceUrl: `${qd}`,
+}
+},
+quoted: mek
+}).catch(e => {
+console.log(e)
+env("Error")
+})
+} catch (e) {
+if(String(e).includes(keyale)) {
+console.log("A api caiu ou não foi possivel executar esta ação., espere retornar")   
+} else {
+console.log(e)
+env('ERROR!!')
+}
+}
+break
+        case 'ytsearch':
+          case 'ytsrc':
+          if (args.length < 1) return env(`Exemplo:\n${command} A vitória chegou`)
+          async function ytsrcp() {
+          let plistS = []
+          let ppliet = await yts(q) 
+          for(let a of ppliet.all) {
+          /plistS.push({title: a.title, description: `Tipo: Audio > Canal: ${a.author.name}\n Duração: ${a.timestamp}`, rowId: `${prefix}down_a ${a.url}`}, {title: a.title, description: `Tipo: Video > Canal: ${a.author.name}\n Duração: ${a.timestamp}`, rowId: `${prefix}down_v ${a.url}`})/
+          plistS.push({title: a.title, description: `Canal: ${a.author.name}\nDuração: ${a.timestamp}`, rowId: `${prefixobot}ytmp3 ${a.url}`})
           }
-        }
-        if ((!(source instanceof ArrayBuffer) || !link || !res.ok) && !isLimit) throw '*[❗] ERRO: ' + (lastError || 'NÃO FOI POSSIVEL BAIXAR O VIDEO*')
-        let _thumb = {}
-        try { _thumb = { thumbnail: await (await fetch(thumbnail)).buffer() } }
-        catch (e) { }
-        conn.sendMessage(from, { document: { url: `${link}` }, mimetype: 'audio/mp4', fileName: 'teste.mp3' });
-        break
-      case 'tiktok':
-        const tiktin = args.join(' ')
-        env('Estou baixado, aguarde um pouco');
-        hx.ttdownloader(`${tiktin}`)
-          .then(result => {
-            const { wm, nowm, audio } = result
-            axios.get('https://tinyurl.com/api-create.php?url=${nowm}')
-              .then(async (a) => {
-                me = `Your video has finished downloading`
-                conn.sendMessage(from, { video: { url: nowm }, fileName: `silas.mp4`, Mimetype: 'video/mp4', caption: ' Pronto' }, { quoted: mek })
-              })
-          })
-        break
-      case 'ytsrc':
-        if (args.length < 1) return env(`Exemplo:\n${command} A vitória chegou`)
-        let list_rows = [];
-        datap = await yts(q);
-        for (let a of datap.all) {
-          list_rows.push({
-            title: a.title, description: `Canal: ${a.author.name} \nDuração: ${a.duration}`.replace('seconds', 'segundos'), rowId: `${prefixobot}ytmp3 ${a.title}`
-          })
-        }
-        button = {
-          title: `Resultados sobre: ${q}`,
-          description: "Toque no botão!!",
-          footerText: `✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD`,
-          buttonText: 'Clique aqui!',
-          listType: 'SINGLE_SELECT',
-          sections: [
-            {
-              title: "Resultados da pesquisa",
-              rows: list_rows
-            }
+          listMessage = {
+          text: `Resultados sobre: ${q}`,
+          footerText: `ASHLEY-MD`,
+          buttonText: "Clique aqui!",
+          sections: [{
+          title: "Resultado da pesquisa:", 
+          rows: plistS
+          }
           ]
-        }
-        templateList = generateWAMessageFromContent(from, proto.Message.fromObject({ "listMessage": button }), { quoted: mek });
-        conn.relayMessage(from, templateList.message, { messageId: templateList.key.id });
-        break
-     
-      case 'play':
-        if (!texto) return env(`Exemplo de como se usar: ${prefixobot + command} a vitória chegou`)
-        var pinga = require("yt-search")
-        var pesquisa = await pinga(texto)
-        var anu = pesquisa.videos[Math.floor(Math.random() * pesquisa.videos.length)]
+          }
+          conn.sendMessage(from, listMessage)
+          }
+          ytsrcp().catch(e => {
+          env2("Ocorreu um erro!", "❌")
+          console.log(e)
+          })
+          break
+
+      case "play":
+        if (!texto)
+          return env(
+            `Exemplo de como se usar: ${prefixobot + command} a vitória chegou`
+          );
+        var pinga = require("yt-search");
+        var pesquisa = await pinga(texto);
+        var anu =
+          pesquisa.videos[Math.floor(Math.random() * pesquisa.videos.length)];
         play = `🎬 Título : ${anu.title}
 🆔 ID : ${anu.videoId}
 ⏳ Duração : ${anu.timestamp}
@@ -4283,304 +6562,738 @@ CONSULTA CNPJ 👨‍💻
 👤 Nome do canal : ${anu.author.name}
 📱 Canal : ${anu.author.url}
 💬 Descrição : ${anu.description}
-📎 Link do vídeo: ${anu.url}`
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: { url: anu.thumbnail }, caption: play, buttons: [{ buttonId: `${prefixobot}ytmp3 ${anu.title}`, buttonText: { displayText: 'Áudio 🎵' }, type: 1 }], headerType: 4 }, { quoted: mek });
-        break
-      case 'ytmp3':
-      case 'ytaudio':
+📎 Link do vídeo: ${anu.url}`;
+        env(mensagem[0].espere);
+        conn.sendMessage(
+          from,
+          {
+            image: { url: anu.thumbnail },
+            caption: play,
+            buttons: [
+              {
+                buttonId: `${prefixobot}ytmp3 ${anu.title}`,
+                buttonText: { displayText: "Áudio 🎵" },
+                type: 1,
+              },
+            ],
+            headerType: 4,
+          },
+          { quoted: mek }
+        );
+        break;
+      
+        case 'ytmp3': 
+        case 'ytaudio':                 		    
         if (args.length < 1) return env(`Exemplo: ${prefixobot}ytmp3 plutao`)
         teks = args.join(' ')
-        env('Espere um pouco, comando está em beta')
-        if (!teks.endsWith("-doc")) {
-          res = await yts(`${teks}`).catch(e => {
-            env('Qual e nome da música?')
-          })
-          res = await y2mateA(res.all[0].url).catch(e => {
-            env('𝐅𝐚𝐥𝐡𝐚,𝐭𝐞𝐧𝐭𝐞 𝐮𝐬𝐚𝐫 𝐧𝐨𝐯𝐚𝐦𝐞𝐧𝐭𝐞 ')
-          })
-          conn.sendMessage(from, { audio: { url: res[0].link }, mimetype: 'audio/mp4' }, { quoted: mek })
-          const linkau = `${res[0].link}`;
-          conn.sendMessage(from, { text: 'Se a música não ser enviado, aperte o botão abaixo, a música será baixada automática!', footer: 'Se a música fui enviada, ignore essa mensagem 🥰', templateButtons: [{ index: 1, urlButton: { displayText: 'DOWNLOAD', url: pinga } }] }, { quoted: mek });
+        env2('Espere um pouco, comando está em beta', "⏳")
+        if (!teks.endsWith("-doc")){
+        res = await yts(`${teks}`).catch(e => {
+        env('Qual e nome da música?')
+        })
+        res = await y2mateA(res.all[0].url).catch(e => {
+        env2('𝐅𝐚𝐥𝐡𝐚,𝐭𝐞𝐧𝐭𝐞 𝐮𝐬𝐚𝐫 𝐧𝐨𝐯𝐚𝐦𝐞𝐧𝐭𝐞', '❌')
+        })
+        conn.sendMessage(from, { audio: {url: res[0].link }, mimetype: 'audio/mp4' }, {quoted: mek})
+        env2("prontinho", "✅");
         }
         break
-      case 'ytaudio2':
-        if (!texto) return env(`Exemplo : ${prefixobot + command} a vitória`)
-        if (!isUrl(args[0]) && !args[0].includes('https://youtube.com')) return env('Cadê o url do vídeo do YouTube')
-        env('Espere um pouco, comando está em beta')
-        var { aiovideodl } = require('./lib/scraper')
-        var result = await aiovideodl(isUrl(texto))
-        var { medias } = result
-        var quality = args[1] ? args[1] : '128kbps'
-        var media = medias.filter(v => v.videoAvailable == false && v.audioAvailable == true && v.quality == quality).map(v => v)
-        if (media[0].formattedSize.split('MB')[0] >= 100.00) return env('File Melebihi Batas' + util.format(media))
-        conn.sendMessage(from, { audio: { url: media[0].url }, Mimetype: 'audio/mp4', fileName: `${title}.mp3` }, { quoted: mek })
-        break
-      case 'ytmp42':
-      case 'ytvideo2':
-        if (!isUrl(args[0]) && !args[0].includes('https://youtube.com')) return env('Cadê o url do vídeo do YouTube')
-        if (!texto) return (`Exemplo : ${prefixobot + command} https://youtu.be/pOFHZ2I7m_4`)
-        env('Espere um pouco, comando está em beta')
-        var { aiovideodl } = require('./lib/scraper')
-        var result = await aiovideodl(isUrl(texto)[0])
-        var { medias } = result
-        var quality = args[1] ? args[1] : '360p'
-        var media = medias.filter(v => v.videoAvailable == true && v.audioAvailable == false && v.quality == quality).map(v => v)
-        if (media[0].formattedSize.split('MB')[0] >= 100.00) return env('File Melebihi Batas' + util.format(media))
-        conn.sendMessage(from, { video: { url: media[0].url }, fileName: `${title}.mp4`, Mimetype: 'video/mp4', caption: ' Pronto' }, { quoted: mek })
-        break
-      case 'xvideos':
-        if (args.length < 1) return env(`Coloque o título do vídeo na frente do comando\nExemplo: ${prefixobot + command} Família sacana`)
-        teks = body.slice(9)
-        res = await fetchJson(`https://apis-carlos.herokuapp.com/api/xvideos?apikey=carlos&option=search&text=${teks}`);
-        var resultFinal = '  *_PESQUISAS ENCONTRADAS_*\n\n'
+      case "ytaudio2":
+        if (!texto) return env(`Exemplo : ${prefixobot + command} a vitória`);
+        if (!isUrl(args[0]) && !args[0].includes("https://youtube.com"))
+          return env("Cadê o url do vídeo do YouTube");
+        env("Espere um pouco, comando está em beta");
+        var { aiovideodl } = require("./lib/scraper");
+        var result = await aiovideodl(isUrl(texto));
+        var { medias } = result;
+        var quality = args[1] ? args[1] : "128kbps";
+        var media = medias
+          .filter(
+            (v) =>
+              v.videoAvailable == false &&
+              v.audioAvailable == true &&
+              v.quality == quality
+          )
+          .map((v) => v);
+        if (media[0].formattedSize.split("MB")[0] >= 100.0)
+          return env("File Melebihi Batas" + util.format(media));
+        conn.sendMessage(
+          from,
+          {
+            audio: { url: media[0].url },
+            Mimetype: "audio/mp4",
+            fileName: `${title}.mp3`,
+          },
+          { quoted: mek }
+        );
+        break;
+      case "ytmp42":
+      case "ytvideo2":
+        if (!isUrl(args[0]) && !args[0].includes("https://youtube.com"))
+          return env("Cadê o url do vídeo do YouTube");
+        if (!texto)
+          return `Exemplo : ${
+            prefixobot + command
+          } https://youtu.be/pOFHZ2I7m_4`;
+        env("Espere um pouco, comando está em beta");
+        var { aiovideodl } = require("./lib/scraper");
+        var result = await aiovideodl(isUrl(texto)[0]);
+        var { medias } = result;
+        var quality = args[1] ? args[1] : "360p";
+        var media = medias
+          .filter(
+            (v) =>
+              v.videoAvailable == true &&
+              v.audioAvailable == false &&
+              v.quality == quality
+          )
+          .map((v) => v);
+        if (media[0].formattedSize.split("MB")[0] >= 100.0)
+          return env("File Melebihi Batas" + util.format(media));
+        conn.sendMessage(
+          from,
+          {
+            video: { url: media[0].url },
+            fileName: `${title}.mp4`,
+            Mimetype: "video/mp4",
+            caption: " Pronto",
+          },
+          { quoted: mek }
+        );
+        break;
+      case "xvideos":
+        if (args.length < 1)
+          return env(
+            `Coloque o título do vídeo na frente do comando\nExemplo: ${
+              prefixobot + command
+            } Família sacana`
+          );
+        teks = body.slice(9);
+        res = await fetchJson(
+          `https://apis-carlos.herokuapp.com/api/xvideos?apikey=carlos&option=search&text=${teks}`
+        );
+        var resultFinal = "  *_PESQUISAS ENCONTRADAS_*\n\n";
         for (let i of res.result) {
-          resultFinal += `   *_LINK E TITULO DAS PEQUISAS ABAIXO_*\n\n*Titulo →* ${i.title}\n*Link →* ${i.url}\n\n`
+          resultFinal += `   *_LINK E TITULO DAS PEQUISAS ABAIXO_*\n\n*Titulo →* ${i.title}\n*Link →* ${i.url}\n\n`;
         }
-        console.log(res)
-        env(resultFinal)
-        break
+        console.log(res);
+        env(resultFinal);
+        break;
       //GRUPO
-      case 'rankgado':
-      case 'rankgados':
-        if (!isGroup) return env('somente em grupo')
+      case "rankgado":
+      case "rankgados":
+        if (!isGroup) return env("somente em grupo");
         try {
-          var ddr = []
-          ret = '🐂 Rank dos mais gados do grupo \n\n'
+          var ddr = [];
+          ret = "🐂 Rank dos mais gados do grupo \n\n";
           for (i = 0; i < 5; i++) {
-            r = Math.floor(Math.random() * groupMetadata.participants.length + 0)
-            ret += `🐂❧ @${groupMembers[r].id.split('@')[0]}\n`
-            ddr.push(groupMembers[r].id)
+            r = Math.floor(
+              Math.random() * groupMetadata.participants.length + 0
+            );
+            ret += `🐂❧ @${groupMembers[r].id.split("@")[0]}\n`;
+            ddr.push(groupMembers[r].id);
           }
-          conn.sendMessage(from, { text: ret.trim(), mentions: ddr, buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'NEXT RANK ☰' }, type: 1 }], headerType: 4 }, { quoted: mek })
+          conn.sendMessage(
+            from,
+            {
+              text: ret.trim(),
+              mentions: ddr,
+              buttons: [
+                {
+                  buttonId: `${prefixobot + command}`,
+                  buttonText: { displayText: "NEXT RANK ☰" },
+                  type: 1,
+                },
+              ],
+              headerType: 4,
+            },
+            { quoted: mek }
+          );
         } catch (e) {
-          console.log(e)
-          env('Deu erro, tente novamente :/')
+          console.log(e);
+          env("Deu erro, tente novamente :/");
         }
-        break
-      case 'ranklindo':
-      case 'ranklindos':
-        if (!isGroup) return env('somente em grupo')
+        break;
+      case "ranklindo":
+      case "ranklindos":
+        if (!isGroup) return env("somente em grupo");
         try {
-          var ddr = []
-          ret = '🤤 Rank dos mais lindos do grupo \n\n'
+          var ddr = [];
+          ret = "🤤 Rank dos mais lindos do grupo \n\n";
           for (i = 0; i < 5; i++) {
-            r = Math.floor(Math.random() * groupMetadata.participants.length + 0)
-            ret += `🤤 @${groupMembers[r].id.split('@')[0]}\n`
-            ddr.push(groupMembers[r].id)
+            r = Math.floor(
+              Math.random() * groupMetadata.participants.length + 0
+            );
+            ret += `🤤 @${groupMembers[r].id.split("@")[0]}\n`;
+            ddr.push(groupMembers[r].id);
           }
-          conn.sendMessage(from, { text: ret.trim(), mentions: ddr, buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'NEXT RANK ☰' }, type: 1 }], headerType: 4 }, { quoted: mek })
+          conn.sendMessage(
+            from,
+            {
+              text: ret.trim(),
+              mentions: ddr,
+              buttons: [
+                {
+                  buttonId: `${prefixobot + command}`,
+                  buttonText: { displayText: "NEXT RANK ☰" },
+                  type: 1,
+                },
+              ],
+              headerType: 4,
+            },
+            { quoted: mek }
+          );
         } catch (e) {
-          console.log(e)
-          env('Deu erro, tente novamente :/')
+          console.log(e);
+          env("Deu erro, tente novamente :/");
         }
-        break
-      case 'rankbaiano':
-      case 'rankbaianos':
-        if (!isGroup) return env('somente em grupo')
+        break;
+      case "rankbaiano":
+      case "rankbaianos":
+        if (!isGroup) return env("somente em grupo");
         try {
-          var ddr = []
-          ret = '🛌 Rank dos mais baianos do grupo \n\n'
+          var ddr = [];
+          ret = "🛌 Rank dos mais baianos do grupo \n\n";
           for (i = 0; i < 5; i++) {
-            r = Math.floor(Math.random() * groupMetadata.participants.length + 0)
-            ret += `🛌 @${groupMembers[r].id.split('@')[0]}\n`
-            ddr.push(groupMembers[r].id)
+            r = Math.floor(
+              Math.random() * groupMetadata.participants.length + 0
+            );
+            ret += `🛌 @${groupMembers[r].id.split("@")[0]}\n`;
+            ddr.push(groupMembers[r].id);
           }
-          conn.sendMessage(from, { text: ret.trim(), mentions: ddr, buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'NEXT RANK ☰' }, type: 1 }], headerType: 4 }, { quoted: mek })
+          conn.sendMessage(
+            from,
+            {
+              text: ret.trim(),
+              mentions: ddr,
+              buttons: [
+                {
+                  buttonId: `${prefixobot + command}`,
+                  buttonText: { displayText: "NEXT RANK ☰" },
+                  type: 1,
+                },
+              ],
+              headerType: 4,
+            },
+            { quoted: mek }
+          );
         } catch (e) {
-          console.log(e)
-          env('Deu erro, tente novamente :/')
+          console.log(e);
+          env("Deu erro, tente novamente :/");
         }
-        break
-      case 'rankgay':
-      case 'rankgays':
-        if (!isGroup) return env('somente em grupo')
+        break;
+      case "rankgay":
+      case "rankgays":
+        if (!isGroup) return env("somente em grupo");
         try {
-          var ddr = []
-          ret = '🏳️‍🌈 Rank dos mais gays do grupo \n\n'
+          var ddr = [];
+          ret = "🏳️‍🌈 Rank dos mais gays do grupo \n\n";
           for (i = 0; i < 5; i++) {
-            r = Math.floor(Math.random() * groupMetadata.participants.length + 0)
-            ret += `🏳️‍🌈 @${groupMembers[r].id.split('@')[0]}\n`
-            ddr.push(groupMembers[r].id)
+            r = Math.floor(
+              Math.random() * groupMetadata.participants.length + 0
+            );
+            ret += `🏳️‍🌈 @${groupMembers[r].id.split("@")[0]}\n`;
+            ddr.push(groupMembers[r].id);
           }
-          conn.sendMessage(from, { text: ret.trim(), mentions: ddr, buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'NEXT RANK ☰' }, type: 1 }], headerType: 4 }, { quoted: mek })
+          conn.sendMessage(
+            from,
+            {
+              text: ret.trim(),
+              mentions: ddr,
+              buttons: [
+                {
+                  buttonId: `${prefixobot + command}`,
+                  buttonText: { displayText: "NEXT RANK ☰" },
+                  type: 1,
+                },
+              ],
+              headerType: 4,
+            },
+            { quoted: mek }
+          );
         } catch (e) {
-          console.log(e)
-          env('Deu erro, tente novamente :/')
+          console.log(e);
+          env("Deu erro, tente novamente :/");
         }
-        break
-      case 'ranknazista':
-      case 'ranknazistas':
-        if (!isGroup) return env('somente em grupo')
+        break;
+      case "ranknazista":
+      case "ranknazistas":
+        if (!isGroup) return env("somente em grupo");
         try {
-          var ddr = []
-          ret = '🇩🇪Rank dos mais nazistas do grupo \n\n'
+          var ddr = [];
+          ret = "🇩🇪Rank dos mais nazistas do grupo \n\n";
           for (i = 0; i < 5; i++) {
-            r = Math.floor(Math.random() * groupMetadata.participants.length + 0)
-            ret += `🇩🇪 @${groupMembers[r].id.split('@')[0]}\n`
-            ddr.push(groupMembers[r].id)
+            r = Math.floor(
+              Math.random() * groupMetadata.participants.length + 0
+            );
+            ret += `🇩🇪 @${groupMembers[r].id.split("@")[0]}\n`;
+            ddr.push(groupMembers[r].id);
           }
-          conn.sendMessage(from, { text: ret.trim(), mentions: ddr, buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'NEXT RANK ☰' }, type: 1 }], headerType: 4 }, { quoted: mek })
+          conn.sendMessage(
+            from,
+            {
+              text: ret.trim(),
+              mentions: ddr,
+              buttons: [
+                {
+                  buttonId: `${prefixobot + command}`,
+                  buttonText: { displayText: "NEXT RANK ☰" },
+                  type: 1,
+                },
+              ],
+              headerType: 4,
+            },
+            { quoted: mek }
+          );
         } catch (e) {
-          console.log(e)
-          env('Deu erro, tente novamente :/')
+          console.log(e);
+          env("Deu erro, tente novamente :/");
         }
-        break
-      case 'rankgostoso':
-      case 'rankgostosos':
-        if (!isGroup) return env('somente em grupo')
+        break;
+      case "rankgostoso":
+      case "rankgostosos":
+        if (!isGroup) return env("somente em grupo");
         try {
-          var ddr = []
-          ret = '😋Rank dos mais gostosos do grupo \n\n'
+          var ddr = [];
+          ret = "😋Rank dos mais gostosos do grupo \n\n";
           for (i = 0; i < 5; i++) {
-            r = Math.floor(Math.random() * groupMetadata.participants.length + 0)
-            ret += `😋 @${groupMembers[r].id.split('@')[0]}\n`
-            ddr.push(groupMembers[r].id)
+            r = Math.floor(
+              Math.random() * groupMetadata.participants.length + 0
+            );
+            ret += `😋 @${groupMembers[r].id.split("@")[0]}\n`;
+            ddr.push(groupMembers[r].id);
           }
-          conn.sendMessage(from, { text: ret.trim(), mentions: ddr, buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'NEXT RANK ☰' }, type: 1 }], headerType: 4 }, { quoted: mek })
+          conn.sendMessage(
+            from,
+            {
+              text: ret.trim(),
+              mentions: ddr,
+              buttons: [
+                {
+                  buttonId: `${prefixobot + command}`,
+                  buttonText: { displayText: "NEXT RANK ☰" },
+                  type: 1,
+                },
+              ],
+              headerType: 4,
+            },
+            { quoted: mek }
+          );
         } catch (e) {
-          console.log(e)
-          env('Deu erro, tente novamente :/')
+          console.log(e);
+          env("Deu erro, tente novamente :/");
         }
-        break
-      case 'rankfeio':
-      case 'rankfeios':
-        if (!isGroup) return env('somente em grupo')
+        break;
+      case "rankfeio":
+      case "rankfeios":
+        if (!isGroup) return env("somente em grupo");
         try {
-          var ddr = []
-          ret = '🤮Rank dos mais feios do grupo \n\n'
+          var ddr = [];
+          ret = "🤮Rank dos mais feios do grupo \n\n";
           for (i = 0; i < 5; i++) {
-            r = Math.floor(Math.random() * groupMetadata.participants.length + 0)
-            ret += `🤮 @${groupMembers[r].id.split('@')[0]}\n`
-            ddr.push(groupMembers[r].id)
+            r = Math.floor(
+              Math.random() * groupMetadata.participants.length + 0
+            );
+            ret += `🤮 @${groupMembers[r].id.split("@")[0]}\n`;
+            ddr.push(groupMembers[r].id);
           }
-          conn.sendMessage(from, { text: ret.trim(), mentions: ddr, buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'NEXT RANK ☰' }, type: 1 }], headerType: 4 }, { quoted: mek })
+          conn.sendMessage(
+            from,
+            {
+              text: ret.trim(),
+              mentions: ddr,
+              buttons: [
+                {
+                  buttonId: `${prefixobot + command}`,
+                  buttonText: { displayText: "NEXT RANK ☰" },
+                  type: 1,
+                },
+              ],
+              headerType: 4,
+            },
+            { quoted: mek }
+          );
         } catch (e) {
-          console.log(e)
-          env('Deu erro, tente novamente :/')
+          console.log(e);
+          env("Deu erro, tente novamente :/");
         }
-        break
-      case 'rankcorno':
-      case 'rankcornos':
-        if (!isGroup) return env('somente em grupo')
+        break;
+      case "rankcorno":
+      case "rankcornos":
+        if (!isGroup) return env("somente em grupo");
         try {
-          var ddr = []
-          ret = '🐂Rank dos mais gados do grupo \n\n'
+          var ddr = [];
+          ret = "🐂Rank dos mais gados do grupo \n\n";
           for (i = 0; i < 5; i++) {
-            r = Math.floor(Math.random() * groupMetadata.participants.length + 0)
-            ret += `🐂 @${groupMembers[r].id.split('@')[0]}\n`
-            ddr.push(groupMembers[r].id)
+            r = Math.floor(
+              Math.random() * groupMetadata.participants.length + 0
+            );
+            ret += `🐂 @${groupMembers[r].id.split("@")[0]}\n`;
+            ddr.push(groupMembers[r].id);
           }
-          conn.sendMessage(from, { text: ret.trim(), mentions: ddr, buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'NEXT RANK ☰' }, type: 1 }], headerType: 4 }, { quoted: mek })
+          conn.sendMessage(
+            from,
+            {
+              text: ret.trim(),
+              mentions: ddr,
+              buttons: [
+                {
+                  buttonId: `${prefixobot + command}`,
+                  buttonText: { displayText: "NEXT RANK ☰" },
+                  type: 1,
+                },
+              ],
+              headerType: 4,
+            },
+            { quoted: mek }
+          );
         } catch (e) {
-          console.log(e)
-          env('Deu erro, tente novamente :/')
+          console.log(e);
+          env("Deu erro, tente novamente :/");
         }
-        break
-      case 'rankmacaco':
-      case 'rankmacacos':
-        if (!isGroup) return env('somente em grupo')
+        break;
+      case "rankmacaco":
+      case "rankmacacos":
+        if (!isGroup) return env("somente em grupo");
         try {
-          var ddr = []
-          ret = '🐒Rank dos mais gados do grupo \n\n'
+          var ddr = [];
+          ret = "🐒Rank dos mais gados do grupo \n\n";
           for (i = 0; i < 5; i++) {
-            r = Math.floor(Math.random() * groupMetadata.participants.length + 0)
-            ret += `🐒 @${groupMembers[r].id.split('@')[0]}\n`
-            ddr.push(groupMembers[r].id)
+            r = Math.floor(
+              Math.random() * groupMetadata.participants.length + 0
+            );
+            ret += `🐒 @${groupMembers[r].id.split("@")[0]}\n`;
+            ddr.push(groupMembers[r].id);
           }
-          conn.sendMessage(from, { text: ret.trim(), mentions: ddr, buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'NEXT RANK ☰' }, type: 1 }], headerType: 4 }, { quoted: mek })
+          conn.sendMessage(
+            from,
+            {
+              text: ret.trim(),
+              mentions: ddr,
+              buttons: [
+                {
+                  buttonId: `${prefixobot + command}`,
+                  buttonText: { displayText: "NEXT RANK ☰" },
+                  type: 1,
+                },
+              ],
+              headerType: 4,
+            },
+            { quoted: mek }
+          );
         } catch (e) {
-          console.log(e)
-          env('Deu erro, tente novamente :/')
+          console.log(e);
+          env("Deu erro, tente novamente :/");
         }
-        break
-      case 'morte':
-        var idazin = `${Math.floor(Math.random() * 110)}`
-        var idade = idazin
-        var teks = body.slice(7)
-        if (teks.length > 15) return env(`Se liga, esse nome nem existe.... Mais você morre aos ${idazin}`)
-        if (args.length < 1) return env(`Pessoas com esse nome: ${pushname}
-Tendem a morrer aos ${idade} anos de Idade.`)
+        break;
+      case "morte":
+        var idazin = `${Math.floor(Math.random() * 110)}`;
+        var idade = idazin;
+        var teks = body.slice(7);
+        if (teks.length > 15)
+          return env(
+            `Se liga, esse nome nem existe.... Mais você morre aos ${idazin}`
+          );
+        if (args.length < 1)
+          return env(`Pessoas com esse nome: ${pushname}
+Tendem a morrer aos ${idade} anos de Idade.`);
         var pinga = `Pessoas com esse nome: ${teks}
-Tendem a morrer aos ${idade} anos de Idade.`
-        env(pinga)
-        break
-      case 'gado':
-      case 'gada':
-        if (args.length < 1) return env('marque seu amigo ou sua amiga com @')
-        gadin = body.slice(6)
+Tendem a morrer aos ${idade} anos de Idade.`;
+        env(pinga);
+        break;
+      case "gado":
+      case "gada":
+        if (args.length < 1) return env("marque seu amigo ou sua amiga com @");
+        gadin = body.slice(6);
         let chifg = [];
-        const chifr = ["ultra extreme gado", "Gado-Master", "Gado-Rei", "Gado", "Escravo-ceta", "Escravo-ceta Maximo", "Gacorno?", "Jogador De Forno Livre<3", "Mestre Do Frifai<3<3", "Gado-Manso", "Gado-Conformado", "Gado-Incubado", "Gado Deus", "Mestre dos Gados", "Topa tudo por buceta", "Gado Comum", "Mini Gadinho", "Gado Iniciante", "Gado Basico", "Gado Intermediario", "Gado Avançado", "Gado Profisional", "Gado Mestre", "Gado Chifrudo", "Corno Conformado", "Corno HiperChifrudo", "Chifrudo Deus", "Mestre dos Chifrudos"]
-        const crifrudo = chifr[Math.floor(Math.random() * chifr.length)]
-        let chif = `qual e a porcentagem dele de boi muhhh: ${gadin} \n\nA porcentagem de gado dele🐂: ${crifrudo}`
+        const chifr = [
+          "ultra extreme gado",
+          "Gado-Master",
+          "Gado-Rei",
+          "Gado",
+          "Escravo-ceta",
+          "Escravo-ceta Maximo",
+          "Gacorno?",
+          "Jogador De Forno Livre<3",
+          "Mestre Do Frifai<3<3",
+          "Gado-Manso",
+          "Gado-Conformado",
+          "Gado-Incubado",
+          "Gado Deus",
+          "Mestre dos Gados",
+          "Topa tudo por buceta",
+          "Gado Comum",
+          "Mini Gadinho",
+          "Gado Iniciante",
+          "Gado Basico",
+          "Gado Intermediario",
+          "Gado Avançado",
+          "Gado Profisional",
+          "Gado Mestre",
+          "Gado Chifrudo",
+          "Corno Conformado",
+          "Corno HiperChifrudo",
+          "Chifrudo Deus",
+          "Mestre dos Chifrudos",
+        ];
+        const crifrudo = chifr[Math.floor(Math.random() * chifr.length)];
+        let chif = `qual e a porcentagem dele de boi muhhh: ${gadin} \n\nA porcentagem de gado dele🐂: ${crifrudo}`;
         conn.sendMessage(from, { text: chif, mentions: [chifg] });
-        break
-      case 'gay':
-        if (body.slice(5).trim() == '') env(`marque alguém usando @\nExemplo: ${prefixobot + command} @`);
-        gadin = body.slice(5)
+        break;
+      case "gay":
+        if (body.slice(5).trim() == "")
+          env(`marque alguém usando @\nExemplo: ${prefixobot + command} @`);
+        gadin = body.slice(5);
         let chiufg = [];
-        const ti = ['4', '9', '17', '28', '34', '48', '59', '62', '74', '83', '97', '100', '29', '94', '75', '82', '41', '39']
-        const kl = ti[Math.floor(Math.random() * ti.length)]
-        pinga = `Qual e porcentagem de gay dele: ${gadin}\n\nA porcentagem de Zé baitola dele e: ${kl}%`
+        const ti = [
+          "4",
+          "9",
+          "17",
+          "28",
+          "34",
+          "48",
+          "59",
+          "62",
+          "74",
+          "83",
+          "97",
+          "100",
+          "29",
+          "94",
+          "75",
+          "82",
+          "41",
+          "39",
+        ];
+        const kl = ti[Math.floor(Math.random() * ti.length)];
+        pinga = `Qual e porcentagem de gay dele: ${gadin}\n\nA porcentagem de Zé baitola dele e: ${kl}%`;
         conn.sendMessage(from, { text: pinga, mentions: [gadin] });
-        break
-      case 'pau':
-      case 'stick':
-        randomp = `${Math.floor(Math.random() * 35)}`
-        const tamanho = randomp
-        if (tamanho < 13) { pp = 'só a fimose' } else if (tamanho == 13) { pp = 'passou da média😳' } else if (tamanho == 14) { pp = 'passou da média😳' } else if (tamanho == 15) { pp = 'eita, vai pegar manga?' } else if (tamanho == 16) { pp = 'eita, vai pegar manga?' } else if (tamanho == 17) { pp = 'calma man, a mina não é um poço😳' } else if (tamanho == 18) { pp = 'calma man, a mina não é um poço😳' } else if (tamanho == 19) { pp = 'calma man, a mina não é um poço😳' } else if (tamanho == 20) { pp = 'você tem um poste no meio das pernas' } else if (tamanho == 21) { pp = 'você tem um poste no meio das pernas' } else if (tamanho == 22) { pp = 'você tem um poste no meio das pernas' } else if (tamanho == 23) { pp = 'você tem um poste no meio das pernas' } else if (tamanho == 24) { pp = 'você tem um poste no meio das pernas' } else if (tamanho > 25) { pp = 'vai procurar petróleo com isso?' }
-        hasil = `Seu pau tem ${randomp}cm\n\n${pp}`
-        env(hasil)
-        break
-      case 'chance':
-        if (args.length < 1) return env(`Coloque deseja sabe na frente do comando\nExemplo de como se usar ${prefixobot + command} eu vou ser rico?`)
+        break;
+      case "pau":
+      case "stick":
+        randomp = `${Math.floor(Math.random() * 35)}`;
+        const tamanho = randomp;
+        if (tamanho < 13) {
+          pp = "só a fimose";
+        } else if (tamanho == 13) {
+          pp = "passou da média😳";
+        } else if (tamanho == 14) {
+          pp = "passou da média😳";
+        } else if (tamanho == 15) {
+          pp = "eita, vai pegar manga?";
+        } else if (tamanho == 16) {
+          pp = "eita, vai pegar manga?";
+        } else if (tamanho == 17) {
+          pp = "calma man, a mina não é um poço😳";
+        } else if (tamanho == 18) {
+          pp = "calma man, a mina não é um poço😳";
+        } else if (tamanho == 19) {
+          pp = "calma man, a mina não é um poço😳";
+        } else if (tamanho == 20) {
+          pp = "você tem um poste no meio das pernas";
+        } else if (tamanho == 21) {
+          pp = "você tem um poste no meio das pernas";
+        } else if (tamanho == 22) {
+          pp = "você tem um poste no meio das pernas";
+        } else if (tamanho == 23) {
+          pp = "você tem um poste no meio das pernas";
+        } else if (tamanho == 24) {
+          pp = "você tem um poste no meio das pernas";
+        } else if (tamanho > 25) {
+          pp = "vai procurar petróleo com isso?";
+        }
+        hasil = `Seu pau tem ${randomp}cm\n\n${pp}`;
+        env(hasil);
+        break;
+      case "chance":
+        if (args.length < 1)
+          return env(
+            `Coloque deseja sabe na frente do comando\nExemplo de como se usar ${
+              prefixobot + command
+            } eu vou ser rico?`
+          );
         jide = [];
-        mentions: jids
-        teks = body.slice(8)
-        var tii = ['4', '9', '17', '28', '34', '48', '59', '62', '74', '83', '97', '100', '29', '94', '75', '82', '41', '39', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59', '60', '61', '62', '63', '64', '65']
-        var kkll = tii[Math.floor(Math.random() * tii.length)]
+        mentions: jids;
+        teks = body.slice(8);
+        var tii = [
+          "4",
+          "9",
+          "17",
+          "28",
+          "34",
+          "48",
+          "59",
+          "62",
+          "74",
+          "83",
+          "97",
+          "100",
+          "29",
+          "94",
+          "75",
+          "82",
+          "41",
+          "39",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16",
+          "17",
+          "18",
+          "19",
+          "20",
+          "21",
+          "21",
+          "22",
+          "23",
+          "24",
+          "25",
+          "26",
+          "27",
+          "28",
+          "29",
+          "30",
+          "31",
+          "32",
+          "33",
+          "34",
+          "35",
+          "36",
+          "37",
+          "38",
+          "39",
+          "40",
+          "41",
+          "42",
+          "43",
+          "44",
+          "45",
+          "46",
+          "47",
+          "48",
+          "49",
+          "50",
+          "51",
+          "52",
+          "53",
+          "54",
+          "55",
+          "56",
+          "57",
+          "58",
+          "59",
+          "60",
+          "61",
+          "62",
+          "63",
+          "64",
+          "65",
+        ];
+        var kkll = tii[Math.floor(Math.random() * tii.length)];
         pkt = `
 A chance de ${teks}
 
-A chance disso acontece e: ${kkll}%`
+A chance disso acontece e: ${kkll}%`;
         conn.sendMessage(from, { text: pkt, mentions: jids }, { quoted: mek });
-        break
-      case 'beijar':
-        if (mek.message.extendedTextMessage === undefined || mek.message.extendedTextMessage === null) return env('marque uma pessoa com @')
-        if (!isGroup) return env('somente em grupo')
-        var beijar = ['beijar', 'beijar2', 'beijar3']
-        var beijaar = beijar[Math.floor(Math.random() * beijar.length)]
-        var num = mek.message.extendedTextMessage.contextInfo.mentionedJid[0]
-        var pinga = `Ohw mds @${sender.split("@")[0]} deu um beijinho no @${num.split('@')[0]}😍❤`
-        await conn.sendMessage(from, { video: fs.readFileSync(`./complement/videos/beijar/${beijaar}.mp4`), caption: pinga, gifPlayback: true }, { quoted: mek })
-        break
-      case 'tapa':
-      case 'slap':
-        if (mek.message.extendedTextMessage === undefined || mek.message.extendedTextMessage === null) return env('marque uma pessoa com @')
-        if (!isGroup) return env('somente em grupo')
-        var tapaa = ['tapa', 'tapa2', 'tapa3', 'tapa4']
-        var tapa = tapaa[Math.floor(Math.random() * tapaa.length)]
-        var num = mek.message.extendedTextMessage.contextInfo.mentionedJid[0]
-        var pinga = `@${sender.split("@")[0]} deu um tapa no @${num.split('@')[0]}👋🏻`
-        await conn.sendMessage(from, { video: fs.readFileSync(`./complement/videos/tapa/${tapa}.mp4`), caption: pinga, mentions: [sender], gifPlayback: true }, { quoted: mek })
-        break
-      case 'abracar':
-      case 'abraçar':
-        if (mek.message.extendedTextMessage === undefined || mek.message.extendedTextMessage === null) return env('marque uma pessoa com @')
-        if (!isGroup) return env('somente em grupo')
-        var abracar = ['abracar', 'abracar2', 'abracar3']
-        var abrac = abracar[Math.floor(Math.random() * abracar.length)]
-        var num = mek.message.extendedTextMessage.contextInfo.mentionedJid[0]
-        var pinga = `@${sender.split("@")[0]} 𝐃𝐄𝐔 𝐔𝐌 𝐀𝐁𝐑𝐀𝐂𝐎 𝐍𝐎 @${num.split('@')[0]} 𝐐𝐔𝐄 𝐅𝐎𝐅𝐎`;
-        await conn.sendMessage(from, { video: fs.readFileSync(`./complement/videos/abracar/${abrac}.mp4`), caption: pinga, gifPlayback: true }, { quoted: mek })
-        break
+        break;
+      case "beijar":
+        if (
+          mek.message.extendedTextMessage === undefined ||
+          mek.message.extendedTextMessage === null
+        )
+          return env("marque uma pessoa com @");
+        if (!isGroup) return env("somente em grupo");
+        var beijar = ["beijar", "beijar2", "beijar3"];
+        var beijaar = beijar[Math.floor(Math.random() * beijar.length)];
+        var num = mek.message.extendedTextMessage.contextInfo.mentionedJid[0];
+        var pinga = `Ohw mds @${sender.split("@")[0]} deu um beijinho no @${
+          num.split("@")[0]
+        }😍❤`;
+        await conn.sendMessage(
+          from,
+          {
+            video: fs.readFileSync(`./complement/videos/beijar/${beijaar}.mp4`),
+            caption: pinga,
+            gifPlayback: true,
+          },
+          { quoted: mek }
+        );
+        break;
+      case "tapa":
+      case "slap":
+        if (
+          mek.message.extendedTextMessage === undefined ||
+          mek.message.extendedTextMessage === null
+        )
+          return env("marque uma pessoa com @");
+        if (!isGroup) return env("somente em grupo");
+        var tapaa = ["tapa", "tapa2", "tapa3", "tapa4"];
+        var tapa = tapaa[Math.floor(Math.random() * tapaa.length)];
+        var num = mek.message.extendedTextMessage.contextInfo.mentionedJid[0];
+        var pinga = `@${sender.split("@")[0]} deu um tapa no @${
+          num.split("@")[0]
+        }👋🏻`;
+        await conn.sendMessage(
+          from,
+          {
+            video: fs.readFileSync(`./complement/videos/tapa/${tapa}.mp4`),
+            caption: pinga,
+            mentions: [sender],
+            gifPlayback: true,
+          },
+          { quoted: mek }
+        );
+        break;
+      case "abracar":
+      case "abraçar":
+        if (
+          mek.message.extendedTextMessage === undefined ||
+          mek.message.extendedTextMessage === null
+        )
+          return env("marque uma pessoa com @");
+        if (!isGroup) return env("somente em grupo");
+        var abracar = ["abracar", "abracar2", "abracar3"];
+        var abrac = abracar[Math.floor(Math.random() * abracar.length)];
+        var num = mek.message.extendedTextMessage.contextInfo.mentionedJid[0];
+        var pinga = `@${sender.split("@")[0]} 𝐃𝐄𝐔 𝐔𝐌 𝐀𝐁𝐑𝐀𝐂𝐎 𝐍𝐎 @${
+          num.split("@")[0]
+        } 𝐐𝐔𝐄 𝐅𝐎𝐅𝐎`;
+        await conn.sendMessage(
+          from,
+          {
+            video: fs.readFileSync(`./complement/videos/abracar/${abrac}.mp4`),
+            caption: pinga,
+            gifPlayback: true,
+          },
+          { quoted: mek }
+        );
+        break;
       //FIM
       //DINHEIRO
-      case 'saldo':
-        var salldo = checkATMuser(sender)
-        const limite = { salldo }
-        if (limite < 100000) { status = 'Classe média' } else if (limite == 1000000) { status = 'Milionário' } else if (limite == 1000000000) { status = 'Bilionário' }
-        else if (limite == 100000) { status = 'Classe pobre' }
+      case "saldo":
+        var salldo = checkATMuser(sender);
+        const limite = { salldo };
+        if (limite < 100000) {
+          status = "Classe média";
+        } else if (limite == 1000000) {
+          status = "Milionário";
+        } else if (limite == 1000000000) {
+          status = "Bilionário";
+        } else if (limite == 100000) {
+          status = "Classe pobre";
+        }
         pinga = `╭───────────────╮
 │ㅤㅤㅤSTATUS BANCÁRIOㅤㅤㅤ│
 ╞───────────────╯
@@ -4591,150 +7304,247 @@ A chance disso acontece e: ${kkll}%`
 ╞➸ 🌐Instituição: *RubyBank*
 ╞➸ ♦️Saldo disponível: *${salldo}*
 │
-╰─────────────╯`
-        conn.sendMessage(from, { text: pinga, footer: `Caso queira fazer transferência, use o botão a baixo`, buttons: [{ buttonId: `${prefixobot}helptransf`, buttonText: { displayText: 'FAZER TRANSFERÊNCIA' }, type: 1 }] }, { quoted: mek })
-        break
-      case 'pix':
-        if (args.length < 1) return env(`Modo certo de se usar ${prefixobot}transferir @ | valor`)
-        buttons = [{ buttonId: `${prefixobot}saldo`, buttonText: { displayText: 'Meu Saldo' }, type: 1 }]
-        if (!q.includes('|')) return env(`Faltou por o valor... exemplo de como se usar: ${prefixobot}transferir @ | 2500\n não esqueça de usar o |`)
-        const tujuan = q.substring(0, q.indexOf('|') - 1)
-        const jumblah = q.substring(q.lastIndexOf('|') + 1)
-        if (isNaN(jumblah)) return await env('O valor precisa está em números...')
-        if (jumblah < 50) return env(`transfrência mínima e de 50 rubys`)
-        if (checkATMuser(sender) < jumblah) return env(`Você não tem rubins suficiente para fazer uma transferência, você precisa ter no minímo 1000 de rubi`)
-        const tujuantf = `${tujuan.replace("@", '')}@s.whatsapp.net`
-        fee = 0.00 * jumblah //IMPOSTO CADA 1 DE DINHERO, ALMENTA E CAI NA SUA CONTA, TODA VEZ QUÊ ALGUÉM FAZER TRANSFERENCIA
-        hasiltf = jumblah - fee
-        addKoinUser(tujuantf, hasiltf)
-        confirmATM(sender, jumblah)
-        addKoinUser('554497433716@s.whatsapp.net', fee)
+╰─────────────╯`;
+        conn.sendMessage(
+          from,
+          {
+            text: pinga,
+            footer: `Caso queira fazer transferência, use o botão a baixo`,
+            buttons: [
+              {
+                buttonId: `${prefixobot}helptransf`,
+                buttonText: { displayText: "FAZER TRANSFERÊNCIA" },
+                type: 1,
+              },
+            ],
+          },
+          { quoted: mek }
+        );
+        break;
+      case "pix":
+        if (args.length < 1)
+          return env(`Modo certo de se usar ${prefixobot}transferir @ | valor`);
+        buttons = [
+          {
+            buttonId: `${prefixobot}saldo`,
+            buttonText: { displayText: "Meu Saldo" },
+            type: 1,
+          },
+        ];
+        if (!q.includes("|"))
+          return env(
+            `Faltou por o valor... exemplo de como se usar: ${prefixobot}transferir @ | 2500\n não esqueça de usar o |`
+          );
+        const tujuan = q.substring(0, q.indexOf("|") - 1);
+        const jumblah = q.substring(q.lastIndexOf("|") + 1);
+        if (isNaN(jumblah))
+          return await env("O valor precisa está em números...");
+        if (jumblah < 50) return env(`transfrência mínima e de 50 rubys`);
+        if (checkATMuser(sender) < jumblah)
+          return env(
+            `Você não tem rubins suficiente para fazer uma transferência, você precisa ter no minímo 1000 de rubi`
+          );
+        const tujuantf = `${tujuan.replace("@", "")}@s.whatsapp.net`;
+        fee = 0.0 * jumblah; //IMPOSTO CADA 1 DE DINHERO, ALMENTA E CAI NA SUA CONTA, TODA VEZ QUÊ ALGUÉM FAZER TRANSFERENCIA
+        hasiltf = jumblah - fee;
+        addKoinUser(tujuantf, hasiltf);
+        confirmATM(sender, jumblah);
+        addKoinUser("554497433716@s.whatsapp.net", fee);
         pingaa = `*TRANSFERÊNCIA CONCLUÍDA*
 Origem: *${sender.split("@")[0]}*
 Destinatário: *${tujuan}*
 Valor transferêrido: *${jumblah}*
 Instituição: *RubyBank*
 Tarifa sobre: *0,00*`;
-        conn.sendMessage(from, { text: pingaa, footer: `Deseja vê seu saldo atualizado?`, buttons: [{ buttonId: `${prefixobot}saldo`, buttonText: { displayText: 'CONSULTA SALDO' }, type: 1 }] }, { quoted: mek })
-        break
-      case 'helptransf':
-        pingu = `Para fazer uma transferência de rubins para outra pessoa faça o seguinte, exemplo de como se usar: ${prefixobot}pix @ | 1000\n não esqueça de usar o |`
-        conn.sendMessage(from, { text: pingu }, { quoted: mek })
-        break
+        conn.sendMessage(
+          from,
+          {
+            text: pingaa,
+            footer: `Deseja vê seu saldo atualizado?`,
+            buttons: [
+              {
+                buttonId: `${prefixobot}saldo`,
+                buttonText: { displayText: "CONSULTA SALDO" },
+                type: 1,
+              },
+            ],
+          },
+          { quoted: mek }
+        );
+        break;
+      case "helptransf":
+        pingu = `Para fazer uma transferência de rubins para outra pessoa faça o seguinte, exemplo de como se usar: ${prefixobot}pix @ | 1000\n não esqueça de usar o |`;
+        conn.sendMessage(from, { text: pingu }, { quoted: mek });
+        break;
       //JOGOS
-      case 'minerar':
-        if (!isGroup) return env('Comando apenas para grupo')
-        let minerar = Math.floor(Math.random() * 30)
-        let textmi = [`Você minerando nas ilhas savitas encontrou ${minerar} rubys!👷⛏️`, `Você minerando no seu quintal achou ${minerar} rubys`, `Parabéns você achou ${minerar} ruby no quintal da vizinha?;-;`, `Você invadiu mina proibida, e quando tava fazendo mineração achou ${minerar} rubys!⛏️`, `Você roubou ${minerar} rubys na mina de Minas gerais!👷⛏️💰`];
-        const minerarresp = textmi[Math.floor(Math.random() * textmi.length)]
-        addKoinUser(sender, minerar)
+      case "minerar":
+        if (!isGroup) return env("Comando apenas para grupo");
+        let minerar = Math.floor(Math.random() * 30);
+        let textmi = [
+          `Você minerando nas ilhas savitas encontrou ${minerar} rubys!👷⛏️`,
+          `Você minerando no seu quintal achou ${minerar} rubys`,
+          `Parabéns você achou ${minerar} ruby no quintal da vizinha?;-;`,
+          `Você invadiu mina proibida, e quando tava fazendo mineração achou ${minerar} rubys!⛏️`,
+          `Você roubou ${minerar} rubys na mina de Minas gerais!👷⛏️💰`,
+        ];
+        const minerarresp = textmi[Math.floor(Math.random() * textmi.length)];
+        addKoinUser(sender, minerar);
         conn.sendMessage(from, { text: minerarresp }, { quoted: mek });
-        break
-      case 'cavalo':
-        if (!isGroup) return env('Comando apenas para grupo')
+        break;
+      case "cavalo":
+        if (!isGroup) return env("Comando apenas para grupo");
         dinheiroc = checkATMuser(sender);
-        if (args[0] == '') return env('especifique a quantidade de Rubys para apostar.');
-        if (isNaN(args[0])) return env('para apostar use apenas números.');
-        if (dinheiroc < 50) return env(`desculpe vc ainda não pode apostar😕 somente com 50 Rubys.\n\nseu saldo é de: ${dinheiroc}`);
-        if (args[0] > dinheiroc) return env(`você não pode apostar uma quantidade de dinheiro maior do que a quê você tem, e nosso limite de apostas é de *50* Rubys\n\nSeu saldo é de: ${dinheiroc}`);
-        if (args[0] < 50) return env(`o minimo para se apostar é de 50 rubys`, { quoted: mek });
+        if (args[0] == "")
+          return env("especifique a quantidade de Rubys para apostar.");
+        if (isNaN(args[0])) return env("para apostar use apenas números.");
+        if (dinheiroc < 50)
+          return env(
+            `desculpe vc ainda não pode apostar😕 somente com 50 Rubys.\n\nseu saldo é de: ${dinheiroc}`
+          );
+        if (args[0] > dinheiroc)
+          return env(
+            `você não pode apostar uma quantidade de dinheiro maior do que a quê você tem, e nosso limite de apostas é de *50* Rubys\n\nSeu saldo é de: ${dinheiroc}`
+          );
+        if (args[0] < 50)
+          return env(`o minimo para se apostar é de 50 rubys`, { quoted: mek });
         let fase = Math.floor(Math.random() * 6) + 1;
         let não_ganhou = -args[0];
         let ganhou = fase + parseInt(args[0]);
         if (fase == 1) {
-          sendButtonText(`☁   ☁    ☀    ☁  ☁️\n` +
-
-            `|           🐎                   |\n` +
-            `|      🐎      🐎            |\n` +
-            `|🐎                              |\n` +
-            `|                      🏇🏼🔴  |\n` +
-            `🚩                           🚩`, `seu cavalo perdeu: ${não_ganhou} rubys`, { quoted: mek });
+          sendButtonText(
+            `☁   ☁    ☀    ☁  ☁️\n` +
+              `|           🐎                   |\n` +
+              `|      🐎      🐎            |\n` +
+              `|🐎                              |\n` +
+              `|                      🏇🏼🔴  |\n` +
+              `🚩                           🚩`,
+            `seu cavalo perdeu: ${não_ganhou} rubys`,
+            { quoted: mek }
+          );
           addKoinUser(sender, não_ganhou);
         } else if (fase == 2) {
-          sendButtonText(`☁   ☁    ☀    ☁   ☁\n` +
-
-            `|           🐎               |\n` +
-            `|      🐎      🐎           |\n` +
-            `| 🐎                         |\n` +
-            `|                   🐎       |\n` +
-            `🚩                    🏇🏼🔴 🚩`, `seu cavalo ganhou: ${ganhou} rubys`, { quoted: mek });
+          sendButtonText(
+            `☁   ☁    ☀    ☁   ☁\n` +
+              `|           🐎               |\n` +
+              `|      🐎      🐎           |\n` +
+              `| 🐎                         |\n` +
+              `|                   🐎       |\n` +
+              `🚩                    🏇🏼🔴 🚩`,
+            `seu cavalo ganhou: ${ganhou} rubys`,
+            { quoted: mek }
+          );
           addKoinUser(sender, ganhou);
         } else if (fase == 3) {
-          sendButtonText(`☁   ☁    ☀    ☁  ☁️\n` +
-
-            `|           🐎                   |\n` +
-            `|      🏇🏼🔴     🐎          |\n` +
-            `|🐎                              |\n` +
-            `|                      🐎  |\n` +
-            `🚩                           🚩`, `seu cavalo perdeu: ${não_ganhou} rubys`, { quoted: mek });
+          sendButtonText(
+            `☁   ☁    ☀    ☁  ☁️\n` +
+              `|           🐎                   |\n` +
+              `|      🏇🏼🔴     🐎          |\n` +
+              `|🐎                              |\n` +
+              `|                      🐎  |\n` +
+              `🚩                           🚩`,
+            `seu cavalo perdeu: ${não_ganhou} rubys`,
+            { quoted: mek }
+          );
           addKoinUser(sender, não_ganhou);
         } else if (fase == 4) {
-          sendButtonText(`☁   ☁    ☀    ☁   ☁\n` +
-
-            `|            🐎              |\n` +
-            `|       🐎                   |\n` +
-            `| 🐎                     🐎 |\n` +
-            `|                🐎          |\n` +
-            `🚩                 🏇🏼🔴    🚩`, `seu cavalo ganhou: ${ganhou} rubys`, { quoted: mek });
+          sendButtonText(
+            `☁   ☁    ☀    ☁   ☁\n` +
+              `|            🐎              |\n` +
+              `|       🐎                   |\n` +
+              `| 🐎                     🐎 |\n` +
+              `|                🐎          |\n` +
+              `🚩                 🏇🏼🔴    🚩`,
+            `seu cavalo ganhou: ${ganhou} rubys`,
+            { quoted: mek }
+          );
         } else if (fase == 5) {
-          sendButtonText(`☁   ☁    ☀    ☁  ☁️\n` +
-
-            `|           🐎                   |\n` +
-            `|      🐎      🏇🏼🔴          |\n` +
-            `|🐎                              |\n` +
-            `|                      🐎  |\n` +
-            `🚩                           🚩`, `seu cavalo perdeu: ${não_ganhou} rubys`, { quoted: mek });
+          sendButtonText(
+            `☁   ☁    ☀    ☁  ☁️\n` +
+              `|           🐎                   |\n` +
+              `|      🐎      🏇🏼🔴          |\n` +
+              `|🐎                              |\n` +
+              `|                      🐎  |\n` +
+              `🚩                           🚩`,
+            `seu cavalo perdeu: ${não_ganhou} rubys`,
+            { quoted: mek }
+          );
           addKoinUser(sender, não_ganhou);
         } else if (fase == 6) {
-          sendButtonText(`☁   ☁   ☀   ☁   ☁\n` +
-
-            `|           🐎              |\n` +
-            `|      🐎                   |\n` +
-            `| 🐎                     🐎 |\n` +
-            `|                     🐎     |\n` +
-            `🚩            🏇🏼🔴         🚩️`, `seu cavalo ganhou: ${ganhou} rubys`, { quoted: mek });
+          sendButtonText(
+            `☁   ☁   ☀   ☁   ☁\n` +
+              `|           🐎              |\n` +
+              `|      🐎                   |\n` +
+              `| 🐎                     🐎 |\n` +
+              `|                     🐎     |\n` +
+              `🚩            🏇🏼🔴         🚩️`,
+            `seu cavalo ganhou: ${ganhou} rubys`,
+            { quoted: mek }
+          );
           addKoinUser(sender, ganhou);
         }
         break;
-      case 'apostar':
-        if (!isGroup) return env('Comando apenas para grupo')
-        const dinheiro = checkATMuser(sender)
-        const checkxpr = checkATMuser(sender, dinheiro)
-        const quantidader = `50`
-        if (checkxpr <= quantidader) return env(`desculpe vc ainda não  pode apostar😕 somente com  ${quantidader} de Rubys.\n\nSuas Rubys: ${checkxpr}`)
-        if (args.length !== 1) return env('Especifique a quantidade de Ruby para apostar.')
-        if (Number(args[0]) >= checkxpr || Number(args[0]) >= dinheiro) return env(`Você não pode apostar uma quantidade de dinheiro maior do que a você tem, e nosso limite de apostas é de ${quantidader} dinheiro por vez!\n\nSeu dinheiro: ${checkxpr}`)
-        if (Number(args[0]) < 50) return env(`O minimo para se apostar é de 50 Rubys`)
-        if (isNaN(args[0])) return env('Para apostar use apenas números, nada de inserir letras, a menos que queira perder todo o XP que tenha.')
-        const double = Math.floor(Math.random() * 7) + 1
-        const nrolxp = Number(-args[0])
-        const prolxp = double + Number(args[0])
+      case "apostar":
+        if (!isGroup) return env("Comando apenas para grupo");
+        const dinheiro = checkATMuser(sender);
+        const checkxpr = checkATMuser(sender, dinheiro);
+        const quantidader = `50`;
+        if (checkxpr <= quantidader)
+          return env(
+            `desculpe vc ainda não  pode apostar😕 somente com  ${quantidader} de Rubys.\n\nSuas Rubys: ${checkxpr}`
+          );
+        if (args.length !== 1)
+          return env("Especifique a quantidade de Ruby para apostar.");
+        if (Number(args[0]) >= checkxpr || Number(args[0]) >= dinheiro)
+          return env(
+            `Você não pode apostar uma quantidade de dinheiro maior do que a você tem, e nosso limite de apostas é de ${quantidader} dinheiro por vez!\n\nSeu dinheiro: ${checkxpr}`
+          );
+        if (Number(args[0]) < 50)
+          return env(`O minimo para se apostar é de 50 Rubys`);
+        if (isNaN(args[0]))
+          return env(
+            "Para apostar use apenas números, nada de inserir letras, a menos que queira perder todo o XP que tenha."
+          );
+        const double = Math.floor(Math.random() * 7) + 1;
+        const nrolxp = Number(-args[0]);
+        const prolxp = double + Number(args[0]);
         if (double == 1) {
-          await env(`🔪BANG!!!💣\n\nVocê perdeu na roleta-russa, causando uma perca de ${nrolxp} em seu dinheiro.`)
-          addKoinUser(sender, nrolxp, dinheiro)
-          addKoinUser(`${OwnerNumber}@s.whatsapp.net`, prolxp)
+          await env(
+            `🔪BANG!!!💣\n\nVocê perdeu na roleta-russa, causando uma perca de ${nrolxp} em seu dinheiro.`
+          );
+          addKoinUser(sender, nrolxp, dinheiro);
+          addKoinUser(`${OwnerNumber}@s.whatsapp.net`, prolxp);
         } else if (double == 2) {
-          await env(`Você Ganhou🥳\nSobreviveu ao tiro e recebeu ${prolxp} Rubys`)
-          addKoinUser(sender, prolxp, dinheiro)
+          await env(
+            `Você Ganhou🥳\nSobreviveu ao tiro e recebeu ${prolxp} Rubys`
+          );
+          addKoinUser(sender, prolxp, dinheiro);
         } else if (double == 3) {
-          await env(`Poxa você está sem sorte😓\n\nVocê perdeu ${nrolxp}\não desista continue apostando😎🤙`)
-          addKoinUser(sender, nrolxp, dinheiro)
-          addKoinUser(`${OwnerNumber}@s.whatsapp.net`, prolxp)
+          await env(
+            `Poxa você está sem sorte😓\n\nVocê perdeu ${nrolxp}\não desista continue apostando😎🤙`
+          );
+          addKoinUser(sender, nrolxp, dinheiro);
+          addKoinUser(`${OwnerNumber}@s.whatsapp.net`, prolxp);
         } else if (double == 4) {
-          await env(`Essa foi por pouco!!😬\n\nVocê consegiu concluir o golpe e ganhou ${prolxp} Rubys`)
-          addKoinUser(sender, prolxp, dinheiro)
+          await env(
+            `Essa foi por pouco!!😬\n\nVocê consegiu concluir o golpe e ganhou ${prolxp} Rubys`
+          );
+          addKoinUser(sender, prolxp, dinheiro);
         } else if (double == 5) {
-          await env(`Você errou o cavalo️\n\nAcabou perdendo ${nrolxp} em seu dinheiro, que tal..apostar mais alto??🤫.`)
-          addKoinUser(sender, nrolxp, dinheiro)
-          addKoinUser(`${OwnerNumber}@s.whatsapp.net`, prolxp)
+          await env(
+            `Você errou o cavalo️\n\nAcabou perdendo ${nrolxp} em seu dinheiro, que tal..apostar mais alto??🤫.`
+          );
+          addKoinUser(sender, nrolxp, dinheiro);
+          addKoinUser(`${OwnerNumber}@s.whatsapp.net`, prolxp);
         } else if (double == 6) {
-          await env(`🥳Aeeeeee🥳\n\nVocê finalmente ganhou, receba seus ${prolxp} de Rubys🔷️`)
-          addKoinUser(sender, prolxp, dinheiro)
+          await env(
+            `🥳Aeeeeee🥳\n\nVocê finalmente ganhou, receba seus ${prolxp} de Rubys🔷️`
+          );
+          addKoinUser(sender, prolxp, dinheiro);
         }
-        break
-      case 'jogodavelha':
-      case 'velha':
-        if (!isGroup) return env('Comando apenas para grupo')
+        break;
+      case "jogodavelha":
+      case "velha":
+        if (!isGroup) return env("Comando apenas para grupo");
         if (!isGame) return env(mensagem[0].game);
         if (fs.existsSync(`./db/tictactoe/db/${from}.json`)) {
           const boardnow = setGame(`${from}`);
@@ -4763,530 +7573,989 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
         boardnow.status = false;
         boardnow.X = sender.replace("@s.whatsapp.net", "");
         boardnow.O = argss[1].replace("@", "");
-        fs.writeFileSync(`./db/tictactoe/db/${from}.json`,
+        fs.writeFileSync(
+          `./db/tictactoe/db/${from}.json`,
           JSON.stringify(boardnow, null, 2)
         );
         const strChat = `*『📌ᎬՏᏢᎬᎡᎪΝᎠϴ ϴ ϴᏢϴΝᎬΝͲᎬ⚔️』*
 
-@${sender.replace("@s.whatsapp.net",
-          "")} _está te desafiando para uma partida de jogo da velha..._
+@${sender.replace(
+          "@s.whatsapp.net",
+          ""
+        )} _está te desafiando para uma partida de jogo da velha..._
 _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
      `;
         mention(strChat);
-        break
-      case 'resetarvelha':
-      case 'resetavelha':
-      case 'rst':
+        break;
+      case "resetarvelha":
+      case "resetavelha":
+      case "rst":
         if (!isGame) return env(mensagem[0].game);
-        if (!isGroup) return env('Comando apenas para grupo')
+        if (!isGroup) return env("Comando apenas para grupo");
         if (fs.existsSync("./db/tictactoe/db/" + from + ".json")) {
           fs.unlinkSync("./db/tictactoe/db/" + from + ".json");
           env(`Jogo da velha resetado com sucesso nesse grupo!`);
         } else {
           env(`Não a nenhuma sessão em andamento...`);
         }
-        break
-      case 'resetaki':
+        break;
+      case "resetaki":
         if (!isGame) return env(mensagem[0].game);
-        if (akinator[0][from] && akinator[0][from].player != sender && !isMemberAdmin && isOwner) return env('*Não é você que está jogando*\n\nOu peça um admin para resetar o akineitor')
-        akinator[0][from] = undefined
-        fs.writeFileSync('./db/json/akinator.json', JSON.stringify(akinator, null, 2))
+        if (
+          akinator[0][from] &&
+          akinator[0][from].player != sender &&
+          !isMemberAdmin &&
+          isOwner
+        )
+          return env(
+            "*Não é você que está jogando*\n\nOu peça um admin para resetar o akineitor"
+          );
+        akinator[0][from] = undefined;
+        fs.writeFileSync(
+          "./db/json/akinator.json",
+          JSON.stringify(akinator, null, 2)
+        );
         buttons_opts = [
-          { buttonId: 'akinator sim', buttonText: { displayText: 'Sim' }, type: 1 },
-          { buttonId: 'akinator nao', buttonText: { displayText: 'Não' }, type: 1 },
-        ]
+          {
+            buttonId: "akinator sim",
+            buttonText: { displayText: "Sim" },
+            type: 1,
+          },
+          {
+            buttonId: "akinator nao",
+            buttonText: { displayText: "Não" },
+            type: 1,
+          },
+        ];
         sendbuttonsMessage = {
           text: `*Jogo reiniciado com sucesso! Deseja jogar outra partida*`,
-          footer: 'Sim ou não?',
+          footer: "Sim ou não?",
           buttons: buttons_opts,
-          headerType: 1
-        }
-        conn.sendMessage(from, sendbuttonsMessage)
-        break
-      case 'respaki':
-        if (!mek.message.listResponseMessage) return
-        if (akinator[0][from] && akinator[0][from].player != sender) return env('*Não é você que está jogando*')
-        if (args.length < 1) return
-        await akinator[0][from].game.step(args[0])
+          headerType: 1,
+        };
+        conn.sendMessage(from, sendbuttonsMessage);
+        break;
+      case "respaki":
+        if (!mek.message.listResponseMessage) return;
+        if (akinator[0][from] && akinator[0][from].player != sender)
+          return env("*Não é você que está jogando*");
+        if (args.length < 1) return;
+        await akinator[0][from].game.step(args[0]);
         if (akinator[0][from].game.progress > 85) {
-          await akinator[0][from].game.win()
-          teks = `Por acaso seu personagem é ${akinator[0][from].game.answers[0].name}?`
+          await akinator[0][from].game.win();
+          teks = `Por acaso seu personagem é ${akinator[0][from].game.answers[0].name}?`;
           buttons_opts = [
-            { buttonId: `${prefixobot}finaki sim`, buttonText: { displayText: 'Sim' }, type: 1 },
-            { buttonId: `${prefixobot}finaki nao`, buttonText: { displayText: 'Não' }, type: 1 },
-          ]
+            {
+              buttonId: `${prefixobot}finaki sim`,
+              buttonText: { displayText: "Sim" },
+              type: 1,
+            },
+            {
+              buttonId: `${prefixobot}finaki nao`,
+              buttonText: { displayText: "Não" },
+              type: 1,
+            },
+          ];
           sendbuttonsMessage = {
-            image: { url: akinator[0][from].game.answers[0].absolute_picture_path },
+            image: {
+              url: akinator[0][from].game.answers[0].absolute_picture_path,
+            },
             caption: `Já sei!\n\n${teks}`,
-            footer: 'Sim ou não?',
+            footer: "Sim ou não?",
             buttons: buttons_opts,
-            headerType: 1
-          }
-          conn.sendMessage(from, sendbuttonsMessage)
+            headerType: 1,
+          };
+          conn.sendMessage(from, sendbuttonsMessage);
         } else {
           listMessage = {
             text: akinator[0][from].game.question,
-            footer: 'Mostrar opções',
-            buttonText: 'Opções',
+            footer: "Mostrar opções",
+            buttonText: "Opções",
             title: "Pergunta",
-            sections: [{
-              title: 'Opções',
-              rows: [{
-                rowId: `${prefixobot}respaki 0`,
-                title: 'Sim',
-                description: ''
-              },
+            sections: [
               {
-                rowId: `${prefixobot}respaki 1`,
-                title: 'Não',
-                description: ''
-              }, {
-                rowId: `${prefixobot}respaki 2`,
-                title: 'Não sei',
-                description: ''
-              }, {
-                rowId: `${prefixobot}respaki 3`,
-                title: 'Provavelmente sim',
-                description: ''
+                title: "Opções",
+                rows: [
+                  {
+                    rowId: `${prefixobot}respaki 0`,
+                    title: "Sim",
+                    description: "",
+                  },
+                  {
+                    rowId: `${prefixobot}respaki 1`,
+                    title: "Não",
+                    description: "",
+                  },
+                  {
+                    rowId: `${prefixobot}respaki 2`,
+                    title: "Não sei",
+                    description: "",
+                  },
+                  {
+                    rowId: `${prefixobot}respaki 3`,
+                    title: "Provavelmente sim",
+                    description: "",
+                  },
+                  {
+                    rowId: `${prefixobot}respaki 4`,
+                    title: "Provavelmente não",
+                    description: "",
+                  },
+                ],
               },
-              {
-                rowId: `${prefixobot}respaki 4`,
-                title: 'Provavelmente não',
-                description: ''
-              }]
-            }]
-          }
-          conn.sendMessage(from, listMessage, { quoted: mek })
+            ],
+          };
+          conn.sendMessage(from, listMessage, { quoted: mek });
         }
-        break
-      case 'akinator':
+        break;
+      case "akinator":
         if (!isGame) return env(mensagem[0].game);
         buttons_opts = [
-          { buttonId: `akinator sim`, buttonText: { displayText: 'Sim' }, type: 1 },
-          { buttonId: `akinator nao`, buttonText: { displayText: 'Não' }, type: 1 },
-        ]
+          {
+            buttonId: `akinator sim`,
+            buttonText: { displayText: "Sim" },
+            type: 1,
+          },
+          {
+            buttonId: `akinator nao`,
+            buttonText: { displayText: "Não" },
+            type: 1,
+          },
+        ];
         sendbuttonsMessage = {
           text: `Olá, sou o akinator ${pushname}\nDeseja jogar?`,
-          footer: 'Vamos jogar um jogo?',
+          footer: "Vamos jogar um jogo?",
           buttons: buttons_opts,
-          headerType: 1
-        }
-        conn.sendMessage(from, sendbuttonsMessage, { quoted: mek })
-        break
-      case 'cassino':
-      case 'slot':
+          headerType: 1,
+        };
+        conn.sendMessage(from, sendbuttonsMessage, { quoted: mek });
+        break;
+      case "cassino":
+      case "slot":
         if (!isGame) return env(mensagem[0].game);
-        if (!isGroup) return env('Comando apenas para grupo')
+        if (!isGroup) return env("Comando apenas para grupo");
         var sotoy = [
-          '🍊 : 🍒 : 🍐',
-          '🍒 : 🍓 : 🍊',
-          '🍇 : 🍇 : 🍇',
-          '🍊 : 🍋 : 🍓',
-          '🍓 : 🍒 : 🍐',
-          '🍓 : 🍒 : 🍊',
-          '🍊 : 🍋 : 🍓',
-          '🍐 : 🍒 : 🍋',
-          '🍐 : 🍐 : 🍐',
-          '🍊 : 🍒 : 🍒',
-          '🍓 : 🍓 : 🍇',
-          '🍌 : 🍒 : 🍓',
-          '🍐 : 🍓 : 🍓',
-          '🍊 : 🍋 : 🍒',
-          '🍋 : 🍋 : 🍌',
-          '🍓 : 🍓 : 🍇',
-          '🍓 : 🍐 : 🍇',
-          '🍓 : 🍓 : 🍓',
-          '🍒 : 🍒 : 🍒',
-          '🍌 : 🍌 : 🍌'
-        ]
-        var somtoy = sotoy[Math.floor(Math.random() * sotoy.length)]
-        var cassino = `[ CASSINO DE FRUTA ]\n-----------------\n🍋 : 🍌 : 🍍\n${somtoy}<=====\n🍋 : 🍌 : 🍍\n[  🎰 | SLOTS ]\n\nInformaçoes : Se você pegar 3 iguais significa que você ganhou\n\nExemplo : 🍌 : 🍌 : 🍌<=====`
-        conn.sendMessage(from, { text: cassino, footer: 'Caso você queira jogar novamente, aperte o botão a baixo!.', buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'Jogar novamente ️' }, type: 1 }] }, { quoted: mek });
-        break
-      case 'cassino2':
-      case 'slot2':
+          "🍊 : 🍒 : 🍐",
+          "🍒 : 🍓 : 🍊",
+          "🍇 : 🍇 : 🍇",
+          "🍊 : 🍋 : 🍓",
+          "🍓 : 🍒 : 🍐",
+          "🍓 : 🍒 : 🍊",
+          "🍊 : 🍋 : 🍓",
+          "🍐 : 🍒 : 🍋",
+          "🍐 : 🍐 : 🍐",
+          "🍊 : 🍒 : 🍒",
+          "🍓 : 🍓 : 🍇",
+          "🍌 : 🍒 : 🍓",
+          "🍐 : 🍓 : 🍓",
+          "🍊 : 🍋 : 🍒",
+          "🍋 : 🍋 : 🍌",
+          "🍓 : 🍓 : 🍇",
+          "🍓 : 🍐 : 🍇",
+          "🍓 : 🍓 : 🍓",
+          "🍒 : 🍒 : 🍒",
+          "🍌 : 🍌 : 🍌",
+        ];
+        var somtoy = sotoy[Math.floor(Math.random() * sotoy.length)];
+        var cassino = `[ CASSINO DE FRUTA ]\n-----------------\n🍋 : 🍌 : 🍍\n${somtoy}<=====\n🍋 : 🍌 : 🍍\n[  🎰 | SLOTS ]\n\nInformaçoes : Se você pegar 3 iguais significa que você ganhou\n\nExemplo : 🍌 : 🍌 : 🍌<=====`;
+        conn.sendMessage(
+          from,
+          {
+            text: cassino,
+            footer:
+              "Caso você queira jogar novamente, aperte o botão a baixo!.",
+            buttons: [
+              {
+                buttonId: `${prefixobot + command}`,
+                buttonText: { displayText: "Jogar novamente ️" },
+                type: 1,
+              },
+            ],
+          },
+          { quoted: mek }
+        );
+        break;
+      case "cassino2":
+      case "slot2":
         if (!isGame) return env(mensagem[0].game);
-        if (!isGroup) return env('Comando apenas para grupo')
+        if (!isGroup) return env("Comando apenas para grupo");
         var sotou = [
-          '🦫 : 🐿️ : 🐓',
-          '🐿️ : 🐬 : 🦫',
-          '🐇 : 🐇 : 🐇',
-          '🦫 : 🦭 : 🐬',
-          '🐬 : 🐿️ : 🐓',
-          '🐬 : 🐿️ : 🦫',
-          '🦫 : 🦭 : 🐬',
-          '🐓 : 🐿️ : 🦭',
-          '🐓 : 🐓 : 🐓',
-          '🦫 : 🐿️ : 🐿️',
-          '🐬 : 🐬 : 🐇',
-          '🐒 : 🐿️ : 🐬',
-          '🐓 : 🐬 : 🐬',
-          '🦫 : 🦭 : 🐿️',
-          '🦭 : 🦭 : 🐒',
-          '🐬 : 🐬 : 🐇',
-          '🐬 : 🐓 : 🐇',
-          '🐬 : 🐬 : 🐬',
-          '🐿️ : 🐿️ : 🐿️',
-          '🐒 : 🐒 : 🐒'
-        ]
-        var somto = sotou[Math.floor(Math.random() * sotou.length)]
-        var cassino2 = `[ CASSINO ANIMAL ]\n-----------------\n🦭 : 🐒 : 🐬\n${somto}<=====\n🦭 : 🐒 : 🐬\n[  🎰 | SLOTS ]\n\nInformaçoes : Se você pegar 3 iguais significa que você ganhou\n\nExemplo : 🐒 : 🐒 : 🐒<=====`
-        conn.sendMessage(from, { text: cassino2, footer: 'Caso você queira jogar novamente, aperte o botão a baixo!.', buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'Jogar novamente ️' }, type: 1 }] }, { quoted: mek });
-        break
-      case 'round6':
+          "🦫 : 🐿️ : 🐓",
+          "🐿️ : 🐬 : 🦫",
+          "🐇 : 🐇 : 🐇",
+          "🦫 : 🦭 : 🐬",
+          "🐬 : 🐿️ : 🐓",
+          "🐬 : 🐿️ : 🦫",
+          "🦫 : 🦭 : 🐬",
+          "🐓 : 🐿️ : 🦭",
+          "🐓 : 🐓 : 🐓",
+          "🦫 : 🐿️ : 🐿️",
+          "🐬 : 🐬 : 🐇",
+          "🐒 : 🐿️ : 🐬",
+          "🐓 : 🐬 : 🐬",
+          "🦫 : 🦭 : 🐿️",
+          "🦭 : 🦭 : 🐒",
+          "🐬 : 🐬 : 🐇",
+          "🐬 : 🐓 : 🐇",
+          "🐬 : 🐬 : 🐬",
+          "🐿️ : 🐿️ : 🐿️",
+          "🐒 : 🐒 : 🐒",
+        ];
+        var somto = sotou[Math.floor(Math.random() * sotou.length)];
+        var cassino2 = `[ CASSINO ANIMAL ]\n-----------------\n🦭 : 🐒 : 🐬\n${somto}<=====\n🦭 : 🐒 : 🐬\n[  🎰 | SLOTS ]\n\nInformaçoes : Se você pegar 3 iguais significa que você ganhou\n\nExemplo : 🐒 : 🐒 : 🐒<=====`;
+        conn.sendMessage(
+          from,
+          {
+            text: cassino2,
+            footer:
+              "Caso você queira jogar novamente, aperte o botão a baixo!.",
+            buttons: [
+              {
+                buttonId: `${prefixobot + command}`,
+                buttonText: { displayText: "Jogar novamente ️" },
+                type: 1,
+              },
+            ],
+          },
+          { quoted: mek }
+        );
+        break;
+      case "round6":
         if (!isGame) return env(mensagem[0].game);
-        if (!isGroup) return env('Comando apenas para grupo')
-        jogadorround = `${Math.floor(Math.random() * 456)}`
-        pinga = `Escolha qual forma você quer jogar.`
-        conn.sendMessage(from, { text: pinga, footer: `Você e o jogador número: ${jogadorround}`, buttons: [{ buttonId: `${prefixobot}round6_formas`, buttonText: { displayText: '☂️' }, type: 1 }, { buttonId: `${prefixobot}round7_formas`, buttonText: { displayText: '⭕' }, type: 1 }, { buttonId: `${prefixobot}round8_formas`, buttonText: { displayText: '⭐' }, type: 1 }] }, { quoted: mek });
-        break
-      case 'round6_formas':
-      case 'round7_formas':
-      case 'round8_formas':
+        if (!isGroup) return env("Comando apenas para grupo");
+        jogadorround = `${Math.floor(Math.random() * 456)}`;
+        pinga = `Escolha qual forma você quer jogar.`;
+        conn.sendMessage(
+          from,
+          {
+            text: pinga,
+            footer: `Você e o jogador número: ${jogadorround}`,
+            buttons: [
+              {
+                buttonId: `${prefixobot}round6_formas`,
+                buttonText: { displayText: "☂️" },
+                type: 1,
+              },
+              {
+                buttonId: `${prefixobot}round7_formas`,
+                buttonText: { displayText: "⭕" },
+                type: 1,
+              },
+              {
+                buttonId: `${prefixobot}round8_formas`,
+                buttonText: { displayText: "⭐" },
+                type: 1,
+              },
+            ],
+          },
+          { quoted: mek }
+        );
+        break;
+      case "round6_formas":
+      case "round7_formas":
+      case "round8_formas":
         if (!isGame) return env(mensagem[0].game);
-        if (!isGroup) return env('Comando apenas para grupo')
-        var round6 = [`Você quebrou o biscoito e morreu`, `Você demorou para entregar seu biscoito e morreu`, `Você foi o primeiro a morrer`, ` Você foi o último a morrer`, `Você não conseguiu entregar o biscoito a tempo, e morreu`, `Você entregou o biscoito faltando 5 segundos`, `Você foi o primeiro a entregar o biscoito`, `Você usou o isqueiro para queimar a agulha e cortar o biscoito e passou`, `Você morreu pq demorou para entregar o biscoito`]
-        const round666 = round6[Math.floor(Math.random() * round6.length)]
-        pinga = `${round666}\n`
-        conn.sendMessage(from, { text: pinga, footer: `Hora do ocorrido:\nDia do acontecimento: ${data}`, buttons: [{ buttonId: `${prefixobot}round6`, buttonText: { displayText: 'TENTA NOVAMENTE' }, type: 1 }] }, { quoted: mek });
-        break
-      case 'tac':
+        if (!isGroup) return env("Comando apenas para grupo");
+        var round6 = [
+          `Você quebrou o biscoito e morreu`,
+          `Você demorou para entregar seu biscoito e morreu`,
+          `Você foi o primeiro a morrer`,
+          ` Você foi o último a morrer`,
+          `Você não conseguiu entregar o biscoito a tempo, e morreu`,
+          `Você entregou o biscoito faltando 5 segundos`,
+          `Você foi o primeiro a entregar o biscoito`,
+          `Você usou o isqueiro para queimar a agulha e cortar o biscoito e passou`,
+          `Você morreu pq demorou para entregar o biscoito`,
+        ];
+        const round666 = round6[Math.floor(Math.random() * round6.length)];
+        pinga = `${round666}\n`;
+        conn.sendMessage(
+          from,
+          {
+            text: pinga,
+            footer: `Hora do ocorrido:\nDia do acontecimento: ${data}`,
+            buttons: [
+              {
+                buttonId: `${prefixobot}round6`,
+                buttonText: { displayText: "TENTA NOVAMENTE" },
+                type: 1,
+              },
+            ],
+          },
+          { quoted: mek }
+        );
+        break;
+      case "tac":
         if (!isGame) return env(mensagem[0].game);
-        if (!isGroup) return env('Comando apenas para grupo')
-        var taac = ['Tac... Não disparou', 'Tac... Não disparou,ainda...', 'Tac💥 Disparou e você morreu', 'Tac💥Disparou mas a bala pegou de raspão', 'A arma falhou', 'Tac... Por pouco que não dispara...', 'Tac... A arma estava descarregada']
-        const baoo = taac[Math.floor(Math.random() * taac.length)]
-        pinga = `${baoo}`
-        conn.sendMessage(from, { text: pinga, footer: `Hora do ocorrido: ${hora()},\nDia do acontecimento: ${data}`, buttons: [{ buttonId: `${prefixobot + command}`, buttonText: { displayText: 'TENTA NOVAMENTE' }, type: 1 }] }, { quoted: mek })
-        break
-      case 'euja':
-      case 'euja2':
-      case 'euja3':
+        if (!isGroup) return env("Comando apenas para grupo");
+        var taac = [
+          "Tac... Não disparou",
+          "Tac... Não disparou,ainda...",
+          "Tac💥 Disparou e você morreu",
+          "Tac💥Disparou mas a bala pegou de raspão",
+          "A arma falhou",
+          "Tac... Por pouco que não dispara...",
+          "Tac... A arma estava descarregada",
+        ];
+        const baoo = taac[Math.floor(Math.random() * taac.length)];
+        pinga = `${baoo}`;
+        conn.sendMessage(
+          from,
+          {
+            text: pinga,
+            footer: `Hora do ocorrido: ${hora()},\nDia do acontecimento: ${data}`,
+            buttons: [
+              {
+                buttonId: `${prefixobot + command}`,
+                buttonText: { displayText: "TENTA NOVAMENTE" },
+                type: 1,
+              },
+            ],
+          },
+          { quoted: mek }
+        );
+        break;
+      case "euja":
+      case "euja2":
+      case "euja3":
         if (!isGame) return env(mensagem[0].game);
-        if (!isGroup) return env('Comando apenas para grupo')
-        const jaja = ['Eu nunca usei o Tinder.', 'Eu nunca fui expulso da sala de aula.', 'Eu nunca fiquei preso no elevador.', 'Eu nunca apareci na TV.', 'Chupei o pau do amigo achando que era um picolé', 'Eu nunca corri da polícia.', 'Eu nunca levei um tapa no rosto.', 'Eu nunca segurei a mão da pessoa errada na rua.', 'Eu nunca comi comida que caiu no chão.', 'Nunca beijei alguém que eu não conhecia.', 'Eu nunca dei um beijo triplo.', 'Eu nunca dormi no ônibus e perdi o meu ponto.', 'Eu nunca vomitei e tive que engolir.', 'Eu nunca entrei em casa pela janela.', 'Nunca me senti atraído(a) pelo pai/mãe de algum amigo.', 'Eu nunca quebrei um osso.', 'Eu nunca participei de uma briga.', 'Eu nunca fingi que estava passando mal para matar aula.', 'Eu nunca fugi de casa.', 'Eu nunca saí na rua de pijama.', 'Nunca me apaixonei à primeira vista.', 'Nunca beijei minha melhor amiga.', 'Nunca andei de cavalo.', 'Eu nunca dei um tapa no rosto de alguém.', 'Eu nunca chorei no transporte público.', 'Eu nunca tive um vídeo constrangedor postado na internet.', 'Eu nunca criei uma conta fake nas redes sociais.', 'Eu nunca tive uma experiência paranormal', 'Eu nunca passei mais de dois dias sem tomar banho.', 'Eu nunca olhei o celular de alguém sem que a pessoa soubesse.', 'Eu nunca me gabei por algo que não fiz.', 'Eu nunca menti tanto sobre alguma coisa que acreditei que fosse verdade.', 'Eu nunca fiquei com mais de uma pessoa ao mesmo tempo.', 'Eu nunca roubei um objeto ou comida de alguma loja, ou mercado', 'Eu nunca entrei numa festa sem ser convidada', 'Eu nunca quebrei algo e coloquei a culpa em outra pessoa', 'Eu nunca desmaiei na rua.', 'Nunca peguei carona com estranhos.', 'Eu nunca desmaiei na rua.']
-        var jale = jaja[Math.floor(Math.random() * jaja.length)]
-        pinga = `${jale}\n`
-        conn.sendMessage(from, { text: pinga, footer: `Verdade acima de todo!`, templateButtons: [{ index: 3, quickReplyButton: { displayText: 'EU JÁ', id: `${prefixobot}euja` } }, { index: 4, quickReplyButton: { displayText: 'EU NUNCA', id: `${prefixobot}euja2` } }, { index: 5, quickReplyButton: { displayText: 'N RESPONDE/PRÓXIMA PERGUNTA', id: `${prefixobot}euja3` } }] }, { quoted: mek });
-        break
-      case 'rr':
+        if (!isGroup) return env("Comando apenas para grupo");
+        const jaja = [
+          "Eu nunca usei o Tinder.",
+          "Eu nunca fui expulso da sala de aula.",
+          "Eu nunca fiquei preso no elevador.",
+          "Eu nunca apareci na TV.",
+          "Chupei o pau do amigo achando que era um picolé",
+          "Eu nunca corri da polícia.",
+          "Eu nunca levei um tapa no rosto.",
+          "Eu nunca segurei a mão da pessoa errada na rua.",
+          "Eu nunca comi comida que caiu no chão.",
+          "Nunca beijei alguém que eu não conhecia.",
+          "Eu nunca dei um beijo triplo.",
+          "Eu nunca dormi no ônibus e perdi o meu ponto.",
+          "Eu nunca vomitei e tive que engolir.",
+          "Eu nunca entrei em casa pela janela.",
+          "Nunca me senti atraído(a) pelo pai/mãe de algum amigo.",
+          "Eu nunca quebrei um osso.",
+          "Eu nunca participei de uma briga.",
+          "Eu nunca fingi que estava passando mal para matar aula.",
+          "Eu nunca fugi de casa.",
+          "Eu nunca saí na rua de pijama.",
+          "Nunca me apaixonei à primeira vista.",
+          "Nunca beijei minha melhor amiga.",
+          "Nunca andei de cavalo.",
+          "Eu nunca dei um tapa no rosto de alguém.",
+          "Eu nunca chorei no transporte público.",
+          "Eu nunca tive um vídeo constrangedor postado na internet.",
+          "Eu nunca criei uma conta fake nas redes sociais.",
+          "Eu nunca tive uma experiência paranormal",
+          "Eu nunca passei mais de dois dias sem tomar banho.",
+          "Eu nunca olhei o celular de alguém sem que a pessoa soubesse.",
+          "Eu nunca me gabei por algo que não fiz.",
+          "Eu nunca menti tanto sobre alguma coisa que acreditei que fosse verdade.",
+          "Eu nunca fiquei com mais de uma pessoa ao mesmo tempo.",
+          "Eu nunca roubei um objeto ou comida de alguma loja, ou mercado",
+          "Eu nunca entrei numa festa sem ser convidada",
+          "Eu nunca quebrei algo e coloquei a culpa em outra pessoa",
+          "Eu nunca desmaiei na rua.",
+          "Nunca peguei carona com estranhos.",
+          "Eu nunca desmaiei na rua.",
+        ];
+        var jale = jaja[Math.floor(Math.random() * jaja.length)];
+        pinga = `${jale}\n`;
+        conn.sendMessage(
+          from,
+          {
+            text: pinga,
+            footer: `Verdade acima de todo!`,
+            templateButtons: [
+              {
+                index: 3,
+                quickReplyButton: {
+                  displayText: "EU JÁ",
+                  id: `${prefixobot}euja`,
+                },
+              },
+              {
+                index: 4,
+                quickReplyButton: {
+                  displayText: "EU NUNCA",
+                  id: `${prefixobot}euja2`,
+                },
+              },
+              {
+                index: 5,
+                quickReplyButton: {
+                  displayText: "N RESPONDE/PRÓXIMA PERGUNTA",
+                  id: `${prefixobot}euja3`,
+                },
+              },
+            ],
+          },
+          { quoted: mek }
+        );
+        break;
+      case "rr":
         if (!isGame) return env(mensagem[0].game);
-        if (!isGroup) return env('Comando apenas para grupo')
-        if (!isBotAdm) return env('Bot nao é adm');
-        words = ['A ARMA ESTAVA DESCARREGADA', 'O TIRO PASSOU DE RASPÃO', 'A ARMA FALHOU', 'A ARMA ESTAVA DESCARREGADA', 'BOOM VOCÊ MORREU💥', 'O TIRO PASSOU DE RASPÃO', 'A ARMA FALHOU', 'BOOM VOCÊ MORREU💥', 'A ARMA ESTAVA DESCARREGADA', 'O TIRO PASSOU DE RASPÃO', 'A ARMA FALHOU', 'BOOM VOCÊ MORREU💥'];
+        if (!isGroup) return env("Comando apenas para grupo");
+        if (!isBotAdm) return env("Bot nao é adm");
+        words = [
+          "A ARMA ESTAVA DESCARREGADA",
+          "O TIRO PASSOU DE RASPÃO",
+          "A ARMA FALHOU",
+          "A ARMA ESTAVA DESCARREGADA",
+          "BOOM VOCÊ MORREU💥",
+          "O TIRO PASSOU DE RASPÃO",
+          "A ARMA FALHOU",
+          "BOOM VOCÊ MORREU💥",
+          "A ARMA ESTAVA DESCARREGADA",
+          "O TIRO PASSOU DE RASPÃO",
+          "A ARMA FALHOU",
+          "BOOM VOCÊ MORREU💥",
+        ];
         random = words[Math.floor(Math.random() * words.length)];
-        if (random == 'BOOM VOCÊ MORREU💥') {
+        if (random == "BOOM VOCÊ MORREU💥") {
           env(random);
-          conn.groupParticipantsUpdate(from, [sender], 'remove');
-          conn.sendMessage(owner[0], `    [ *_ALERTA_* ]\n\n → esse maluko aqui levou ban no jogo \".rr\"\ncaso ele não volte esse é o numero dele: ${sender.split('@')[0]}`);
+          conn.groupParticipantsUpdate(from, [sender], "remove");
+          conn.sendMessage(
+            owner[0],
+            `    [ *_ALERTA_* ]\n\n → esse maluko aqui levou ban no jogo \".rr\"\ncaso ele não volte esse é o numero dele: ${
+              sender.split("@")[0]
+            }`
+          );
         } else {
           env(random);
         }
-        break
+        break;
       //FIM
       //PLAQUINHA
-      case 'plaquinha':
+      case "plaquinha":
         if (!isNsfw) return env(mensagem[0].nsfw);
-        if (!texto) return env(`Coloque o nome da plaquinha na frente do comando\nExemplo de como se usar: ${prefixobot + command} Toki`)
+        if (!texto)
+          return env(
+            `Coloque o nome da plaquinha na frente do comando\nExemplo de como se usar: ${
+              prefixobot + command
+            } Toki`
+          );
         var sections = [
           {
             title: "Plaquinha",
             rows: [
-              { title: `Plaquinha  com o nome "${texto}" no peito`, rowId: `${prefixobot}plaqui ${texto}` },
-              { title: `Plaquinha2 com o nome "${texto}" na bunda`, rowId: `${prefixobot}plaqui2 ${texto}` },
-              { title: `Plaquinha3 com o nome "${texto}" na bunda`, rowId: `${prefixobot}plaqui3 ${texto}` },
-              { title: `Plaquinha4 com o nome "${texto}" na bunda`, rowId: `${prefixobot}plaqui4 ${texto}` }],
-          }
-        ]
+              {
+                title: `Plaquinha  com o nome "${texto}" no peito`,
+                rowId: `${prefixobot}plaqui ${texto}`,
+              },
+              {
+                title: `Plaquinha2 com o nome "${texto}" na bunda`,
+                rowId: `${prefixobot}plaqui2 ${texto}`,
+              },
+              {
+                title: `Plaquinha3 com o nome "${texto}" na bunda`,
+                rowId: `${prefixobot}plaqui3 ${texto}`,
+              },
+              {
+                title: `Plaquinha4 com o nome "${texto}" na bunda`,
+                rowId: `${prefixobot}plaqui4 ${texto}`,
+              },
+            ],
+          },
+        ];
         var listMessage = {
           text: "Escolha um tema para sua plaquinha.",
           footer: "Selecione o tema abaixo",
           buttonText: "Escolha o tema da sua plaquinha",
-          sections
-        }
-        const sendMsg = await conn.sendMessage(from, listMessage)
-        break
-      case 'plaqui':
+          sections,
+        };
+        const sendMsg = await conn.sendMessage(from, listMessage);
+        break;
+      case "plaqui":
         if (!isNsfw) return env(mensagem[0].nsfw);
-        if (args.length < 1) return env(`Digite seu nome/nick na frente do comando\nExemplo de como se usar: ${prefixobot + command} Joazin`)
-        teks = body.slice(8)
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: { url: `https://ubbornag.sirv.com/Screenshot_20210513-151821.png?text.0.text=${teks}&text.0.position.x=-40%25&text.0.position.y=-65%25&text.0.size=30&text.0.color=000000&text.0.opacity=53&text.0.font.family=Shadows%20Into%20Light%20Two&text.0.outline.blur=15` }, caption: '✓' });
-        break
-      case 'plaqui2':
+        if (args.length < 1)
+          return env(
+            `Digite seu nome/nick na frente do comando\nExemplo de como se usar: ${
+              prefixobot + command
+            } Joazin`
+          );
+        teks = body.slice(8);
+        env(mensagem[0].espere);
+        conn.sendMessage(from, {
+          image: {
+            url: `https://ubbornag.sirv.com/Screenshot_20210513-151821.png?text.0.text=${teks}&text.0.position.x=-40%25&text.0.position.y=-65%25&text.0.size=30&text.0.color=000000&text.0.opacity=53&text.0.font.family=Shadows%20Into%20Light%20Two&text.0.outline.blur=15`,
+          },
+          caption: "✓",
+        });
+        break;
+      case "plaqui2":
         if (!isNsfw) return env(mensagem[0].nsfw);
-        if (args.length < 1) return env(`Digite seu nome/nick na frente do comando\nExemplo de como se usar: ${prefixobot + command} Joazin`)
-        teks = body.slice(9)
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: { url: `https://ubbornag.sirv.com/Screenshot_20210513-151821.png?text.0.text=${teks}&text.0.position.x=-40%25&text.0.position.y=-65%25&text.0.size=30&text.0.color=000000&text.0.opacity=53&text.0.font.family=Shadows%20Into%20Light%20Two&text.0.outline.blur=15` }, caption: '✓' });
-        break
-      case 'plaqui3':
+        if (args.length < 1)
+          return env(
+            `Digite seu nome/nick na frente do comando\nExemplo de como se usar: ${
+              prefixobot + command
+            } Joazin`
+          );
+        teks = body.slice(9);
+        env(mensagem[0].espere);
+        conn.sendMessage(from, {
+          image: {
+            url: `https://ubbornag.sirv.com/Screenshot_20210513-151821.png?text.0.text=${teks}&text.0.position.x=-40%25&text.0.position.y=-65%25&text.0.size=30&text.0.color=000000&text.0.opacity=53&text.0.font.family=Shadows%20Into%20Light%20Two&text.0.outline.blur=15`,
+          },
+          caption: "✓",
+        });
+        break;
+      case "plaqui3":
         if (!isNsfw) return env(mensagem[0].nsfw);
-        if (args.length < 1) return env(`Digite seu nome/nick na frente do comando\nExemplo de como se usar: ${prefixobot + command} Joazin`)
-        teks = body.slice(9)
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: { url: `https://clutamac.sirv.com/1011b781-bab1-49e3-89db-ee2c064868fa%20(1).jpg?text.0.text=${teks}&text.0.position.gravity=northwest&text.0.position.x=22%25&text.0.position.y=60%25&text.0.size=18&text.0.color=000000&text.0.opacity=47&text.0.font.family=Roboto%20Mono&text.0.font.style=italic` }, caption: '✓' });
-        break
-      case 'plaqui4':
+        if (args.length < 1)
+          return env(
+            `Digite seu nome/nick na frente do comando\nExemplo de como se usar: ${
+              prefixobot + command
+            } Joazin`
+          );
+        teks = body.slice(9);
+        env(mensagem[0].espere);
+        conn.sendMessage(from, {
+          image: {
+            url: `https://clutamac.sirv.com/1011b781-bab1-49e3-89db-ee2c064868fa%20(1).jpg?text.0.text=${teks}&text.0.position.gravity=northwest&text.0.position.x=22%25&text.0.position.y=60%25&text.0.size=18&text.0.color=000000&text.0.opacity=47&text.0.font.family=Roboto%20Mono&text.0.font.style=italic`,
+          },
+          caption: "✓",
+        });
+        break;
+      case "plaqui4":
         if (!isNsfw) return env(mensagem[0].nsfw);
-        if (args.length < 1) return env(`Digite seu nome/nick na frente do comando\nExemplo de como se usar: ${prefixobot + command} Joazin`)
-        teks = body.slice(9)
-        env(mensagem[0].espere)
-        conn.sendMessage(from, { image: { url: `https://rsymenti.sirv.com/IMG-20210724-WA0303.jpg?text.0.text=${teks}&text.0.position.x=-20%25&text.0.position.y=-38%25&text.0.size=30&text.0.color=000000&text.0.opacity=93&text.0.font.family=Rock%20Salt&text.0.outline.color=ff0000&text.0.outline.blur=6&text.0.outline.opacity=73` }, caption: '✓' });
-        break
+        if (args.length < 1)
+          return env(
+            `Digite seu nome/nick na frente do comando\nExemplo de como se usar: ${
+              prefixobot + command
+            } Joazin`
+          );
+        teks = body.slice(9);
+        env(mensagem[0].espere);
+        conn.sendMessage(from, {
+          image: {
+            url: `https://rsymenti.sirv.com/IMG-20210724-WA0303.jpg?text.0.text=${teks}&text.0.position.x=-20%25&text.0.position.y=-38%25&text.0.size=30&text.0.color=000000&text.0.opacity=93&text.0.font.family=Rock%20Salt&text.0.outline.color=ff0000&text.0.outline.blur=6&text.0.outline.opacity=73`,
+          },
+          caption: "✓",
+        });
+        break;
       //FERRAMENTAS
-      case 'parimp':
-      case 'imppar':
-        if (!texto) return env('Coloque um numero na frente do comando.');
-        if (isNaN(texto)) return env('Coloque somente números.');
+      case "parimp":
+      case "imppar":
+        if (!texto) return env("Coloque um numero na frente do comando.");
+        if (isNaN(texto)) return env("Coloque somente números.");
         function parimp(n) {
           if (n % 2 == 0) {
-            return 'O número e *Par*'
+            return "O número e *Par*";
           } else {
-            return 'O número e *Impar*'
+            return "O número e *Impar*";
           }
         }
-        let respi = parimp(texto)
-        env(respi)
-        break
-      case 'reaçao':
-      case 'reaction':
-      case 'reagir':
-        if (!texto) return env('Qual Emoji você quer reagir na mensagem?');
-        if (texto.length < 1) return env('1 emoji apenas')
-        if (mek.message.extendedTextMessage === undefined || mek.message.extendedTextMessage === null) return env('Marque uma mensagem!')
+        let respi = parimp(texto);
+        env(respi);
+        break;
+      case "reaçao":
+      case "reaction":
+      case "reagir":
+        if (!texto) return env("Qual Emoji você quer reagir na mensagem?");
+        if (texto.length < 1) return env("1 emoji apenas");
+        if (
+          mek.message.extendedTextMessage === undefined ||
+          mek.message.extendedTextMessage === null
+        )
+          return env("Marque uma mensagem!");
         const reactionMessage = {
           react: {
             text: texto,
             key: {
               remoteJid: from,
               id: mek.message.extendedTextMessage.contextInfo.stanzaId,
-              participant: mek.message.extendedTextMessage.contextInfo.participant
-            }
-          }
+              participant:
+                mek.message.extendedTextMessage.contextInfo.participant,
+            },
+          },
         };
         conn.sendMessage(from, reactionMessage);
-        break
-      case 'fotogb':
-        if (!texto) return env('Coloque quantos gigas na foto você quer');
-        if (isNaN(texto)) return env('Apenas números.')
-        let giguin = texto
-        imagee = info.extendedTextMessage.contextInfo.quotedMessage.imageMessage
+        break;
+      case "fotogb":
+        if (!texto) return env("Coloque quantos gigas na foto você quer");
+        if (isNaN(texto)) return env("Apenas números.");
+        let giguin = texto;
+        imagee =
+          info.extendedTextMessage.contextInfo.quotedMessage.imageMessage;
         imagee.fileLength = `${giguin}000000000`;
-        imagee.caption = 'sexo kkk';
-        conn.relayMessage(from, { imageMessage: imagee }, { messageId: require('crypto').randomBytes(6).toString('hex').toUpperCase(), additionalAttributes: {} });
-        break
-      case 'audiogb':
-        if (!texto) return env('Coloque quantos gigas na foto você quer');
-        if (isNaN(texto)) return env('Apenas números.')
-        let giiguin = texto
-        audioo = info.extendedTextMessage.contextInfo.quotedMessage.audioMessage
+        imagee.caption = "sexo kkk";
+        conn.relayMessage(
+          from,
+          { imageMessage: imagee },
+          {
+            messageId: require("crypto")
+              .randomBytes(6)
+              .toString("hex")
+              .toUpperCase(),
+            additionalAttributes: {},
+          }
+        );
+        break;
+      case "audiogb":
+        if (!texto) return env("Coloque quantos gigas na foto você quer");
+        if (isNaN(texto)) return env("Apenas números.");
+        let giiguin = texto;
+        audioo =
+          info.extendedTextMessage.contextInfo.quotedMessage.audioMessage;
         audioo.fileLength = `${giiguin}000000000`;
         audioo.seconds = 999999999;
-        conn.relayMessage(from, { audioMessage: audioo }, { messageId: require('@adiwajshing/baileys').generateMessageID(), additionalAttributes: {} });
-        break
-      case 'cpf':
-        const dbcpf = JSON.parse(fs.readFileSync('./db/json/dbcpf.json'));
-        cpf = args.join(' ')
-        const getcpf = (cpf) => { let position = false; Object.keys(dbcpf).forEach((i) => { if (dbcpf[i].cpf === cpf) { position = i } }); if (position !== false) { return dbcpf[position] } }
-        getcpf(cpf)
-          .then(e => {
-            if (e.erro) return env('cpf não encontrado')
-            env(`cpf encontrado nome mãe: ${e.nomeMae}`)})
-        break
-      case 'fakemgsg':
-        if (mek.message.extendedTextMessage === undefined || mek.message.extendedTextMessage === null) return env('marque uma pessoa com @')
-        if (!texto.includes('|')) return env('use *|* junto ao comando')
-        numi = mek.message.extendedTextMessage.contextInfo.mentionedJid[0]
-        var pargi = body.slice(23)
-        var msg1i = pargi.split('|')[0]
-        var msg2i = pargi.split('|')[1]
-        if (msg1i.trim() == '') return env('coloque algo antes do *|*')
-        if (msg2i.trim() == '') return env('coloque algo depois do *|*')
+        conn.relayMessage(
+          from,
+          { audioMessage: audioo },
+          {
+            messageId: require("@adiwajshing/baileys").generateMessageID(),
+            additionalAttributes: {},
+          }
+        );
+        break;
+      case "cpf":
+        const dbcpf = JSON.parse(fs.readFileSync("./db/json/dbcpf.json"));
+        cpf = args.join(" ");
+        const getcpf = (cpf) => {
+          let position = false;
+          Object.keys(dbcpf).forEach((i) => {
+            if (dbcpf[i].cpf === cpf) {
+              position = i;
+            }
+          });
+          if (position !== false) {
+            return dbcpf[position];
+          }
+        };
+        getcpf(cpf).then((e) => {
+          if (e.erro) return env("cpf não encontrado");
+          env(`cpf encontrado nome mãe: ${e.nomeMae}`);
+        });
+        break;
+      case "fakemgsg":
+        if (
+          mek.message.extendedTextMessage === undefined ||
+          mek.message.extendedTextMessage === null
+        )
+          return env("marque uma pessoa com @");
+        if (!texto.includes("|")) return env("use *|* junto ao comando");
+        numi = mek.message.extendedTextMessage.contextInfo.mentionedJid[0];
+        var pargi = body.slice(23);
+        var msg1i = pargi.split("|")[0];
+        var msg2i = pargi.split("|")[1];
+        if (msg1i.trim() == "") return env("coloque algo antes do *|*");
+        if (msg2i.trim() == "") return env("coloque algo depois do *|*");
         conn.sendMessage(from, msg2i.trim(), MessageType.text, {
           contextInfo: {
-            participant: numi, quotedMessage: {
-              extendedTextMessage: { text: msg1i.trim() }
-            }
-          }
-        }
-        )
-        addFilter(from)
+            participant: numi,
+            quotedMessage: {
+              extendedTextMessage: { text: msg1i.trim() },
+            },
+          },
+        });
+        addFilter(from);
         break;
-      case 'fakemsg':
-        if (body.slice(9).trim() == '') env('Pra quem você quer fazer o fakemsg??');
+      case "fakemsg":
+        if (body.slice(9).trim() == "")
+          env("Pra quem você quer fazer o fakemsg??");
         [msgbot, msgpe] = body.slice(9).split("|");
-        if (!msgbot || !msgpe) return env('Use | ao meio do comando');
+        if (!msgbot || !msgpe) return env("Use | ao meio do comando");
 
-        const ta = mek.message.extendedTextMessage.contextInfo.participant
+        const ta = mek.message.extendedTextMessage.contextInfo.participant;
         let content = {
           key: {
             participant: ta,
           },
           message: {
             conversation: msgbot,
-          }
+          },
         };
         conn.sendMessage(from, { text: msgpe }, { quoted: content });
-        break
-      case 'pinterest':
-        if (args.length < 1) return env(`coloque o você deseja pesquisa na frente do comando\nExemplo de como se usar ${prefixobot + command} Naruto`)
-        pesq = body.slice(11)
+        break;
+      case "pinterest":
+        if (args.length < 1)
+          return env(
+            `coloque o você deseja pesquisa na frente do comando\nExemplo de como se usar ${
+              prefixobot + command
+            } Naruto`
+          );
+        pesq = body.slice(11);
         {
-          env('espere')
-          const { pinterest } = require('./lib/scraper')
-          anu = await pinterest(texto)
-          result = anu[Math.floor(Math.random() * anu.length)]
-          conn.sendMessage(from, { image: { url: result }, caption: '✅', buttons: [{ buttonId: `${prefixobot + command} ${pesq}`, buttonText: { displayText: 'Próxima imagem' }, type: 1 }], headerType: 4 });
+          env("espere");
+          const { pinterest } = require("./lib/scraper");
+          anu = await pinterest(texto);
+          result = anu[Math.floor(Math.random() * anu.length)];
+          conn.sendMessage(from, {
+            image: { url: result },
+            caption: "✅",
+            buttons: [
+              {
+                buttonId: `${prefixobot + command} ${pesq}`,
+                buttonText: { displayText: "Próxima imagem" },
+                type: 1,
+              },
+            ],
+            headerType: 4,
+          });
         }
-        break
-      case 'wallpaper': {
-        if (!texto) return env('Qual o tema?')
-        env('espere um pouquinho')
-        piing = '${result.image[2] || result.image[1] || result.image[0]}'
-        let { wallpaper } = require('./lib/scraper')
-        anu = await wallpaper(texto)
-        result = anu[Math.floor(Math.random() * anu.length)]
-        let buttons = [
-          { buttonId: `${prefixobot + command} ${texto}`, buttonText: { displayText: 'Próxima imagem' }, type: 1 }
-        ]
-        let buttonMessage = {
-          image: { url: result.image[0] },
-          caption: `Tema : ${result.title}\n Categoria : ${result.type}\n`,
-          footer: 'Caso queira outra imagem aperte o botão abaixo',
-          buttons: buttons,
-          headerType: 4
+        break;
+      case "wallpaper":
+        {
+          if (!texto) return env("Qual o tema?");
+          env("espere um pouquinho");
+          piing = "${result.image[2] || result.image[1] || result.image[0]}";
+          let { wallpaper } = require("./lib/scraper");
+          anu = await wallpaper(texto);
+          result = anu[Math.floor(Math.random() * anu.length)];
+          let buttons = [
+            {
+              buttonId: `${prefixobot + command} ${texto}`,
+              buttonText: { displayText: "Próxima imagem" },
+              type: 1,
+            },
+          ];
+          let buttonMessage = {
+            image: { url: result.image[0] },
+            caption: `Tema : ${result.title}\n Categoria : ${result.type}\n`,
+            footer: "Caso queira outra imagem aperte o botão abaixo",
+            buttons: buttons,
+            headerType: 4,
+          };
+          conn.sendMessage(from, buttonMessage, { quoted: mek });
         }
-        conn.sendMessage(from, buttonMessage, { quoted: mek })
-      }
-        break
-      case 'personagem':
+        break;
+      case "personagem":
         var sections = [
           {
             title: "Plaquinha",
             rows: [
-              { title: `Naruto Uzumaki`, rowId: `${prefixobot}pinterest Naruto Uzumaki` },
-              { title: `Sasuke Uchiha`, rowId: `${prefixobot}pinterest Sasuke Uchiha` },
-              { title: `Sakura Haruno`, rowId: `${prefixobot}pinterest Sakura Haruno` },
-              { title: `Kakashi Hatake`, rowId: `${prefixobot}pinterest Kakashi Hatakw` }],
-          }
-        ]
+              {
+                title: `Naruto Uzumaki`,
+                rowId: `${prefixobot}pinterest Naruto Uzumaki`,
+              },
+              {
+                title: `Sasuke Uchiha`,
+                rowId: `${prefixobot}pinterest Sasuke Uchiha`,
+              },
+              {
+                title: `Sakura Haruno`,
+                rowId: `${prefixobot}pinterest Sakura Haruno`,
+              },
+              {
+                title: `Kakashi Hatake`,
+                rowId: `${prefixobot}pinterest Kakashi Hatakw`,
+              },
+            ],
+          },
+        ];
         var listMessage = {
           text: "Escolha um personagem no botão abaixo",
           footer: "Selecione o personagem",
           buttonText: "Escolha um Personagem",
-          sections
-        }
-        const pesquisin = await conn.sendMessage(from, listMessage)
-        break
-      case 'semoji':
-        if (!texto) return env('Qual emoji?')
+          sections,
+        };
+        const pesquisin = await conn.sendMessage(from, listMessage);
+        break;
+      case "semoji":
+        if (!texto) return env("Qual emoji?");
         var sections = [
           {
             title: "Emojis:",
             rows: [
-              { title: `Emoji "${texto}" da Apple.`, rowId: `${prefixobot + 'emooji' + ' ' + texto + '/' + 'apple'}` },
-              { title: `Emoji "${texto}" do Google.`, rowId: `${prefixobot + 'emooji' + ' ' + texto + '/' + 'google'}` },
-              { title: `Emoji "${texto}" da Samsung.`, rowId: `${prefixobot + 'emooji' + ' ' + texto + '/' + 'samsung'}` },
-              { title: `Emoji "${texto}" da Microsoft.`, rowId: `${prefixobot + 'emooji' + ' ' + texto + '/' + 'microsoft'}` },
-              { title: `Emoji "${texto}" do Whatsapp.`, rowId: `${prefixobot + 'emooji' + ' ' + texto + '/' + 'whatsapp'}` },
-              { title: `Emoji "${texto}" do Twitter.`, rowId: `${prefixobot + 'emooji' + ' ' + texto + '/' + 'twitter'}` },
-              { title: `Emoji "${texto}" do Facebook.`, rowId: `${prefixobot + 'emooji' + ' ' + texto + '/' + 'facebook'}` },
-              { title: `Emoji "${texto}" do Joypixels.`, rowId: `${prefixobot + 'emooji' + ' ' + texto + '/' + 'joypixels'}` },
-              { title: `Emoji "${texto}" do Openmoji.`, rowId: `${prefixobot + 'emooji' + ' ' + texto + '/' + 'openmoji'}` },
-              { title: `Emoji "${texto}" do Skype(Emoji Animado).`, rowId: `${prefixobot + 'emooji' + ' ' + texto + '/' + 'skype'}` },
-              { title: `Emoji "${texto}" do Emojidex.`, rowId: `${prefixobot + 'emooji' + ' ' + texto + '/' + 'emojidex'}` },
-              { title: `Emoji "${texto}" do Emojipedia.`, rowId: `${prefixobot + 'emooji' + ' ' + texto + '/' + 'Emojipedia'}` },
-              { title: `Emoji "${texto}" do LG.`, rowId: `${prefixobot + 'emooji' + ' ' + texto + '/' + 'lg'}` },
-              { title: `Emoji "${texto}" do Noto Emoji.`, rowId: `${prefixobot + 'emooji' + ' ' + texto + '/' + 'notoemoji'}` }],
-          }
-        ]
+              {
+                title: `Emoji "${texto}" da Apple.`,
+                rowId: `${prefixobot + "emooji" + " " + texto + "/" + "apple"}`,
+              },
+              {
+                title: `Emoji "${texto}" do Google.`,
+                rowId: `${
+                  prefixobot + "emooji" + " " + texto + "/" + "google"
+                }`,
+              },
+              {
+                title: `Emoji "${texto}" da Samsung.`,
+                rowId: `${
+                  prefixobot + "emooji" + " " + texto + "/" + "samsung"
+                }`,
+              },
+              {
+                title: `Emoji "${texto}" da Microsoft.`,
+                rowId: `${
+                  prefixobot + "emooji" + " " + texto + "/" + "microsoft"
+                }`,
+              },
+              {
+                title: `Emoji "${texto}" do Whatsapp.`,
+                rowId: `${
+                  prefixobot + "emooji" + " " + texto + "/" + "whatsapp"
+                }`,
+              },
+              {
+                title: `Emoji "${texto}" do Twitter.`,
+                rowId: `${
+                  prefixobot + "emooji" + " " + texto + "/" + "twitter"
+                }`,
+              },
+              {
+                title: `Emoji "${texto}" do Facebook.`,
+                rowId: `${
+                  prefixobot + "emooji" + " " + texto + "/" + "facebook"
+                }`,
+              },
+              {
+                title: `Emoji "${texto}" do Joypixels.`,
+                rowId: `${
+                  prefixobot + "emooji" + " " + texto + "/" + "joypixels"
+                }`,
+              },
+              {
+                title: `Emoji "${texto}" do Openmoji.`,
+                rowId: `${
+                  prefixobot + "emooji" + " " + texto + "/" + "openmoji"
+                }`,
+              },
+              {
+                title: `Emoji "${texto}" do Skype(Emoji Animado).`,
+                rowId: `${prefixobot + "emooji" + " " + texto + "/" + "skype"}`,
+              },
+              {
+                title: `Emoji "${texto}" do Emojidex.`,
+                rowId: `${
+                  prefixobot + "emooji" + " " + texto + "/" + "emojidex"
+                }`,
+              },
+              {
+                title: `Emoji "${texto}" do Emojipedia.`,
+                rowId: `${
+                  prefixobot + "emooji" + " " + texto + "/" + "Emojipedia"
+                }`,
+              },
+              {
+                title: `Emoji "${texto}" do LG.`,
+                rowId: `${prefixobot + "emooji" + " " + texto + "/" + "lg"}`,
+              },
+              {
+                title: `Emoji "${texto}" do Noto Emoji.`,
+                rowId: `${
+                  prefixobot + "emooji" + " " + texto + "/" + "notoemoji"
+                }`,
+              },
+            ],
+          },
+        ];
         var listMessage = {
           text: "Escolha um tema de figurinha.",
           footer: "Selecione o tema abaixo.",
           buttonText: "Escolha o tema da sua Figurinha.",
-          sections
-        }
-        const sendemoji = await conn.sendMessage(from, listMessage, { quoted: mek })
-        break
-      case 'emooji':
-        if (!q) return env(`Exemplo: ${prefixobot}emoji ☹️/whatsapp`)
-        emot = q.split('/')[0]
-        jemot = q.split('/')[1]
-        if (jemot == 'apple') {
-          idemot = 0
-        }
-        else if (jemot == 'google') {
-          idemot = 1
-        }
-        else if (jemot == 'samsung') {
-          idemot = 2
-        }
-        else if (jemot == 'microsoft') {
-          idemot = 3
-        }
-        else if (jemot == 'whatsapp') {
-          idemot = 4
-        }
-        else if (jemot == 'twitter') {
-          idemot = 5
-        }
-        else if (jemot == 'facebook') {
-          idemot = 6
-        }
-        else if (jemot == 'skype') {
-          idemot = 7
-        }
-        else if (jemot == 'joypixels') {
-          idemot = 8
-        }
-        else if (jemot == 'openmoji') {
-          idemot = 9
-        }
-        else if (jemot == 'notoemoji') {
-          idemot = 10
-        }
-        else if (jemot == 'Emojipedia') {
-          idemot = 11
-        }
-        else if (jemot == 'lg') {
-          idemot = 12
-        }
-        else {
-          return env(`....`)
-        }
-        env('perai')
-        if (idemot == undefined) return
-        emoji.get(emot)
-          .then(emoji => {
-            console.log(emoji.images[idemot]);
-            sendStickerFromUrl(from, emoji.images[idemot].url, mek)
-          })
-        break
-      case 'joinemoji':
-        if (body.slice(11).trim() == '') env('cade os emojis?');
-        [emoji1, emoji2] = body.slice(11).split("+");
-        if (!emoji1 || !emoji2) return env('coloque os emojis que vc quer juntar separando-os com +\n exemplo: ¿joiemoji 😎+😝');
-        try {
-          res = await fetchJson(`https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${emoji1}_${emoji2}`);
-          sendStickerFromUrl(from, res.results[0].url, mek);
-        } catch (a) {
-          env('não foi possível juntar os emojis :(');
-        }
+          sections,
+        };
+        const sendemoji = await conn.sendMessage(from, listMessage, {
+          quoted: mek,
+        });
         break;
-      case 'calcular':
+      case "emooji":
+        if (!q) return env(`Exemplo: ${prefixobot}emoji ☹️/whatsapp`);
+        emot = q.split("/")[0];
+        jemot = q.split("/")[1];
+        if (jemot == "apple") {
+          idemot = 0;
+        } else if (jemot == "google") {
+          idemot = 1;
+        } else if (jemot == "samsung") {
+          idemot = 2;
+        } else if (jemot == "microsoft") {
+          idemot = 3;
+        } else if (jemot == "whatsapp") {
+          idemot = 4;
+        } else if (jemot == "twitter") {
+          idemot = 5;
+        } else if (jemot == "facebook") {
+          idemot = 6;
+        } else if (jemot == "skype") {
+          idemot = 7;
+        } else if (jemot == "joypixels") {
+          idemot = 8;
+        } else if (jemot == "openmoji") {
+          idemot = 9;
+        } else if (jemot == "notoemoji") {
+          idemot = 10;
+        } else if (jemot == "Emojipedia") {
+          idemot = 11;
+        } else if (jemot == "lg") {
+          idemot = 12;
+        } else {
+          return env(`....`);
+        }
+        env("perai");
+        if (idemot == undefined) return;
+        emoji.get(emot).then((emoji) => {
+          console.log(emoji.images[idemot]);
+          sendStickerFromUrl(from, emoji.images[idemot].url, mek);
+        });
+        break;
+        case 'autofigu':
+case 'autosticker':
+if (!isMemberAdmin && isOwner) return env(mensagem[0].admin)
+if (!isBotAdm) return env(mensagem[0].botadmin);
+if (!isGroup) return env(mensagem[0].grupo);
+if (args.length < 1) return env('1 pra ligar / 0 pra desligar')
+if (Number(args[0]) === 1) {
+if (isAutofigu) return env('Ja esta ativo')
+autofigu.push(from)
+fs.writeFileSync('./db/json/autofigu.json', JSON.stringify(autofigu))
+env('Auto figu ativado com sucesso nesse grupo.')
+} else if (Number(args[0]) === 0) {
+if (!isAutofigu) return env('Ja esta Desativado')
+pesquisar = from
+processo = autofigu.indexOf(pesquisar)
+while(processo >= 0){
+autofigu.splice(processo, 1)
+processo = autofigu.indexOf(pesquisar)
+}
+fs.writeFileSync('./db/json/autofigu.json', JSON.stringify(autofigu))
+env('Desativado com sucesso o recurso de auto figu nesse grupo️')
+} else {
+env('1 para ativar, 0 para desativar')
+}
+break
+case 'misturar':
+  if(!q.includes("+")) return conn.sendMessage(from, `trem ta faltando esse (+), vou te dar um exemplo..\nExemplo: ${prefix+command} 😒+😁`)
+  txt = q.replace(" +", "+").replace("+ ", "+").replace(" + ", "+")
+  let [emj1, emj2] = txt.split("+")
+  try {
+      const a = new Date().getTime()
+      const downloader = new Downloader({
+          url: `https://aleatoryapi.herokuapp.com/api/emojimix?emoj=${encodeURI(emj1)}&emoj2=${encodeURI(emj2)}&apikey=${keyale}`, //If the file name already exists, a new file with the name 200MB1.zip is created.
+          directory: "./temp", //This folder will be created, if it doesn't exist.
+          fileName: a + ".jpg" //The file name.
+      });
+      try {
+          await downloader.download();
+          const fig_enviar = await createSticker(`./temp/${a}.jpg`, descFig)
+          conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
+          fs.unlink(`./temp/${a}.jpg`, () => { })
+      }  
+      catch (error) {
+          conn.sendMessage(from, "esse não tem desculpe..");
+          fs.unlink(`./temp/${a}.jpg`, () => { })
+      }
+  } catch (err) {
+      console.log(err)
+  } 
+  break
+      case "calcular":
         datas = body.slice(10);
-        if (!/\+|÷|×|-/gi.test(datas)) return env('use os simbolos: + - × ou ÷');
-        number1 = datas.split(/\+|÷|×|-/gi)[0].replace(/ /gi, '');
-        number2 = datas.split(/\+|÷|×|-/gi)[1].replace(/ /gi, '');
+        if (!/\+|÷|×|-/gi.test(datas))
+          return env("use os simbolos: + - × ou ÷");
+        number1 = datas.split(/\+|÷|×|-/gi)[0].replace(/ /gi, "");
+        number2 = datas.split(/\+|÷|×|-/gi)[1].replace(/ /gi, "");
         symbol = datas.match(/\+|×|÷|-/gi)[0];
-        if (isNaN(number1) || isNaN(number2)) return env('somente numeros!');
-        if (symbol.startsWith('+')) {
+        if (isNaN(number1) || isNaN(number2)) return env("somente numeros!");
+        if (symbol.startsWith("+")) {
           env(parseInt(number1) + parseInt(number2));
-        } else if (symbol.startsWith('-')) {
+        } else if (symbol.startsWith("-")) {
           env(parseInt(number1) - parseInt(number2));
-        } else if (symbol.startsWith('×')) {
+        } else if (symbol.startsWith("×")) {
           env(parseInt(number1) * parseInt(number2));
-        } else if (symbol.startsWith('÷')) {
+        } else if (symbol.startsWith("÷")) {
           env(parseInt(number1) / parseInt(number2));
         }
         break;
@@ -5301,24 +8570,38 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
     //=======================================\\
 
     if (isAntiLink) {
-      if (type == 'stickerMessage')
-        if (type == 'audioMessage')
-          if (type == 'imageMessage')
-            if (budy.includes("https://") || (budy.includes(".net") || (budy.includes(".com") || (budy.includes("//s.kwai.app/") || (budy.includes("//vm.tiktok") || (budy.includes("www.") || (budy.includes("chat.whatsapp") || (budy.includes(".xml") || (budy.includes("youtube.com") || (budy.includes("//t.me/") || (budy.includes(".css")))))))))))) {
-              linkgpp = await conn.groupInviteCode(from)
-              if (budy.match(`${linkgpp}`)) return env('Link do nosso grupo, não irei remover.. ')
+      if (type == "stickerMessage")
+        if (type == "audioMessage")
+          if (type == "imageMessage")
+            if (
+              budy.includes("https://") ||
+              budy.includes(".net") ||
+              budy.includes(".com") ||
+              budy.includes("//s.kwai.app/") ||
+              budy.includes("//vm.tiktok") ||
+              budy.includes("www.") ||
+              budy.includes("chat.whatsapp") ||
+              budy.includes(".xml") ||
+              budy.includes("youtube.com") ||
+              budy.includes("//t.me/") ||
+              budy.includes(".css")
+            ) {
+              linkgpp = await conn.groupInviteCode(from);
+              if (budy.match(`${linkgpp}`))
+                return env("Link do nosso grupo, não irei remover.. ");
               if (!isGroup)
-                if (isGroupAdmins) return env(`*Vc é admin do gp,fica tranquilo que não irei te banir.*`)
+                if (isGroupAdmins)
+                  return env(
+                    `*Vc é admin do gp,fica tranquilo que não irei te banir.*`
+                  );
+              setTimeout(() => {}, 1100);
               setTimeout(() => {
-              }, 1100)
-              setTimeout(() => {
-                conn.groupParticipantsUpdate(from, [sender], 'remove')
-              }, 1000)
+                conn.groupParticipantsUpdate(from, [sender], "remove");
+              }, 1000);
             }
     }
     //========================================\\
   });
-
 }
 
 connect();

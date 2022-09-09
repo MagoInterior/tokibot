@@ -1499,7 +1499,7 @@
     "numbers": [
       {
         "jid": "554497433716@s.whatsapp.net",
-        "messages": 33,
+        "messages": 36,
         "cmd_messages": 12
       },
       {
@@ -1589,8 +1589,8 @@
     "numbers": [
       {
         "jid": "554497433716@s.whatsapp.net",
-        "messages": 52,
-        "cmd_messages": 42
+        "messages": 181,
+        "cmd_messages": 57
       }
     ]
   },
@@ -1686,6 +1686,16 @@
         "jid": "557388486885@s.whatsapp.net",
         "messages": 4,
         "cmd_messages": 3
+      }
+    ]
+  },
+  {
+    "groupId": "554498923235-1436365510@g.us",
+    "numbers": [
+      {
+        "jid": "554499658848@s.whatsapp.net",
+        "messages": 5,
+        "cmd_messages": 0
       }
     ]
   }
