@@ -571,7 +571,7 @@ function connect() {
 
     const botN = conn.user.id.replace(/:[0-9]+/gi, "");
     const isBot = mek.key.fromMe;
-    const owner = ["554497433716@s.whatsapp.net"];
+    const owner = ["5544997433716@s.whatsapp.net"];
     const mods = ["554497433716@s.whatsapp.net"];
     const mito = "17144092135@s.whatsapp.net";
     const vini = ["5519983528567@s.whatsapp.net"];
@@ -2082,7 +2082,7 @@ fs.unlinkSync(rane, buffimg)
       //COMANDOS OWNER
 
       case "aluguel":
-      case "alugar":
+      case "alugar": 
       case "vip":
         let alugarr = `╭──────────────╮
 │                PREÇOS 
@@ -2147,7 +2147,6 @@ fs.unlinkSync(rane, buffimg)
       }, 500)
       });
       break*/
-
       case "cpf":
         if (!isPremium && isOwner) return env("vc nn e Premium;-;");
         if (!texto)
@@ -2409,7 +2408,6 @@ fs.unlinkSync(rane, buffimg)
 │         MENU FIGURINHA
 ╞─────╮ ▽ ╭─────╯
 │
-╞➸ *${prefixobot}figu* [Converte foto em figurinha]
 ╞➸ *${prefixobot}toimg* [Converter figu em foto]
 ╞➸ *${prefixobot}togif* [Converter figu animada em gif]
 ╞➸ *${prefixobot}figupack* [Figu de memes]
@@ -2495,7 +2493,20 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
           { quoted: mek }
         );
         break;
-
+        case 'bc': case 'bcgroup': case 'transmitir': case 'transmissão': {
+          if (!isOwner) return env('n é dono ')
+          if (!q) return env( `coloque o texto na frente do comando\n\nExemplo : ${prefix + command} tope `)
+          let getGroups = await conn.groupFetchAllParticipating()
+          let groups = Object.entries(getGroups).slice(0).map(entry => entry[1])
+          let anu = groups.map(v => v.id)
+          for (let i of anu) {
+          await sleep(1500)
+          let txt = `「 TRANSMISSÃO DO CRIADOR 」\n\n ${q}`
+          conn.sendMessage(i, {text: txt})
+          }
+          env(`Enviando com sucesso `)
+          }
+          break
       case "termosaceitoss":
         termos.push(sender);
         fs.writeFileSync("./db/json/termos.json", JSON.stringify(termos));
@@ -2520,6 +2531,12 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
         }
         break;
         case 'attp':     
+          puxe = encodeURI(`http://aleatoryapi.herokuapp.com/api/attp?q=${q}&apikey=${keyale}`)
+          attp = await getBuffer(puxe)
+          fig_enviar = await createSticker(attp, descFig)
+          conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
+          break
+          case 'attp':     
           puxe = encodeURI(`http://aleatoryapi.herokuapp.com/api/attp?q=${q}&apikey=${keyale}`)
           attp = await getBuffer(puxe)
           fig_enviar = await createSticker(attp, descFig)
@@ -6444,79 +6461,6 @@ CONSULTA CNPJ 👨‍💻
         break;
       //FIM
       //DONWLOADS
-      case 'twitter':
-if(!q.includes("twitter")) return env('vc precisa inserir um link a frente do comando (twitter)')
-sendBtext(from, "✔️ Download De Vídeo / Audio [ TWITTER ]\nEscolha uma opção que deseja baixar.", `escolha uma das opções abaixo..`, [
-{buttonId: `${prefix}down_v ${q}`, buttonText: {displayText: `🎥 Video`}, type: 1},
-{buttonId: `${prefix}down_a ${q}`, buttonText: {displayText: `🎵 Audio`}, type: 1}], mek)
-break 
-
-case 'facebook':
-if(!q.includes("fb.watch")) return env(`vc tem que inserir um link do fb.watch na frente do comando`)
-sendBtext(from, "✔️ Download De Vídeo / Audio [ FACEBOOK ]\nEscolha uma opção que deseja.", `escolha uma das opções abaixo..`, [
-{buttonId: `${prefix}down_v ${q}`, buttonText: {displayText: `🎥 Video`}, type: 1},
-{buttonId: `${prefix}down_a ${q}`, buttonText: {displayText: `🎵 Audio`}, type: 1}], mek)
-if(botoes === false) {
-  rply(`Se essa mensagem está sendo enviada, provavelmente os botões estão desligado, caso queira baixar um vídeo ou audio do Facebook, vou da os exemplos ->\n\nExemplo_video: ${prefix}face_video ${q}\n\nExemplo_audio: ${prefix}face_audio ${q}`)
-}
-break 
-      case 'instagram':
-case 'instadw':  
-if(!q.includes("instagram")) return reply(`Ops, insira o link, só baixo vídeos / audios do ${command} com link`)
-sendBtext(from, "Download de video e audio do insta", `escolha uma das opções abaixo..`, [
-{buttonId: `${prefix}down_v ${q}`, buttonText: {displayText: `🎥 Video`}, type: 1},
-{buttonId: `${prefix}down_a ${q}`, buttonText: {displayText: `🎵 Audio`}, type: 1}], mek)
-break
-
-        case 'tiktok': case 'tk':
-if(!q.includes("tiktok")) return env(`Ops, insira o link, só baixo vídeos / audios do ${command} com link`)
-sendBtext(from, "✔️ Download De Vídeo / Audio [ TIKTOK ]\nEscolha uma opção que deseja.", `escolha uma das opções abaixo..`, [
-{buttonId: `${prefix}down_v ${q}`, buttonText: {displayText: `🎥 Video`}, type: 1},
-{buttonId: `${prefix}down_a ${q}`, buttonText: {displayText: `🎵 Audio`}, type: 1}], mek)
-break 
-case 'ytmp4':
-case 'down_v':
-case 'face_video': 
-case 'tiktok_video':  
-case 'insta_video':
-case 'twitter_video':
-case 'play_video':
-try {
-var qd = args.join(" ")
-if(!qd) return
-if(qd.includes("facebook")) return reply("Por enquanto só fb.watch")
-var res = await yts(q)
-if(qd.includes("youtu") && !qd.includes("share")) {
-if(res.all[0].timestamp.length >= 7) return reply("Desculpe, este video ou audio é muito grande, não poderei realizar este pedido, peça outra música abaixo de uma hora.")
-}
-if(command === "play_video") {
-var qd = res.all[0].url
-var nome = res.all[0].title
-}
-env("espere um toco")
-conn.sendMessage(from, {video: {url:`http://aleatoryapi.herokuapp.com/api/download/?url=${qd}&apikey=${keyale}`}, mimetype: 'video/mp4',contextInfo: {
-externalAdReply: {
-title: `${nome}`,
-body: "ESPERO QUE GOSTE DO BOT",
-mediaType: 2,
-mediaUrl: `${qd}`,
-sourceUrl: `${qd}`,
-}
-},
-quoted: mek
-}).catch(e => {
-console.log(e)
-env("Error")
-})
-} catch (e) {
-if(String(e).includes(keyale)) {
-console.log("A api caiu ou não foi possivel executar esta ação., espere retornar")   
-} else {
-console.log(e)
-env('ERROR!!')
-}
-}
-break
         case 'ytsearch':
           case 'ytsrc':
           if (args.length < 1) return env(`Exemplo:\n${command} A vitória chegou`)
@@ -6581,7 +6525,6 @@ break
           { quoted: mek }
         );
         break;
-      
         case 'ytmp3': 
         case 'ytaudio':                 		    
         if (args.length < 1) return env(`Exemplo: ${prefixobot}ytmp3 plutao`)
@@ -6595,8 +6538,9 @@ break
         env2('𝐅𝐚𝐥𝐡𝐚,𝐭𝐞𝐧𝐭𝐞 𝐮𝐬𝐚𝐫 𝐧𝐨𝐯𝐚𝐦𝐞𝐧𝐭𝐞', '❌')
         })
         conn.sendMessage(from, { audio: {url: res[0].link }, mimetype: 'audio/mp4' }, {quoted: mek})
+        sendFileFromUrl(res[0].link)
         env2("prontinho", "✅");
-        }
+        } 
         break
       case "ytaudio2":
         if (!texto) return env(`Exemplo : ${prefixobot + command} a vitória`);
@@ -8491,31 +8435,6 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
           sendStickerFromUrl(from, emoji.images[idemot].url, mek);
         });
         break;
-        case 'autofigu':
-case 'autosticker':
-if (!isMemberAdmin && isOwner) return env(mensagem[0].admin)
-if (!isBotAdm) return env(mensagem[0].botadmin);
-if (!isGroup) return env(mensagem[0].grupo);
-if (args.length < 1) return env('1 pra ligar / 0 pra desligar')
-if (Number(args[0]) === 1) {
-if (isAutofigu) return env('Ja esta ativo')
-autofigu.push(from)
-fs.writeFileSync('./db/json/autofigu.json', JSON.stringify(autofigu))
-env('Auto figu ativado com sucesso nesse grupo.')
-} else if (Number(args[0]) === 0) {
-if (!isAutofigu) return env('Ja esta Desativado')
-pesquisar = from
-processo = autofigu.indexOf(pesquisar)
-while(processo >= 0){
-autofigu.splice(processo, 1)
-processo = autofigu.indexOf(pesquisar)
-}
-fs.writeFileSync('./db/json/autofigu.json', JSON.stringify(autofigu))
-env('Desativado com sucesso o recurso de auto figu nesse grupo️')
-} else {
-env('1 para ativar, 0 para desativar')
-}
-break
 case 'misturar':
   if(!q.includes("+")) return conn.sendMessage(from, `trem ta faltando esse (+), vou te dar um exemplo..\nExemplo: ${prefix+command} 😒+😁`)
   txt = q.replace(" +", "+").replace("+ ", "+").replace(" + ", "+")

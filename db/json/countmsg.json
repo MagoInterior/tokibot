@@ -1551,6 +1551,16 @@
         "jid": "553898095855@s.whatsapp.net",
         "messages": 1,
         "cmd_messages": 0
+      },
+      {
+        "jid": "557598842039@s.whatsapp.net",
+        "messages": 4,
+        "cmd_messages": 1
+      },
+      {
+        "jid": "554499049082@s.whatsapp.net",
+        "messages": 3,
+        "cmd_messages": 0
       }
     ]
   },
