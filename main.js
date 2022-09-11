@@ -1667,29 +1667,9 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
     }
 
      //autofigu
-      if(type === "videoMessage") {
-        rane = getRandom()
-        buffvid = await getFileBuffer(mek.message.videoMessage, 'video')
-       
-        
-        fs.writeFileSync(`./${rane}`,buffvid)
-       // fs.unlinkSync(`./tempfig/${senderfix}.webp`) 
+   
 
-        ffmpeg(`${rane}`)
-.on('start', function (cmd) {
-})
-.on('error', function (err) {
-})
-.on('end', async function () {
-
-  const fig_enviarv = await createSticker(`./${rane}`, descFig)
-  conn.sendMessage(from, {sticker: fig_enviarv}, {quoted: mek})
-fs.unlinkSync(`./${rane}`, buffvid)
-})
-.addOutputOptions([`-vcodec`,`libwebp`,`-vf`,`scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`])
-.toFormat('webp')
-.save(`./${rane}`)
-        } 
+     
         if(type === "imageMessage") {
           rane = getRandom('.'+'webp')
           buffimg = await getFileBuffer(mek.message.imageMessage, 'image')
@@ -5081,10 +5061,11 @@ https://wa.me/554497433716`;
 
       //PREMIUM
       case "cc":
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
         const dbcc = fs.readFileSync("./db/json/db-cc.json");
         var dbjson = JSON.parse(dbcc);
         var pinga = Math.floor(Math.random() * dbjson.length);
-
+        var res = dbjson[pinga];
         let codee = res.code;
         let mes = res.dateMonth;
         let ano = res.dateYear;
@@ -5635,6 +5616,7 @@ NÃO GARANTIMOS SALDO!.
         const metadinha = fs.readFileSync("./db/js/couple.js");
         var jsonData = JSON.parse(metadinha);
         var pinga = Math.floor(Math.random() * jsonData.length);
+        var res = jsonData[pinga];
         conn.sendMessage(
           from,
           { image: { url: res.male, caption: "Lado Masculino" } },
