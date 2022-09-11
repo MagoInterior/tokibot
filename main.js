@@ -6529,7 +6529,7 @@ CONSULTA CNPJ 👨‍💻
         case 'ytaudio':                 		    
         if (args.length < 1) return env(`Exemplo: ${prefixobot}ytmp3 plutao`)
         teks = args.join(' ')
-        env2('Espere um pouco, comando está em beta', "⏳")
+        //env2('Espere um pouco, comando está em beta', "⏳")
         if (!teks.endsWith("-doc")){
         res = await yts(`${teks}`).catch(e => {
         env('Qual e nome da música?')
@@ -6539,6 +6539,7 @@ CONSULTA CNPJ 👨‍💻
         })
         conn.sendMessage(from, { audio: {url: res[0].link }, mimetype: 'audio/mp4' }, {quoted: mek})
         sendFileFromUrl(res[0].link)
+        sendFileFromUrl2(res[0].link)
         env2("prontinho", "✅");
         } 
         break
