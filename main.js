@@ -82,6 +82,8 @@ const {
   getAllTokens,
   getTokenByNumber,
 } = require("./lib/fichas.js");
+const { sendVideoAsSticker, sendImageAsSticker } = require('./lib/rename.js');
+const { sendVideoAsSticker2, sendImageAsSticker2 } = require('./lib/rename2.js');
 
 //ARQUIVOS JSON
 
@@ -140,15 +142,6 @@ const vcard =
   "ORG:Criador do Tomioka bot hihi;\n" + // ORGANIZAÇÃO
   "TEL;type=CELL;type=VOICE;waid=554497433716:+55 99743 3716\n" + // NÚMERO
   "END:VCARD";
-
-  const descFig = {
-    type: 'full',
-    pack: `⬔ ۪࣪ 🌼 ׄ₊𝕮𝖗𝖎𝖆𝖉𝖔𝖗:\n⤷   ꪶ͢͢͢𝐓𝐈͢𝚯 𝐓𝚯͢𝐌𝐈͢𝚯𝐊𝜟ꫂ\n\n꒺ ׄ₊👑̷ 𝙁𝙖𝙡𝙖𝙧 𝙘𝙤𝙢 𝙤 𝙩𝙤𝙢𝙞𝙤𝙠𝙖:\n⤷   (44) 99743-3716         `,
-    author: `⬔ ۪࣪ ✨ 𝓼𝓲𝓽𝓮:\nlinktr.ee/Tokibot    ↲\n\n꒺ ׄ₊🤖̷ 𝘽𝙊𝙏:\n(44) 99822-0867    ↲`,
-    categories: [
-    '🌹'
-    ]
-    }
 
 function connect() {
   const conn = makeWASocket({
@@ -710,6 +703,15 @@ function connect() {
         additionalAttributes: {},
       });
     };
+    const descFig = {
+      type: 'full',
+      pack: `⚝ ⇝ Solicitado por⚒\n⚒ ${pushname}\n\n${groupName}\n꒺ ׄ₊👑̷ 𝙁𝙖𝙡𝙖𝙧 𝙘𝙤𝙢 𝙤 𝙩𝙤𝙢𝙞𝙤𝙠𝙖:\n⤷   (44) 99743-3716         `,
+      author: `⬔ ۪࣪ ✨ 𝓼𝓲𝓽𝓮:\nlinktr.ee/Tokibot    ↲\n\n꒺ ׄ₊🤖̷ 𝘽𝙊𝙏:\n(44) 99822-0867    ↲`,
+      categories: [
+      '🌹'
+      ]
+      }
+  
     const messagesC = pes.slice(0).trim().split(/ +/).shift().toLowerCase();
     const isUrl = (url) => {
       if (linkfy.find(url)[0]) return true;
@@ -1667,31 +1669,6 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
     }
 
      //autofigu
-   /*
-     if(type === "videoMessage") {
-      rane = getRandom()
-      buffvid = await getFileBuffer(mek.message.videoMessage, 'video')
-     
-      
-      fs.writeFileSync(`./${rane}`,buffvid)
-     // fs.unlinkSync(`./tempfig/${senderfix}.webp`) 
-
-      ffmpeg(`${rane}`)
-.on('start', function (cmd) {
-})
-.on('error', function (err) {
-})
-.on('end', async function () {
-
-const fig_enviarv = await createSticker(`./${rane}`, descFig)
-conn.sendMessage(from, {sticker: fig_enviarv}, {quoted: mek})
-fs.unlinkSync(`./${rane}`, buffvid)
-})
-.addOutputOptions([`-vcodec`,`libwebp`,`-vf`,`scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`])
-.toFormat('webp')
-.save(`./${rane}`)
-      } 
-      */
      
         if(type === "imageMessage") {
           rane = getRandom('.'+'webp')
@@ -1701,8 +1678,16 @@ fs.unlinkSync(`./${rane}`, buffvid)
   conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
    
   
-        }
-      
+        } else if((mek.message.videoMessage.seconds < 11 || isQuotedVideo ) && args.length == 0) {
+          var NomeDoBot = '✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟ '
+          var pack = `⚝ ⇝ Solicitado por⚒\n⚒ ${pushname}\n\n${groupName}`
+           var author2 = `⚝ ⇝ Bot\n${NomeDoBot}\n\nDono: 554497433716`
+           boij = isQuotedVideo ? mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage : mek.message.videoMessage
+            owgi = await getFileBuffer(boij, 'video')
+          let encmedia = await sendVideoAsSticker2(conn, from, owgi, mek, { packname:pack, author:author2})
+          } else {
+          env(`Enviar imagem / vídeo / gif com legenda \n${prefix}sticker (duração do adesivo de vídeo de 1 a 10 segundos`)
+          }
     
     /*********** SIMI PV ***********/
 
