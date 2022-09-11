@@ -73,7 +73,7 @@ const webp_mp4 = require("./db/js/webp_mp4.js");
 const { getRandom, runtime, formatp, getBuffer } = require("./lib/myfunc");
 const { getAdmins, getMembers } = require("./lib/utils");
 const { webp2gifFile } = require("./lib/gif22.js");
-const { y2mateA, y2mateV } = require("./lib/y2mate.js");
+const ytmate = require('./lib/ytmate')
 const tiktok = require("./lib/tiktok.js");
 const { data, data2, data3, hora, hora2 } = require("./lib/functions.js");
 const {
@@ -1684,21 +1684,22 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
 
   const fig_enviarv = await createSticker(`./${rane}`, descFig)
   conn.sendMessage(from, {sticker: fig_enviarv}, {quoted: mek})
-fs.unlinkSync(`./${rane}`, descFig)
+fs.unlinkSync(`./${rane}`, buffvid)
 })
 .addOutputOptions([`-vcodec`,`libwebp`,`-vf`,`scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`])
 .toFormat('webp')
 .save(`./${rane}`)
         } 
-      if(type === "imageMessage") {
-        rane = getRandom('.'+'webp')
-        buffimg = await getFileBuffer(mek.message.imageMessage, 'image')
-        fs.writeFileSync(rane, buffimg)
-const fig_enviar = await createSticker(rane, descFig)
-conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
-fs.unlinkSync(rane, buffimg)  
-
-      }
+        if(type === "imageMessage") {
+          rane = getRandom('.'+'webp')
+          buffimg = await getFileBuffer(mek.message.imageMessage, 'image')
+        
+  const fig_enviar = await createSticker(buffimg, descFig)
+  conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
+   
+  
+        }
+      
     
     /*********** SIMI PV ***********/
 
@@ -4461,112 +4462,6 @@ https://wa.me/554497433716`;
           await env("Não fui possível sair do grupo.");
         }
         break;
-      case "stiker":
-      case "sticker":
-      case "stickergif":
-      case "stikergif":
-      case "fig":
-      case "fs":
-      case "gif":
-      case "figura":
-      case "figu":
-      case "figurinha":
-      case "f":
-      case "s":
-        if (isMedia || isQuotedImage) {
-          const encmedia = isQuotedImage
-            ? JSON.parse(JSON.stringify(mek).replace("quotedM", "m")).message
-                .extendedTextMessage.contextInfo
-            : mek;
-          const media = await conn.downloadAndSaveMediaMessage(
-            encmedia,
-            `./sticker/${senderfix}`
-          );
-          console.log(color("|FIG|", "cyan"), color("FIGURINHAAAA", "yellow"));
-          await ffmpeg(`${media}`)
-            .input(media)
-            .on("start", function (cmd) {})
-            .on("error", function (err) {
-              console.log(`Error : ${err}`);
-              fs.unlinkSync(media);
-              enviar("error");
-            })
-            .on("end", async function () {
-              const MatadataFix3 = {
-                type: "full",
-                pack: `${pack}`,
-                author: `${author}`,
-                categories: ["🌹"],
-              };
-              const sticker4s = await createSticker(
-                `./sticker/${senderfix}.webp`,
-                MatadataFix3
-              );
-             conn.sendMessage(from, sticker4s, MessageType.sticker, {
-                contextInfo: tome,
-                fromMe: false,
-              }); //contextInfo: {"forwardingScore": 9999, "isForwarded": true} pra desaparecer após 7 dias
-              fs.unlinkSync(media);
-              fs.unlinkSync(`./sticker/${senderfix}.webp`);
-            })
-            .addOutputOptions([
-              `-vcodec`,
-              `libwebp`,
-              `-vf`,
-              `scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`,
-            ])
-            .toFormat("webp")
-            .save(`./sticker/${senderfix}.webp`);
-        } else if ((isMedia < 11 || isQuotedVideo < 11) && args.length == 0) {
-          const encmedia = isQuotedVideo
-            ? JSON.parse(JSON.stringify(mek).replace("quotedM", "m")).message
-                .extendedTextMessage.contextInfo
-            : mek;
-          const media = await conn.downloadAndSaveMediaMessage(
-            encmedia,
-            `./sticker/${senderfix}`
-          );
-          console.log(color("|FIG|", "cyan"), color("FIGURINHAAAA", "yellow"));
-          enviar("ᴘᴏʀ ғᴀᴠᴏʀ, ᴇsᴘᴇʀᴇ..");
-          await ffmpeg(`${media}`)
-            .inputFormat(media.split(".")[4])
-            .on("start", function (cmd) {})
-            .on("error", function (err) {
-              fs.unlinkSync(media);
-              tipe = media.endsWith(".mp4") ? "video" : "gif";
-            })
-            .on("end", async function () {
-              const MatadataFix4 = {
-                type: "full",
-                pack: `${pack}`,
-                author: `${author}`,
-                categories: ["🌹"],
-              };
-              const sticker5s = await createSticker(
-                `./sticker/${senderfix}.webp`,
-                MatadataFix4
-              );
-             conn.sendMessage(from, sticker5s, MessageType.sticker, {
-                contextInfo: tome,
-                fromMe: false,
-              }); //contextInfo: {"forwardingScore": 9999, "isForwarded": true} pra desaparecer após 7 dias
-              fs.unlinkSync(media);
-              fs.unlinkSync(`./sticker/${senderfix}.webp`);
-            })
-            .addOutputOptions([
-              `-vcodec`,
-              `libwebp`,
-              `-vf`,
-              `scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`,
-            ])
-            .toFormat("webp")
-            .save(`./sticker/${senderfix}.webp`);
-        } else {
-          enviar(
-            `marque uma foto/imagem/video ou gif de até 10 segundos com o comando: /f`
-          );
-        }
-        break;
       case "hidetag":
       case "totag":
       case "marcar":
@@ -6534,12 +6429,10 @@ CONSULTA CNPJ 👨‍💻
         res = await yts(`${teks}`).catch(e => {
         env('Qual e nome da música?')
         })
-        res = await y2mateA(res.all[0].url).catch(e => {
+        res = await ytmate.y2mateA(res.all[0].url).catch(e => {
         env2('𝐅𝐚𝐥𝐡𝐚,𝐭𝐞𝐧𝐭𝐞 𝐮𝐬𝐚𝐫 𝐧𝐨𝐯𝐚𝐦𝐞𝐧𝐭𝐞', '❌')
         })
-        conn.sendMessage(from, { audio: {url: res[0].link }, mimetype: 'audio/mp4' }, {quoted: mek})
-        sendFileFromUrl(res[0].link)
-        sendFileFromUrl2(res[0].link)
+      await conn.sendMessage(from, { audio: {url: res[0].link }, mimetype: 'audio/mp4' }, {quoted: mek})
         env2("prontinho", "✅");
         } 
         break
