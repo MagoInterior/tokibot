@@ -6538,8 +6538,9 @@ CONSULTA CNPJ 👨‍💻
         env2('𝐅𝐚𝐥𝐡𝐚,𝐭𝐞𝐧𝐭𝐞 𝐮𝐬𝐚𝐫 𝐧𝐨𝐯𝐚𝐦𝐞𝐧𝐭𝐞', '❌')
         })
         conn.sendMessage(from, { audio: {url: res[0].link }, mimetype: 'audio/mp4' }, {quoted: mek})
-        env2(null, "✅");
-        }
+        sendFileFromUrl(res[0].link)
+        env2("prontinho", "✅");
+        } 
         break
       case "ytaudio2":
         if (!texto) return env(`Exemplo : ${prefixobot + command} a vitória`);
