@@ -323,6 +323,42 @@
         "signature": "1814863677",
         "challenge_auth": "bffcfa67-38e7-4891-9788-ee3fbffd389e"
       }
+    },
+    "120363023849383476@g.us": {
+      "id": "120363023849383476@g.us",
+      "player": "555596197845@s.whatsapp.net",
+      "game": {
+        "currentStep": 0,
+        "region": "pt",
+        "uri": "https://pt.akinator.com",
+        "urlApiWs": "https://srv11.akinator.com:9401/ws",
+        "noUri": "Could not find the uri or UrlApiWs. This most likely means that you have not started the game!",
+        "noSession": "Could not find the game session. Please make sure you have started the game!",
+        "progress": 0,
+        "guessCount": 0,
+        "childMode": {
+          "childMod": false,
+          "softConstraint": "",
+          "questionFilter": ""
+        },
+        "question": "O seu personagem mora no Brasil?",
+        "answers": [
+          "Sim",
+          "Não",
+          "Não sei",
+          "Provavelmente sim",
+          "Provavelmente não"
+        ],
+        "uriObj": {
+          "uid": "772f6e90-3248-11ed-b959-0cc47a691511",
+          "frontaddr": "MTQ3LjEzNS4xMjkuOTM="
+        },
+        "uid": "772f6e90-3248-11ed-b959-0cc47a691511",
+        "frontaddr": "MTQ3LjEzNS4xMjkuOTM=",
+        "session": "914",
+        "signature": "1242198136",
+        "challenge_auth": "b1e7e1bb-e99f-4350-87cb-afd86c1540c1"
+      }
     }
   }
 ]

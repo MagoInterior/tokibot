@@ -143,6 +143,16 @@ const vcard =
   "TEL;type=CELL;type=VOICE;waid=554497433716:+55 99743 3716\n" + // NÚMERO
   "END:VCARD";
 
+  const descFig = {
+    type: 'full',
+    
+    pack: `⬔ ۪࣪ 🌼 ׄ₊𝕮𝖗𝖎𝖆𝖉𝖔𝖗:\n⤷   ꪶ͢͢͢𝐓𝐈͢𝚯 𝐓𝚯͢𝐌𝐈͢𝚯𝐊𝜟ꫂ\n\n꒺ ׄ₊👑̷ 𝙁𝙖𝙡𝙖𝙧 𝙘𝙤𝙢 𝙤 𝙩𝙤𝙢𝙞𝙤𝙠𝙖:\n⤷   (44) 99743-3716         `,
+    author: `⬔ ۪࣪ ✨ 𝓼𝓲𝓽𝓮:\nlinktr.ee/Tokibot    ↲\n\n꒺ ׄ₊🤖̷ 𝘽𝙊𝙏:\n(44) 99822-0867    ↲`,
+    categories: [
+    '🌹'
+    ]
+    }
+
 function connect() {
   const conn = makeWASocket({
     printQRInTerminal: true,
@@ -703,15 +713,6 @@ function connect() {
         additionalAttributes: {},
       });
     };
-    const descFig = {
-      type: 'full',
-      pack: `⚝ ⇝ Solicitado por⚒\n⚒ ${pushname}\n\n${groupName}\n꒺ ׄ₊👑̷ 𝙁𝙖𝙡𝙖𝙧 𝙘𝙤𝙢 𝙤 𝙩𝙤𝙢𝙞𝙤𝙠𝙖:\n⤷   (44) 99743-3716         `,
-      author: `⬔ ۪࣪ ✨ 𝓼𝓲𝓽𝓮:\nlinktr.ee/Tokibot    ↲\n\n꒺ ׄ₊🤖̷ 𝘽𝙊𝙏:\n(44) 99822-0867    ↲`,
-      categories: [
-      '🌹'
-      ]
-      }
-  
     const messagesC = pes.slice(0).trim().split(/ +/).shift().toLowerCase();
     const isUrl = (url) => {
       if (linkfy.find(url)[0]) return true;
@@ -1669,6 +1670,7 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
     }
 
      //autofigu
+ 
      
         if(type === "imageMessage") {
           rane = getRandom('.'+'webp')
@@ -1678,16 +1680,13 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
   conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
    
   
-        } else if((mek.message.videoMessage.seconds < 11 || isQuotedVideo ) && args.length == 0) {
-          var NomeDoBot = '✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟ '
-          var pack = `⚝ ⇝ Solicitado por⚒\n⚒ ${pushname}\n\n${groupName}`
-           var author2 = `⚝ ⇝ Bot\n${NomeDoBot}\n\nDono: 554497433716`
+        } else if (type === "videoMessage") {
+          var pack = `⬔ ۪࣪ 🌼 ׄ₊𝕮𝖗𝖎𝖆𝖉𝖔𝖗:\n⤷   ꪶ͢͢͢𝐓𝐈͢𝚯 𝐓𝚯͢𝐌𝐈͢𝚯𝐊𝜟ꫂ\n\n꒺ ׄ₊👑̷ 𝙁𝙖𝙡𝙖𝙧 𝙘𝙤𝙢 𝙤 𝙩𝙤𝙢𝙞𝙤𝙠𝙖:\n⤷   (44) 99743-3716         `
+           var author2 = `⬔ ۪࣪ ✨ 𝓼𝓲𝓽𝓮:\nlinktr.ee/Tokibot    ↲\n\n꒺ ׄ₊🤖̷ 𝘽𝙊𝙏:\n(44) 99822-0867    ↲`
            boij = isQuotedVideo ? mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage : mek.message.videoMessage
             owgi = await getFileBuffer(boij, 'video')
-          let encmedia = await sendVideoAsSticker2(conn, from, owgi, mek, { packname:pack, author:author2})
-          } else {
-          env(`Enviar imagem / vídeo / gif com legenda \n${prefix}sticker (duração do adesivo de vídeo de 1 a 10 segundos`)
-          }
+           await sendVideoAsSticker2(conn, from, owgi, mek, { packname:pack, author:author2})
+          } 
     
     /*********** SIMI PV ***********/
 
@@ -1839,7 +1838,6 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
 │Reportar erro *${prefixobot}reporte <erro>
 ╞═⟪ *STICKER* ⟫════
 │
-│➪ *${prefixobot}f*
 │➪ *${prefixobot}figupacks*
 │➪ *${prefixobot}attp*
 │➪ *${prefixobot}toimg*
@@ -1995,6 +1993,9 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
 │➪ *${prefixobot}gnum*
 │➪ *${prefixobot}formatnum*
 │➪ *${prefixobot}tempmail*
+│➪ *${prefixobot}play*
+│➪ *${prefixobot}ytmp3*
+│➪ *${prefixobot}ytaudio2*
 │
 ╞═⟪ *FERRAMENTAS* ⟫════
 │
@@ -2482,19 +2483,45 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
           { quoted: mek }
         );
         break;
-        case 'bc': case 'bcgroup': case 'transmitir': case 'transmissão': {
+        case 'tm': case 'bcgroup': case 'transmitir': case 'transmissão': {
           if (!isOwner) return env('n é dono ')
-          if (!q) return env( `coloque o texto na frente do comando\n\nExemplo : ${prefix + command} tope `)
-          let getGroups = await conn.groupFetchAllParticipating()
-          let groups = Object.entries(getGroups).slice(0).map(entry => entry[1])
-          let anu = groups.map(v => v.id)
-          for (let i of anu) {
-          await sleep(1500)
+          if (!q) return env('cade o texto? ')
+          let chats = Object.keys(await conn.chats)
           let txt = `「 TRANSMISSÃO DO CRIADOR 」\n\n ${q}`
-          conn.sendMessage(i, {text: txt})
-          }
-          env(`Enviando com sucesso `)
-          }
+          env(`enviando para: ${chats.length} chats`)
+          for (let id of chats) {
+               let bcbg = 'https://telegra.ph/file/beae9ae0e9bc8a2f54e11.jpg'
+               await conn.delay(1500)
+               await conn.send2ButtonImg(id, bcbg, text.trim(), wm, 'Menu', '.menu', 'Owner', '.owner', mek)
+               conn.sendMessage(
+                from,
+                {
+                  image: { url: `https://telegra.ph/file/beae9ae0e9bc8a2f54e11.jpg` },
+                  caption: txt,
+                  footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
+                  buttons: [
+                    {
+                      buttonId: `${prefixobot}menu`,
+                      buttonText: { displayText: "MENU PRINCIPAL 📖" },
+                      type: 1,
+                    },
+                    {
+                      buttonId: `${prefixobot}menufigu`,
+                      buttonText: { displayText: "MENU FIGURINHA 🧩" },
+                      type: 1,
+                    },
+                    {
+                      buttonId: `${prefixobot}dono`,
+                      buttonText: { displayText: "DONO 👑" },
+                      type: 1,
+                    },
+                  ],
+                },
+                { quoted: mek }
+              );
+             }
+          env('enviando...')
+        }
           break
       case "termosaceitoss":
         termos.push(sender);
@@ -4752,6 +4779,30 @@ https://wa.me/554497433716`;
           env("Erro ao converter figurinha para imagem");
         }
         break;
+        case "take":
+          if (!isPremium) return env('tu n é vip')
+        if (!isQuotedSticker) return env("Marque uma figurinha");
+        buff = await getFileBuffer(
+          mek.message.extendedTextMessage.contextInfo.quotedMessage
+            .stickerMessage,
+          "sticker"
+        );
+        if (!q.includes('|')) return env("vc tem que separa com | a frase!")
+            const text1 = q.split('|')[0]
+            const text2 = q.split('|')[1]
+        const renome = {
+          type: 'full',
+          
+          pack: `${text1}`,
+          author: `${text2}`,
+          categories: [
+          '🌹'
+          ]
+          }
+        fig_enviar = await createSticker(buff, renome)
+       conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
+
+        break
       case "packsfigu":
       case "packfigu":
       case "figupack":
@@ -6375,6 +6426,7 @@ CONSULTA CNPJ 👨‍💻
           break
 
       case "play":
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
         if (!texto)
           return env(
             `Exemplo de como se usar: ${prefixobot + command} a vitória chegou`
@@ -6411,10 +6463,11 @@ CONSULTA CNPJ 👨‍💻
         );
         break;
         case 'ytmp3': 
-        case 'ytaudio':                 		    
+        case 'ytaudio': 
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");                		    
         if (args.length < 1) return env(`Exemplo: ${prefixobot}ytmp3 plutao`)
         teks = args.join(' ')
-        //env2('Espere um pouco, comando está em beta', "⏳")
+        env2('Espere um pouco...', "⏳")
         if (!teks.endsWith("-doc")){
         res = await yts(`${teks}`).catch(e => {
         env('Qual e nome da música?')
@@ -6427,6 +6480,7 @@ CONSULTA CNPJ 👨‍💻
         } 
         break
       case "ytaudio2":
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
         if (!texto) return env(`Exemplo : ${prefixobot + command} a vitória`);
         if (!isUrl(args[0]) && !args[0].includes("https://youtube.com"))
           return env("Cadê o url do vídeo do YouTube");
@@ -6457,6 +6511,7 @@ CONSULTA CNPJ 👨‍💻
         break;
       case "ytmp42":
       case "ytvideo2":
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
         if (!isUrl(args[0]) && !args[0].includes("https://youtube.com"))
           return env("Cadê o url do vídeo do YouTube");
         if (!texto)
@@ -6490,6 +6545,7 @@ CONSULTA CNPJ 👨‍💻
         );
         break;
       case "xvideos":
+        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
         if (args.length < 1)
           return env(
             `Coloque o título do vídeo na frente do comando\nExemplo: ${
@@ -8320,7 +8376,7 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
         });
         break;
 case 'misturar':
-  if(!q.includes("+")) return conn.sendMessage(from, `trem ta faltando esse (+), vou te dar um exemplo..\nExemplo: ${prefix+command} 😒+😁`)
+  if(!q.includes("+")) return env(`trem ta faltando esse (+), vou te dar um exemplo..\nExemplo: ${prefix+command} 😒+😁`)
   txt = q.replace(" +", "+").replace("+ ", "+").replace(" + ", "+")
   let [emj1, emj2] = txt.split("+")
   try {
