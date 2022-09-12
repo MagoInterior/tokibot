@@ -2552,12 +2552,6 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
           fig_enviar = await createSticker(attp, descFig)
           conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
           break
-          case 'attp':     
-          puxe = encodeURI(`http://aleatoryapi.herokuapp.com/api/attp?q=${q}&apikey=${keyale}`)
-          attp = await getBuffer(puxe)
-          fig_enviar = await createSticker(attp, descFig)
-          conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
-          break
       case "cekvip":
         let cekvip = `Status vip
 *STATUS:* ${isPremium ? "✅" : "❎"}`;
