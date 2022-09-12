@@ -2486,9 +2486,9 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
         case 'tm': case 'bcgroup': case 'transmitir': case 'transmissão': {
           if (!isOwner) return env('n é dono ')
           if (!q) return env('cade o texto? ')
-          let chats = Object.keys(await conn.chats)
+          let chats = Object.entries(conn.chats).filter(([jid, chat]) => !jid.endsWith('@g.us') && chat.isChats).map(v => v[0])
           let txt = `「 TRANSMISSÃO DO CRIADOR 」\n\n ${q}`
-          env(`enviando para: ${chats.length} chats`)
+         /// env(`enviando para: ${chats.length} chats`)
           for (let id of chats) {
                let bcbg = 'https://telegra.ph/file/beae9ae0e9bc8a2f54e11.jpg'
                await conn.delay(1500)
