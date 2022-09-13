@@ -1499,7 +1499,7 @@
     "numbers": [
       {
         "jid": "554497433716@s.whatsapp.net",
-        "messages": 91,
+        "messages": 101,
         "cmd_messages": 31
       },
       {
@@ -1559,7 +1559,7 @@
       },
       {
         "jid": "554499049082@s.whatsapp.net",
-        "messages": 3,
+        "messages": 15,
         "cmd_messages": 0
       },
       {
@@ -1584,8 +1584,8 @@
       },
       {
         "jid": "556291703729@s.whatsapp.net",
-        "messages": 74,
-        "cmd_messages": 3
+        "messages": 110,
+        "cmd_messages": 5
       },
       {
         "jid": "5511982966028@s.whatsapp.net",
@@ -1659,17 +1659,17 @@
       },
       {
         "jid": "5511911030228@s.whatsapp.net",
-        "messages": 68,
-        "cmd_messages": 6
+        "messages": 76,
+        "cmd_messages": 7
       },
       {
         "jid": "5521976944696@s.whatsapp.net",
-        "messages": 3,
+        "messages": 5,
         "cmd_messages": 0
       },
       {
         "jid": "553184359459@s.whatsapp.net",
-        "messages": 24,
+        "messages": 25,
         "cmd_messages": 5
       },
       {
@@ -1696,6 +1696,41 @@
         "jid": "5511989276417@s.whatsapp.net",
         "messages": 2,
         "cmd_messages": 0
+      },
+      {
+        "jid": "558195150111@s.whatsapp.net",
+        "messages": 21,
+        "cmd_messages": 5
+      },
+      {
+        "jid": "5511916600763@s.whatsapp.net",
+        "messages": 3,
+        "cmd_messages": 1
+      },
+      {
+        "jid": "558399128082@s.whatsapp.net",
+        "messages": 1,
+        "cmd_messages": 0
+      },
+      {
+        "jid": "558281240362@s.whatsapp.net",
+        "messages": 5,
+        "cmd_messages": 1
+      },
+      {
+        "jid": "5522998916923@s.whatsapp.net",
+        "messages": 14,
+        "cmd_messages": 0
+      },
+      {
+        "jid": "556496126761@s.whatsapp.net",
+        "messages": 24,
+        "cmd_messages": 3
+      },
+      {
+        "jid": "5519971021018@s.whatsapp.net",
+        "messages": 2,
+        "cmd_messages": 1
       }
     ]
   },
