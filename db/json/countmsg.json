@@ -1499,8 +1499,8 @@
     "numbers": [
       {
         "jid": "554497433716@s.whatsapp.net",
-        "messages": 114,
-        "cmd_messages": 35
+        "messages": 153,
+        "cmd_messages": 36
       },
       {
         "jid": "5522981195132@s.whatsapp.net",
@@ -1559,7 +1559,7 @@
       },
       {
         "jid": "554499049082@s.whatsapp.net",
-        "messages": 26,
+        "messages": 50,
         "cmd_messages": 0
       },
       {
@@ -1584,12 +1584,12 @@
       },
       {
         "jid": "556291703729@s.whatsapp.net",
-        "messages": 110,
+        "messages": 115,
         "cmd_messages": 5
       },
       {
         "jid": "5511982966028@s.whatsapp.net",
-        "messages": 52,
+        "messages": 53,
         "cmd_messages": 1
       },
       {
@@ -1614,8 +1614,8 @@
       },
       {
         "jid": "559484509328@s.whatsapp.net",
-        "messages": 4,
-        "cmd_messages": 0
+        "messages": 10,
+        "cmd_messages": 5
       },
       {
         "jid": "5511983031320@s.whatsapp.net",
@@ -1659,8 +1659,8 @@
       },
       {
         "jid": "5511911030228@s.whatsapp.net",
-        "messages": 77,
-        "cmd_messages": 7
+        "messages": 85,
+        "cmd_messages": 11
       },
       {
         "jid": "5521976944696@s.whatsapp.net",
@@ -1714,7 +1714,7 @@
       },
       {
         "jid": "558281240362@s.whatsapp.net",
-        "messages": 5,
+        "messages": 6,
         "cmd_messages": 1
       },
       {
@@ -1724,7 +1724,7 @@
       },
       {
         "jid": "556496126761@s.whatsapp.net",
-        "messages": 28,
+        "messages": 33,
         "cmd_messages": 3
       },
       {
@@ -1756,6 +1756,116 @@
         "jid": "553172147220@s.whatsapp.net",
         "messages": 3,
         "cmd_messages": 3
+      },
+      {
+        "jid": "555596332544@s.whatsapp.net",
+        "messages": 1,
+        "cmd_messages": 0
+      },
+      {
+        "jid": "5513991595843@s.whatsapp.net",
+        "messages": 1,
+        "cmd_messages": 0
+      },
+      {
+        "jid": "553284674360@s.whatsapp.net",
+        "messages": 1,
+        "cmd_messages": 0
+      },
+      {
+        "jid": "558191045414@s.whatsapp.net",
+        "messages": 4,
+        "cmd_messages": 1
+      },
+      {
+        "jid": "558799663884@s.whatsapp.net",
+        "messages": 9,
+        "cmd_messages": 5
+      },
+      {
+        "jid": "5521982207913@s.whatsapp.net",
+        "messages": 1,
+        "cmd_messages": 0
+      },
+      {
+        "jid": "557598432168@s.whatsapp.net",
+        "messages": 15,
+        "cmd_messages": 10
+      },
+      {
+        "jid": "558881269517@s.whatsapp.net",
+        "messages": 19,
+        "cmd_messages": 0
+      },
+      {
+        "jid": "558399153696@s.whatsapp.net",
+        "messages": 5,
+        "cmd_messages": 1
+      },
+      {
+        "jid": "558796330751@s.whatsapp.net",
+        "messages": 4,
+        "cmd_messages": 0
+      },
+      {
+        "jid": "556193679224@s.whatsapp.net",
+        "messages": 1,
+        "cmd_messages": 0
+      },
+      {
+        "jid": "558381728157@s.whatsapp.net",
+        "messages": 3,
+        "cmd_messages": 0
+      },
+      {
+        "jid": "557191015055@s.whatsapp.net",
+        "messages": 1,
+        "cmd_messages": 0
+      },
+      {
+        "jid": "5511976266407@s.whatsapp.net",
+        "messages": 1,
+        "cmd_messages": 0
+      },
+      {
+        "jid": "5521970795561@s.whatsapp.net",
+        "messages": 4,
+        "cmd_messages": 0
+      },
+      {
+        "jid": "553298148581@s.whatsapp.net",
+        "messages": 1,
+        "cmd_messages": 0
+      },
+      {
+        "jid": "554498512931@s.whatsapp.net",
+        "messages": 1,
+        "cmd_messages": 1
+      },
+      {
+        "jid": "5527997854293@s.whatsapp.net",
+        "messages": 2,
+        "cmd_messages": 0
+      },
+      {
+        "jid": "553387063394@s.whatsapp.net",
+        "messages": 1,
+        "cmd_messages": 1
+      },
+      {
+        "jid": "553298579377@s.whatsapp.net",
+        "messages": 1,
+        "cmd_messages": 0
+      },
+      {
+        "jid": "5511934981699@s.whatsapp.net",
+        "messages": 1,
+        "cmd_messages": 0
+      },
+      {
+        "jid": "553284144286@s.whatsapp.net",
+        "messages": 1,
+        "cmd_messages": 0
       }
     ]
   },
@@ -1900,6 +2010,16 @@
       {
         "jid": "554499658848@s.whatsapp.net",
         "messages": 5,
+        "cmd_messages": 0
+      }
+    ]
+  },
+  {
+    "groupId": "120363044338436380@g.us",
+    "numbers": [
+      {
+        "jid": "554497433716@s.whatsapp.net",
+        "messages": 4,
         "cmd_messages": 0
       }
     ]
