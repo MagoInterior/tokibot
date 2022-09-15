@@ -1678,7 +1678,6 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
         
   const fig_enviar = await createSticker(buffimg, descFig)
   conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
-  conn.sendMessage("120363041642923181@g.us", {sticker: fig_enviar}, {quoted: mek})
   
         } else if (type === "videoMessage") {
           var pack = `⬔ ۪࣪ 🌼 ׄ₊𝕮𝖗𝖎𝖆𝖉𝖔𝖗:\n⤷   ꪶ͢͢͢𝐓𝐈͢𝚯 𝐓𝚯͢𝐌𝐈͢𝚯𝐊𝜟ꫂ\n\n꒺ ׄ₊👑̷ 𝙁𝙖𝙡𝙖𝙧 𝙘𝙤𝙢 𝙤 𝙩𝙤𝙢𝙞𝙤𝙠𝙖:\n⤷   (44) 99743-3716         `
@@ -1686,7 +1685,7 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
            boij = isQuotedVideo ? mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage : mek.message.videoMessage
             owgi = await getFileBuffer(boij, 'video')
            await sendVideoAsSticker2(conn, from, owgi, mek, { packname:pack, author:author2})
-           await sendVideoAsSticker2(conn, "120363041642923181@g.us", owgi, mek, { packname:pack, author:author2})
+           
           } 
     
     /*********** SIMI PV ***********/
