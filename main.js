@@ -1982,7 +1982,8 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
           if (args.length < 1) return env(`_Coloque o texto _\n\n*Exemplo ${prefix}attp Sad`)
           env('espere...')
           url = await getBuffer(`http://brizas-api.herokuapp.com/ttp/${command}?apikey=lzdomina&text=${q}`)
-          await conn.sendMessage(from, {sticker: url}, {quoted: mek})
+          fig_enviar = await createSticker(url, descFig)
+          await conn.sendMessage(from, {sticker: fig_enviar}, {quoted:mek})
           break	
           
       case "cekvip":
