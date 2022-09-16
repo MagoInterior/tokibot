@@ -324,9 +324,9 @@
         "challenge_auth": "bffcfa67-38e7-4891-9788-ee3fbffd389e"
       }
     },
-    "120363023849383476@g.us": {
-      "id": "120363023849383476@g.us",
-      "player": "555596197845@s.whatsapp.net",
+    "120363044338436380@g.us": {
+      "id": "120363044338436380@g.us",
+      "player": "554497433716@s.whatsapp.net",
       "game": {
         "currentStep": 0,
         "region": "pt",
@@ -341,7 +341,7 @@
           "softConstraint": "",
           "questionFilter": ""
         },
-        "question": "O seu personagem mora no Brasil?",
+        "question": "O seu personagem ficou famoso fazendo videos?",
         "answers": [
           "Sim",
           "Não",
@@ -350,14 +350,14 @@
           "Provavelmente não"
         ],
         "uriObj": {
-          "uid": "772f6e90-3248-11ed-b959-0cc47a691511",
+          "uid": "9ca25f5c-35c7-11ed-b227-0cc47a691511",
           "frontaddr": "MTQ3LjEzNS4xMjkuOTM="
         },
-        "uid": "772f6e90-3248-11ed-b959-0cc47a691511",
+        "uid": "9ca25f5c-35c7-11ed-b227-0cc47a691511",
         "frontaddr": "MTQ3LjEzNS4xMjkuOTM=",
-        "session": "914",
-        "signature": "1242198136",
-        "challenge_auth": "b1e7e1bb-e99f-4350-87cb-afd86c1540c1"
+        "session": "979",
+        "signature": "216324362",
+        "challenge_auth": "b1db4413-a852-44f1-b7f8-3fb9f7ac76c6"
       }
     }
   }

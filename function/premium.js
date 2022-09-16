@@ -1,5 +1,6 @@
 const fs = require('fs-extra')
 const toMs = require('ms')
+const _dir = JSON.parse(fs.readFileSync('./db/json/premium.json'))
 
 /**
  * Add premium user.
@@ -7,7 +8,7 @@ const toMs = require('ms')
  * @param {string} expired 
  * @param {object} _dir 
  */
-const addPremiumUser = (userId, expired, _dir) => {
+const addPremiumUser = (userId, expired) => {
     const obj = { id: userId, expired: Date.now() + toMs(expired) }
     _dir.push(obj)
     fs.writeFileSync('./db/json/premium.json', JSON.stringify(_dir))
@@ -19,7 +20,7 @@ const addPremiumUser = (userId, expired, _dir) => {
  * @param {object} _dir 
  * @returns {Number}
  */
-const getPremiumPosition = (userId, _dir) => {
+ const getPremiumPosition = (userId) => {
     let position = null
     Object.keys(_dir).forEach((i) => {
         if (_dir[i].id === userId) {
@@ -27,9 +28,12 @@ const getPremiumPosition = (userId, _dir) => {
         }
     })
     if (position !== null) {
-        return position
+        _dir.splice(position, 1)
+        fs.writeFileSync('./db/json/premium.json', JSON.stringify(_dir))
     }
 }
+
+
 
 /**
  * Get premium user expired.
@@ -37,7 +41,7 @@ const getPremiumPosition = (userId, _dir) => {
  * @param {object} _dir 
  * @returns {Number}
  */
-const getPremiumExpired = (userId, _dir) => {
+const getPremiumExpired = (userId) => {
     let position = null
     Object.keys(_dir).forEach((i) => {
         if (_dir[i].id === userId) {
@@ -55,7 +59,7 @@ const getPremiumExpired = (userId, _dir) => {
  * @param {object} _dir 
  * @returns {boolean}
  */
-const checkPremiumUser = (userId, _dir) => {
+const checkPremiumUser = (userId) => {
     let status = false
     Object.keys(_dir).forEach((i) => {
         if (_dir[i].id === userId) {
@@ -69,7 +73,7 @@ const checkPremiumUser = (userId, _dir) => {
  * Constantly checking premium.
  * @param {object} _dir 
  */
-const expiredCheck = (_dir) => {
+const expiredCheck = () => {
     setInterval(() => {
         let position = null
         Object.keys(_dir).forEach((i) => {
@@ -84,7 +88,6 @@ const expiredCheck = (_dir) => {
         }
     }, 1000)
 }
-
 /**
  * Get all premium user ID.
  * @param {object} _dir 

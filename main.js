@@ -25,30 +25,24 @@ const {
   downloadContentFromMessage,
   makeInMemoryStore,
   jidDecode,
+  MessageRetryMap
 } = require("@adiwajshing/baileys");
 
 //MÚDULOS
-let limit = 50;
-const { youtubedl, youtubedlv2, youtubedlv3, merdeka } = require("@bochilteam/scraper");
 const fs = require("fs");
 const config = require('./config.json')
 const P = require("pino");
 const fetch = require("node-fetch");
-const chalk = require("chalk");
 const mimetype = require("mime-types");
 const speed = require("performance-now");
-const ffmpeg = require("fluent-ffmpeg");
-const base64 = require("base-64");
 const moment = require("moment-timezone");
 const { Aki } = require("aki-api");
 const axios = require("axios");
 const ms = require("parse-ms");
 const request = require("request-promise");
-const cheerio = require("cheerio");
 const { color } = require('./lib/color');
 const toMs = require("ms");
 const thiccysapi = require("textmaker-thiccy");
-const hx = require("hxz-api");
 const gis = require("g-i-s");
 const googleIt = require("google-it");
 const linkfy = require("linkifyjs");
@@ -59,10 +53,7 @@ const { EmojiAPI } = require("emoji-api");
 const emoji = new EmojiAPI();
 const os = require("os");
 const phaticusthiccy = require("@phaticusthiccy/open-apis");
-const store = makeInMemoryStore({
-  logger: P().child({ level: "debug", stream: "store" }),
-});
-const { WSF, createSticker } = require("wa-sticker-formatter");
+const { createSticker } = require("wa-sticker-formatter");
 const { exec } = require('child_process')
 const Downloader = require("nodejs-file-downloader");
 // LIBS
@@ -72,9 +63,6 @@ const level = require("./lib/level.js");
 const webp_mp4 = require("./db/js/webp_mp4.js");
 const { getRandom, runtime, formatp, getBuffer } = require("./lib/myfunc");
 const { getAdmins, getMembers } = require("./lib/utils");
-const { webp2gifFile } = require("./lib/gif22.js");
-const ytmate = require('./lib/ytmate')
-const tiktok = require("./lib/tiktok.js");
 const { data, data2, data3, hora, hora2 } = require("./lib/functions.js");
 const {
   addToken,
@@ -82,56 +70,26 @@ const {
   getAllTokens,
   getTokenByNumber,
 } = require("./lib/fichas.js");
-const { sendVideoAsSticker, sendImageAsSticker } = require('./lib/rename.js');
-const { sendVideoAsSticker2, sendImageAsSticker2 } = require('./lib/rename2.js');
-
+const { sendVideoAsSticker } = require('./lib/rename.js');
 //ARQUIVOS JSON
 
 const { state, saveState } = useSingleFileAuthState("auth-info-multi.json");
-const bemvindo2 = JSON.parse(fs.readFileSync("./db/json/bemvindo2.json"));
-const _level = JSON.parse(fs.readFileSync("./db/json/level.json"));
-const simipv = JSON.parse(fs.readFileSync("./db/json/simipv.json"));
-const countMessage = JSON.parse(fs.readFileSync("./db/json/countmsg.json"));
-const _premium = JSON.parse(fs.readFileSync("./db/json/premium.json"));
-const premium = require("./function/premium.js");
-const mensagem = JSON.parse(fs.readFileSync("./db/json/menssagem.json"));
-const dinheiro = JSON.parse(fs.readFileSync("./db/json/dinheiro.json")); //ONDE FICA ARMAZENADO OS DADOS
-const antifake = JSON.parse(fs.readFileSync("./db/json/antifake.json"));
-const bye_group = JSON.parse(fs.readFileSync("./db/json/byegp.json"));
-const bye_group2 = JSON.parse(fs.readFileSync("./db/json/byegp2.json"));
-const welcome_group2 = JSON.parse(fs.readFileSync("./db/json/welcomegp2.json"));
-const welcome_group = JSON.parse(fs.readFileSync("./db/json/welcomegp.json"));
-const termos = JSON.parse(fs.readFileSync("./db/json/termos.json"));
-const welkom = JSON.parse(fs.readFileSync("./db/json/welkom.json"));
-const welkom2 = JSON.parse(fs.readFileSync("./db/json/vacilo.json"));
-const antilinkgp = JSON.parse(fs.readFileSync("./db/json/antilinkgp.json"));
-const antilink = JSON.parse(fs.readFileSync("./db/json/antilink.json"));
-// const profissao_group = JSON.parse(fs.readFileSync('./db/json/profissão.json'));
-const simi = JSON.parse(fs.readFileSync("./db/json/simi.json"));
-const ban = JSON.parse(fs.readFileSync("./db/json/banned.json"));
-const akinator = JSON.parse(fs.readFileSync("./db/json/akinator.json"));
-const adeuscara = JSON.parse(fs.readFileSync("./db/json/adeuscara.json"));
-const antiviewonce = JSON.parse(fs.readFileSync("./db/json/antiviewonce.json"));
-const game = JSON.parse(fs.readFileSync("./db/json/game.json"));
-const nsfw = JSON.parse(fs.readFileSync("./db/json/nsfw.json"));
-const antipala = JSON.parse(fs.readFileSync("./db/json/antipala.json"));
+const { bemvindo2, _level,antipv,countMessage, _premium, premium, mensagem, dinheiro, antifake,bye_group, bye_group2, welcome_group, termos, welkom, welkom2, antilink, simi, akinator, adeuscara, antiviewonce, game, nsfw, antipala} = require('./func.js')
+
 
 //FIM
-
-//RPG
-
-const nomerpg = JSON.parse(fs.readFileSync("./db/json/nomerpg.json"));
-const profissao = JSON.parse(fs.readFileSync("./db/json/profissao.json"));
-const rancarpg = JSON.parse(fs.readFileSync("./db/json/rancca.json"));
 
 //PARTE JS
 
 const { convertSticker } = require("./lib/swm.js");
 
 blocked = [];
-BotName = "Tomioka-MD";
-prefix = ["#", "$", "/", "!", "&", "."];
-prefixobot = ["/"];
+BotName = config.nomeBot
+prefix = config.prefix
+pack = config.pack
+author = config.author
+keyale = config.keyale
+banChats = config.banChats 
 
 global.blocked;
 
@@ -145,21 +103,22 @@ const vcard =
 
   const descFig = {
     type: 'full',
-    
-    pack: `⬔ ۪࣪ 🌼 ׄ₊𝕮𝖗𝖎𝖆𝖉𝖔𝖗:\n⤷   ꪶ͢͢͢𝐓𝐈͢𝚯 𝐓𝚯͢𝐌𝐈͢𝚯𝐊𝜟ꫂ\n\n꒺ ׄ₊👑̷ 𝙁𝙖𝙡𝙖𝙧 𝙘𝙤𝙢 𝙤 𝙩𝙤𝙢𝙞𝙤𝙠𝙖:\n⤷   (44) 99743-3716         `,
-    author: `⬔ ۪࣪ ✨ 𝓼𝓲𝓽𝓮:\nlinktr.ee/Tokibot    ↲\n\n꒺ ׄ₊🤖̷ 𝘽𝙊𝙏:\n(44) 99822-0867    ↲`,
+    pack: `${pack}`,
+    author: `${author}`,
     categories: [
     '🌹'
     ]
     }
 
 function connect() {
-  const conn = makeWASocket({
-    printQRInTerminal: true,
-    logger: P({ level: "silent" }),
-    defaultQueryTimeoutMs: undefined,
-    auth: state,
-  });
+ const conn = makeWASocket({
+logger: P({ level: 'silent' }),
+printQRInTerminal: true,
+auth: state,
+msgRetryCounterMap: MessageRetryMap,
+defaultQueryTimeoutMs: undefined, 
+keepAliveIntervalMs: 1000 * 60 * 10 * 3
+})
 
   conn.ev.on("connection.update", (update) => {
     if (update.connection == "close") {
@@ -519,49 +478,16 @@ function connect() {
     function env(text) {
       conn.sendMessage(from, { text: text }, { quoted: mek });
     }
-    function env2(text, emoji){
-  
-      env(text);
-     
-      const sendReaction2 = {
-         react: {
-             text: null, 
-             key: mek.key
-         }
-     }
-     const sendReagir2 = conn.sendMessage(from, sendReaction2)
-     
-     setTimeout(() =>{  const sendReactionn2 = {
-         react: {
-             text: emoji, 
-             key: mek.key
-         }
-     }
-     const sendReagirr2 = conn.sendMessage(from, sendReactionn2) }, 1)
-     }
-     function env3(text, text3, emoji){
-  
-      sendButtonText(from, text, text3, {quoted: mek});
-     
-      const sendReaction3 = {
-         react: {
-             text: null, 
-             key: mek.key
-         }
-     }
-     const sendReagir3 = conn.sendMessage(from, sendReaction3)
-     
-     setTimeout(() =>{  const sendReactionn3 = {
-         react: {
-             text: emoji, 
-             key: mek.key
-         }
-     }
-     const sendReagirr3 = conn.sendMessage(from, sendReactionn3) }, 1)
-     }
-    const envJSON = (text) => {
-      env(JSON.stringify(text, null, 2));
-    };
+    var sendBimg = async (id, img1, text1, desc1, but = [], vr) => {
+      buttonMessage = {
+      image: {url: img1},
+      caption: text1,
+      footerText: desc1,
+      buttons: but,
+      headerType: 4
+      }
+      conn.sendMessage(id, buttonMessage, {quoted: mek})
+      }
 
     function mention(text, quoted = true) {
       conn.sendMessage(
@@ -574,11 +500,8 @@ function connect() {
 
     const botN = conn.user.id.replace(/:[0-9]+/gi, "");
     const isBot = mek.key.fromMe;
-    const owner = ["5544997433716@s.whatsapp.net"];
-    const mods = ["554497433716@s.whatsapp.net"];
-    const mito = "17144092135@s.whatsapp.net";
-    const vini = ["5519983528567@s.whatsapp.net"];
-    const akashi = "559291687728@s.whatsapp.net";
+    const owner = ["554497433716@s.whatsapp.net"];
+    const rayssa = ["554497239322@s.whatsapp.net"];
 
     const isGroup = mek.key.remoteJid.endsWith("g.us");
     const metadata = isGroup ? await conn.groupMetadata(from) : {};
@@ -676,20 +599,14 @@ function connect() {
     for(let obj of profissao_group) groupTabela.push(obj.jid)*/
 
     //FRASES DE USUÁRIOS
-    const isMito = sender != mito;
-    const isAkashi = sender != akashi;
-    const isVini = sender != vini;
-    const keyale = config.keyale
-    const isOwner = owner.indexOf(sender) < 0;
-    const isMods = mods.indexOf(sender) < 0;
-    const isPremium = premium.checkPremiumUser(sender, _premium);
-    const isSimiPv = simipv.includes(sender);
+
+    const isDono = owner.includes(sender);
+    const isRayssa = rayssa.includes(sender);
+    const isPremium = premium.checkPremiumUser(sender, _premium);	
     const isAdmins = isGroup ? getAdmins(groupMembers) : "";
     const isMemberAdmin = isGroup ? isAdmins.indexOf(sender) > -1 : false;
     const isBotAdm = isGroup ? isAdmins.indexOf(botN) > -1 : false;
     const allMembers = isGroup ? getMembers(groupMembers) : [];
-    const isWelkom = isGroup ? welkom.includes(from) : false;
-    const isWelkom2 = isGroup ? welkom2.includes(from) : true;
     const isAntiPala = isGroup ? antipala.includes(from) : false;
     const isNsfw = isGroup ? nsfw.includes(from) : true;
     const isGame = isGroup ? game.includes(from) : false;
@@ -698,22 +615,24 @@ function connect() {
     const isSimi = isGroup ? simi.includes(from) : false;
     const isLevelingOn = isGroup ? _level.includes(from) : false;
     const isAntiLink = isGroup ? antilink.includes(from) : false;
-    const isAntilinkgp = isGroup ? antilinkgp.includes(from) : false;
-    const isBanned = ban.includes(sender);
     const isCmd = prefix.indexOf(body.slice(0, 1)) > -1;
-    const senderfix = mek.key.fromMe ? tomioka.user.jid : isGroup ? mek.participant : mek.key.remoteJid
+    const isComum = bemvindo2.includes(sender) ? type === 'videoMessage' || type === 'imageMessage' : true
     const mentions = (teks, memberr, id) => {
       id == null || id == undefined || id == false
         ? conn.sendMessage(from, { text: teks.trim(), mentions: memberr })
         : conn.sendMessage(from, { text: teks.trim(), mentions: memberr });
     };
-    const createMessageByContent = (id, content) => {
-      conn.relayMessage(id, content, {
-        messageId: require("@adiwajshing/baileys").generateMessageID(),
-        additionalAttributes: {},
-      });
+
+    const getFileBuffer = async (mediakey, MediaType) => {
+      const stream = await downloadContentFromMessage(mediakey, MediaType);
+
+      let buffer = Buffer.from([]);
+      for await (const chunk of stream) {
+        buffer = Buffer.concat([buffer, chunk]);
+      }
+      return buffer;
     };
-    const messagesC = pes.slice(0).trim().split(/ +/).shift().toLowerCase();
+
     const isUrl = (url) => {
       if (linkfy.find(url)[0]) return true;
       return false;
@@ -768,7 +687,50 @@ function connect() {
 
     const isQuotedProduct =
       type === "extendedTextMessage" && content.includes("productMessage");
-      
+
+       //autofigu e ignorar comando não premium 
+    if(!isRayssa && type === "imageMessage") {
+      rane = getRandom('.'+'webp')
+      buffimg = await getFileBuffer(mek.message.imageMessage, 'image')
+      fig_enviar = await createSticker(buffimg, descFig)
+await conn.sendMessage(from, {sticker: fig_enviar})
+
+    } else if (!isRayssa && type === "videoMessage") {
+       boij = isQuotedVideo ? mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage : mek.message.videoMessage
+        owgi = await getFileBuffer(boij, 'video')
+        pack = config.pack
+        author = config.author
+       await sendVideoAsSticker(conn, from, owgi, mek, { packname: pack, author:author})
+
+       
+      } else if (isRayssa && type === "imageMessage") {
+        rane = getRandom('.'+'webp')
+      buffimg = await getFileBuffer(mek.message.imageMessage, 'image')
+    const rayfig = {
+type: 'full',
+pack: `Rapkcz ray🤍`,
+author: ``,
+categories: [
+'🌹'
+]
+}
+const fig_enviar = await createSticker(buffimg, rayfig)
+conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
+
+      } else if (isRayssa && type === "videoMessage") {
+        var pack = `Rapkcz ray🤍`
+        boij = isQuotedVideo ? mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage : mek.message.videoMessage
+         owgi = await getFileBuffer(boij, 'video')
+        await sendVideoAsSticker(conn, from, owgi, mek, { packname:pack })
+      }
+
+
+    if(!isGroup && banChats === true && !isDono && !isPremium && !isComum) return env('Olá esse bot ficou privado e só fara figurinhas agr, se quiser vê-lo completo precisa comprar com o criador o acesso vip que terá acesso completo do bot\n\nsegue o link abaixo..\nwa.me/554497433716') 
+     bemvindo2.push(sender) 
+     fs.writeFileSync("./db/json/bemvindo2.json", JSON.stringify(bemvindo2));
+    
+    const atibot = mek.isBaileys
+      if (atibot === true) return 
 
  
   // ENVIAR BOTÃO COM TEXTO
@@ -779,7 +741,7 @@ function connect() {
   buttons: but,
   headerType: 1
   }
-  conn.sendMessage(id, buttonMessage, {quoted: vr})
+  conn.sendMessage(id, buttonMessage, {quoted: mek})
   }
   
   
@@ -811,16 +773,6 @@ function connect() {
       });
     }
 
-    const getFileBuffer = async (mediakey, MediaType) => {
-      const stream = await downloadContentFromMessage(mediakey, MediaType);
-
-      let buffer = Buffer.from([]);
-      for await (const chunk of stream) {
-        buffer = Buffer.concat([buffer, chunk]);
-      }
-      return buffer;
-    };
-
     const fetchJson = (url) => {
       return fetch(url)
         .then((response) => response.json())
@@ -845,28 +797,7 @@ function connect() {
       return mentioneds;
     };
 
-    //===============(APAGA MENSAGEM AUTOMÁTICO)=============\\
-
-    /*if (mek.key.participant == '558183341993@s.whatsapp.net') {
-        const key = {
-          remoteJid: from,
-          fromMe: conn.user.id.replace(/:[0-9]+/gi, '') == mek.key.participant,
-          id: mek.key.id,
-          participant: mek.key.participant
-        };
-        conn.sendMessage(from, {delete: key});
-      }
-    
-    /*if (from == '120363043790271792@g.us ') {
-        const key = {
-          remoteJid: from,
-          fromMe: conn.user.id.replace(/:[0-9]+/gi, '') == mek.key.participant,
-          id: mek.key.id,
-          participant: mek.key.participant
-        };
-        conn.sendMessage(from, {delete: key});
-      }*/
-
+   
     //===============(AUTO-BAN)=============\\
     const dbids = [];
     for (i = 0; i < adeuscara.length; ++i) {
@@ -875,195 +806,6 @@ function connect() {
     const isAdeusCara = isGroup && dbids.indexOf(from) >= 0 ? true : false;
 
     //======================================\\
-    letcentralrpg = "120363023849383476@g.us";
-
-    //ARMADURA
-    const addProfissaoId = (userId, chatId) => {
-      const obj = {
-        grupo: chatId,
-        pessoa: userId,
-        profissao: "Camisa simples",
-      };
-      profissao.push(obj);
-      fs.writeFileSync("./db/json/profissao.json", JSON.stringify(profissao));
-    };
-    const addProfissao = (userId, chatId, quanto) => {
-      let position = false;
-      Object.keys(profissao).forEach((i) => {
-        if (profissao[i].pessoa === userId && profissao[i].grupo === chatId) {
-          position = i;
-        }
-      });
-      if (position !== false) {
-        profissao[position].profissao = quanto;
-        fs.writeFileSync("./db/json/profissao.json", JSON.stringify(profissao));
-      }
-    };
-    const getProfissao = (userId, chatId) => {
-      let position = false;
-      Object.keys(profissao).forEach((i) => {
-        if (profissao[i].pessoa === userId && profissao[i].grupo === chatId) {
-          position = i;
-        }
-      });
-      if (position !== false) {
-        return profissao[position].profissao;
-      }
-    };
-    const getProfissao2 = (userId, chatId) => {
-      let position = false;
-      Object.keys(profissao).forEach((i) => {
-        if (profissao[i].pessoa === userId && profissao[i].grupo === chatId) {
-          position = i;
-        }
-      });
-      if (position !== false) {
-        return profissao[position];
-      }
-    };
-
-    if (isGroup && !mek.key.fromMe) {
-      cg = getProfissao2(
-        sender.includes(":")
-          ? sender.split(":")[0] + "@s.whatsapp.net"
-          : sender,
-        letcentralrpg
-      );
-      if (cg == undefined)
-        addProfissaoId(
-          sender.includes(":")
-            ? sender.split(":")[0] + "@s.whatsapp.net"
-            : sender,
-          letcentralrpg
-        );
-    }
-
-    //NOME
-    const addNomerpg = (userId, chatId) => {
-      const obj = {
-        grupo: chatId,
-        pessoa: userId,
-        nomerpg: "*Nome:* Desconhecido\n*Idade:* Desconhecida",
-      };
-      nomerpg.push(obj);
-      fs.writeFileSync("./db/json/nomerpg.json", JSON.stringify(nomerpg));
-    };
-    const addNome = (userId, chatId, quanto) => {
-      let position = false;
-      Object.keys(nomerpg).forEach((i) => {
-        if (nomerpg[i].pessoa === userId && nomerpg[i].grupo === chatId) {
-          position = i;
-        }
-      });
-      if (position !== false) {
-        nomerpg[position].nomerpg = quanto;
-        fs.writeFileSync("./db/json/nomerpg.json", JSON.stringify(nomerpg));
-      }
-    };
-    const getNome = (userId, chatId) => {
-      let position = false;
-      Object.keys(nomerpg).forEach((i) => {
-        if (nomerpg[i].pessoa === userId && nomerpg[i].grupo === chatId) {
-          position = i;
-        }
-      });
-      if (position !== false) {
-        return nomerpg[position].nomerpg;
-      }
-    };
-    const getNome2 = (userId, chatId) => {
-      let position = false;
-      Object.keys(nomerpg).forEach((i) => {
-        if (nomerpg[i].pessoa === userId && nomerpg[i].grupo === chatId) {
-          position = i;
-        }
-      });
-      if (position !== false) {
-        return nomerpg[position];
-      }
-    };
-
-    if (isGroup && !mek.key.fromMe) {
-      cg = getNome2(
-        sender.includes(":")
-          ? sender.split(":")[0] + "@s.whatsapp.net"
-          : sender,
-        letcentralrpg
-      );
-      if (cg == undefined)
-        addNomerpg(
-          sender.includes(":")
-            ? sender.split(":")[0] + "@s.whatsapp.net"
-            : sender,
-          letcentralrpg
-        );
-    }
-
-    //RANÇA
-    const addRancarpg = (userId, chatId) => {
-      const obj = {
-        grupo: chatId,
-        pessoa: userId,
-        rancarpg: "*Rança:* Desconhecido\n*Região:* Desconhecida",
-      };
-      rancarpg.push(obj);
-      fs.writeFileSync("./db/json/rancca.json", JSON.stringify(rancarpg));
-    };
-
-    const addRanca = (userId, chatId, quanto) => {
-      let position = false;
-      Object.keys(rancarpg).forEach((i) => {
-        if (rancarpg[i].pessoa === userId && rancarpg[i].grupo === chatId) {
-          position = i;
-        }
-      });
-      if (position !== false) {
-        rancarpg[position].rancarpg = quanto;
-        fs.writeFileSync("./db/json/rancca.json", JSON.stringify(rancarpg));
-      }
-    };
-
-    const getRanca = (userId, chatId) => {
-      let position = false;
-      Object.keys(rancarpg).forEach((i) => {
-        if (rancarpg[i].pessoa === userId && rancarpg[i].grupo === chatId) {
-          position = i;
-        }
-      });
-      if (position !== false) {
-        return rancarpg[position].rancarpg;
-      }
-    };
-
-    const getRanca2 = (userId, chatId) => {
-      let position = false;
-      Object.keys(rancarpg).forEach((i) => {
-        if (rancarpg[i].pessoa === userId && rancarpg[i].grupo === chatId) {
-          position = i;
-        }
-      });
-      if (position !== false) {
-        return rancarpg[position];
-      }
-    };
-
-    if (isGroup && !mek.key.fromMe) {
-      cg = getRanca2(
-        sender.includes(":")
-          ? sender.split(":")[0] + "@s.whatsapp.net"
-          : sender,
-        letcentralrpg
-      );
-      if (cg == undefined)
-        addRancarpg(
-          sender.includes(":")
-            ? sender.split(":")[0] + "@s.whatsapp.net"
-            : sender,
-          letcentralrpg
-        );
-    }
-
-    //
 
     // Automate
 
@@ -1098,7 +840,7 @@ function connect() {
       ) {
         if (budy.match(linkgppp)) return env("Link de nosso grupo 🙂");
         if (mek.key.fromMe) return;
-        if (isMemberAdmin && isOwner) return;
+        if (!isMemberAdmin && !isDono) return;
         env("Adeus bosta");
         conn.groupParticipantsUpdate(from, [sender], "remove");
       }
@@ -1613,107 +1355,11 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
     //await conn.sendReadReceipt(from, mek.key.participant, [mek.key.id]);
 
     //=================================\\
-    if (!isCmd && !isGroup && !bemvindo2.includes(sender)) {
-      var menuzin = ` _*Olá ${pushname}*_
-*Prazer em conhecê-lo(a), me chamo Toki Bot.😊*
-_Sou uma inteligência artificial 100% automatizado para ajudar em todo que for possível nessa plataforma._
-
-*Estou a sua disposição o dia todo, 24h horas por dia para te ajudar!*
-
-Tenho +300 funções disponiveis para você, dentre elas são:
-
-✅️ Fazer figurinhas
-✅️ Baixar músicas/videos
-✅ Logos personalizadas
-✅️ Gerenciamento de grupos
-✅️ Edições e envio de fotos
-✅ Mini jogos
-✅ Pesquisas 
-
-*✨❤️Espero que goste e aproveite bastante! ❤️✨*
-
-A baixo segue o link do grupo oficial, onde você pode acompanhar as novidades, e dar as suas sugestões!
-
-Obs: 
--para fazer figurinhas mande a midia para depois comentar com /s para ele identificar!
-se não fizer isso e mandar direto na foto ele não identifica e cai...
-
-‼️ _*LEIA ATENTAMENTE AS REGRAS PARA EVITAR BANIMENTO*_ ‼`;
-      conn.sendMessage(
-        from,
-        {
-          text: menuzin,
-          footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
-          buttons: [
-            {
-              buttonId: `${prefixobot}menu`,
-              buttonText: { displayText: "MENU PRINCIPAL 📖" },
-              type: 1,
-            },
-            {
-              buttonId: `${prefixobot}menufigu`,
-              buttonText: { displayText: "MENU FIGURINHA 🧩" },
-              type: 1,
-            },
-            {
-              buttonId: `${prefixobot}regras`,
-              buttonText: { displayText: "REGRAS ⚠️" },
-              type: 1,
-            },
-          ],
-        },
-        { quoted: whatsapp }
-      );
-
-      bemvindo2.push(sender);
-      fs.writeFileSync("./db/json/bemvindo2.json", JSON.stringify(bemvindo2));
-    }
-
-     //autofigu
- 
-     
-        if(type === "imageMessage") {
-          rane = getRandom('.'+'webp')
-          buffimg = await getFileBuffer(mek.message.imageMessage, 'image')
-        
-  const fig_enviar = await createSticker(buffimg, descFig)
-  conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
   
-        } else if (type === "videoMessage") {
-          var pack = `⬔ ۪࣪ 🌼 ׄ₊𝕮𝖗𝖎𝖆𝖉𝖔𝖗:\n⤷   ꪶ͢͢͢𝐓𝐈͢𝚯 𝐓𝚯͢𝐌𝐈͢𝚯𝐊𝜟ꫂ\n\n꒺ ׄ₊👑̷ 𝙁𝙖𝙡𝙖𝙧 𝙘𝙤𝙢 𝙤 𝙩𝙤𝙢𝙞𝙤𝙠𝙖:\n⤷   (44) 99743-3716         `
-           var author2 = `⬔ ۪࣪ ✨ 𝓼𝓲𝓽𝓮:\nlinktr.ee/Tokibot    ↲\n\n꒺ ׄ₊🤖̷ 𝘽𝙊𝙏:\n(44) 99822-0867    ↲`
-           boij = isQuotedVideo ? mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage : mek.message.videoMessage
-            owgi = await getFileBuffer(boij, 'video')
-           await sendVideoAsSticker2(conn, from, owgi, mek, { packname:pack, author:author2})
-           
-          } 
-    
-    /*********** SIMI PV ***********/
+ 
+     if (body.length >= 3000) {
 
-    /*if (!isCmd && !isGroup && !isSimiPv && !simipv.includes(sender)) {
-    
-    let simii = args.join(" ") 
-    let simihpv = await fetchJson(`https://api-sv2.simsimi.net/v2/?text=${simii}&lc=pt&cf=false`)
-    env(simihpv.success);
-    fs.writeFileSync('./db/json/simipv.json', JSON.stringify(simipv))
-    
-    if(type == 'imageMessage') return 
-    if(type == 'audioMessage') return 
-    if(type == 'stickerMessage') return   
-    if(mek.key.fromMe) return 
-    
-    }
-
-    if (from.endsWith('@s.whatsapp.net') && !isCmd) {
-      try {
-        const res = await fetchJson(`https://api-sv2.simsimi.net/v2/?text=${body}&lc=pt&cf=false`);
-        env(res.success);
-      } catch (a) {
-        conn.sendMessage(owner, { text: `erro no simi ↓\n\n${a.stack}` });
-      }
-    }
-    */
-
+     }
     switch (argsButton[0]) {
       case "finaki":
         if (argsButton[1] == "nao") return env("*Puxa não foi desta vez 😔*");
@@ -1746,27 +1392,27 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
               title: "Opções",
               rows: [
                 {
-                  rowId: `${prefixobot}respaki 0`,
+                  rowId: `${prefix}respaki 0`,
                   title: "Sim",
                   description: "",
                 },
                 {
-                  rowId: `${prefixobot}respaki 1`,
+                  rowId: `${prefix}respaki 1`,
                   title: "Não",
                   description: "",
                 },
                 {
-                  rowId: `${prefixobot}respaki 2`,
+                  rowId: `${prefix}respaki 2`,
                   title: "Não sei",
                   description: "",
                 },
                 {
-                  rowId: `${prefixobot}respaki 3`,
+                  rowId: `${prefix}respaki 3`,
                   title: "Provavelmente sim",
                   description: "",
                 },
                 {
-                  rowId: `${prefixobot}respaki 4`,
+                  rowId: `${prefix}respaki 4`,
                   title: "Provavelmente não",
                   description: "",
                 },
@@ -1817,7 +1463,7 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
               index: 3,
               quickReplyButton: {
                 displayText: "teste",
-                id: `${prefixobot}tac`,
+                id: `${prefix}tac`,
               },
             },
           ],
@@ -1835,195 +1481,195 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
 │
 │Toki-Beta MD
 │Seu dispositivo: ${adivinha}
-│Reportar erro *${prefixobot}reporte <erro>
+│Reportar erro *${prefix}reporte <erro>
 ╞═⟪ *STICKER* ⟫════
 │
-│➪ *${prefixobot}figupacks*
-│➪ *${prefixobot}attp*
-│➪ *${prefixobot}toimg*
-│➪ *${prefixobot}togif*
+│➪ *${prefix}figupacks*
+│➪ *${prefix}attp*
+│➪ *${prefix}toimg*
+│➪ *${prefix}togif*
 │
 ╞═⟪ *ADMINISTRAÇÃO* ⟫════
 │
-│➪ *${prefixobot}rankgm*
-│➪ *${prefixobot}setnome*
-│➪ *${prefixobot}setdesc*
-│➪ *${prefixobot}notreleaseconfig*
-│➪ *${prefixobot}releaseconfig*
-│➪ *${prefixobot}closed*
-│➪ *${prefixobot}open*
-│➪ *${prefixobot}notif*
-│➪ *${prefixobot}promote*
-│➪ *${prefixobot}ban*
-│➪ *${prefixobot}demote*
-│➪ *${prefixobot}add*
-│➪ *${prefixobot}rstlink*
-│➪ *${prefixobot}leave*
+│➪ *${prefix}rankgm*
+│➪ *${prefix}setnome*
+│➪ *${prefix}setdesc*
+│➪ *${prefix}notreleaseconfig*
+│➪ *${prefix}releaseconfig*
+│➪ *${prefix}closed*
+│➪ *${prefix}open*
+│➪ *${prefix}notif*
+│➪ *${prefix}promote*
+│➪ *${prefix}ban*
+│➪ *${prefix}demote*
+│➪ *${prefix}add*
+│➪ *${prefix}rstlink*
+│➪ *${prefix}leave*
 │
 ╞═⟪ *ADMINISTRAÇÃO* ⟫════
 │
-│➪ *${prefixobot}antilink [1/0]*
-│➪ *${prefixobot}antifake [1/0]*
-│➪ *${prefixobot}game [1/]*
-│➪ *${prefixobot}nsfw [1/]*
-│➪ *${prefixobot}antipala [1/]*
+│➪ *${prefix}antilink [1/0]*
+│➪ *${prefix}antifake [1/0]*
+│➪ *${prefix}game [1/]*
+│➪ *${prefix}nsfw [1/]*
+│➪ *${prefix}antipala [1/]*
 │
 ╞═⟪ *AKINATOR* ⟫════
 │
-│➪ *${prefixobot}akinator* 
-│➪ *${prefixobot}resetaki*
+│➪ *${prefix}akinator* 
+│➪ *${prefix}resetaki*
 │
 ╞═⟪ *JOGOS* ⟫════
 │
-│➪ *${prefixobot}diga*
+│➪ *${prefix}diga*
 │
 ╞═⟪ *JOGOS* ⟫════
 │
-│➪ *${prefixobot}tac*
-│➪ *${prefixobot}euja*
-│➪ *${prefixobot}rr*
-│➪ *${prefixobot}round6*
-│➪ *${prefixobot}slot*
-│➪ *${prefixobot}slot2*
+│➪ *${prefix}tac*
+│➪ *${prefix}euja*
+│➪ *${prefix}rr*
+│➪ *${prefix}round6*
+│➪ *${prefix}slot*
+│➪ *${prefix}slot2*
 │
 ╞═⟪ *ENTRETENIMENTO* ⟫════
 │
-│➪ *${prefixobot}rankbaiano*
-│➪ *${prefixobot}ranklindo*
-│➪ *${prefixobot}ranknazista*
-│➪ *${prefixobot}rankgostoso*
-│➪ *${prefixobot}rankfeio*
-│➪ *${prefixobot}rankmacaco*
-│➪ *${prefixobot}rankgay*
-│➪ *${prefixobot}rankcorno*
-│➪ *${prefixobot}perfil*
-│➪ *${prefixobot}abraçar*
-│➪ *${prefixobot}beijar*
-│➪ *${prefixobot}tapa*
-│➪ *${prefixobot}chance* 
-│➪ *${prefixobot}gay* [@]
-│➪ *${prefixobot}pau*
-│➪ *${prefixobot}gado* [@]
-│➪ *${prefixobot}morte*
+│➪ *${prefix}rankbaiano*
+│➪ *${prefix}ranklindo*
+│➪ *${prefix}ranknazista*
+│➪ *${prefix}rankgostoso*
+│➪ *${prefix}rankfeio*
+│➪ *${prefix}rankmacaco*
+│➪ *${prefix}rankgay*
+│➪ *${prefix}rankcorno*
+│➪ *${prefix}perfil*
+│➪ *${prefix}abraçar*
+│➪ *${prefix}beijar*
+│➪ *${prefix}tapa*
+│➪ *${prefix}chance* 
+│➪ *${prefix}gay* [@]
+│➪ *${prefix}pau*
+│➪ *${prefix}gado* [@]
+│➪ *${prefix}morte*
 │
 ╞═⟪ *BANCO RUBY* ⟫════
 │
-│➪ *${prefixobot}saldo*
-│➪ *${prefixobot}pix*
-│➪ *${prefixobot}profissao*
+│➪ *${prefix}saldo*
+│➪ *${prefix}pix*
+│➪ *${prefix}profissao*
 │
 ╞═⟪ *LOGOS* ⟫════
 │
-│➪ *${prefixobot}logos* nome
-│➪ *${prefixobot}loli
+│➪ *${prefix}logos* nome
+│➪ *${prefix}loli
 │
 ╞═⟪ *ESCRITAS* ⟫════
 │
-│➪ *${prefixobot}liza*
-│➪ *${prefixobot}bart*
-│➪ *${prefixobot}monica*
-│➪ *${prefixobot}bolsonaro*
-│➪ *${prefixobot}papel* 
-│➪ *${prefixobot}plaquinha*
+│➪ *${prefix}liza*
+│➪ *${prefix}bart*
+│➪ *${prefix}monica*
+│➪ *${prefix}bolsonaro*
+│➪ *${prefix}papel* 
+│➪ *${prefix}plaquinha*
 │
 ╞═⟪ *HENTA +18* ⟫════
 │
-│➪ *${prefixobot}ahegao*
-│➪ *${prefixobot}hentai*
-│➪ *${prefixobot}ero*
-│➪ *${prefixobot}pussyanime*
-│➪ *${prefixobot}masturbation*
+│➪ *${prefix}ahegao*
+│➪ *${prefix}hentai*
+│➪ *${prefix}ero*
+│➪ *${prefix}pussyanime*
+│➪ *${prefix}masturbation*
 │
 ╞═⟪ *HENTA LITE* ⟫════
 │
-│➪ *${prefixobot}waifu*
-│➪ *${prefixobot}shinobu*
-│➪ *${prefixobot}thighs*
+│➪ *${prefix}waifu*
+│➪ *${prefix}shinobu*
+│➪ *${prefix}thighs*
 │
 ╞═⟪ *+18* ⟫════
 │
-│➪ *${prefixobot}utaka*
-│➪ *${prefixobot}mia*
-│➪ *${prefixobot}pussy*
-│➪ *${prefixobot}malkova*
-│➪ *${prefixobot}belle*
+│➪ *${prefix}utaka*
+│➪ *${prefix}mia*
+│➪ *${prefix}pussy*
+│➪ *${prefix}malkova*
+│➪ *${prefix}belle*
 │
 ╞═⟪ *IMAGEM* ⟫════
 │
-│➪ *${prefixobot}placas*
-│➪ *${prefixobot}coffee*
-│➪ *${prefixobot}personagem
-│➪ *${prefixobot}metadinha*
+│➪ *${prefix}placas*
+│➪ *${prefix}coffee*
+│➪ *${prefix}personagem
+│➪ *${prefix}metadinha*
 │
 ╞═⟪ *VÍDEO* ⟫════
 │
-│➪ *${prefixobot}saycat*
+│➪ *${prefix}saycat*
 │
 ╞═⟪ *DONWLOADS* ⟫════
 │
-│➪ *${prefixobot}play*
-│➪ *${prefixobot}ytmp3* 
-│➪ *${prefixobot}ytaudio2* 
-│➪ *${prefixobot}ytmp4*
-│➪ *${prefixobot}ytmp42*
-│➪ *${prefixobot}ytsrc* 
-│➪ *${prefixobot}Instagram*
-│➪ *${prefixobot}tiktok*
-│➪ *${prefixobot}twitter*
-│➪ *${prefixobot}facebook*
+│➪ *${prefix}play*
+│➪ *${prefix}ytmp3* 
+│➪ *${prefix}ytaudio2* 
+│➪ *${prefix}ytmp4*
+│➪ *${prefix}ytmp42*
+│➪ *${prefix}ytsrc* 
+│➪ *${prefix}Instagram*
+│➪ *${prefix}tiktok*
+│➪ *${prefix}twitter*
+│➪ *${prefix}facebook*
 │
 ╞═⟪ *PESQUISAR* ⟫════
 │
-│➪ *${prefixobot}jogo*
-│➪ *${prefixobot}google*
-│➪ *${prefixobot}achar*
-│➪ *${prefixobot}wallpaper*
-│➪ *${prefixobot}celular*
-│➪ *${prefixobot}wikipedia*
-│➪ *${prefixobot}pinterest*
-│➪ *${prefixobot}cep*
-│➪ *${prefixobot}ddd*
-│➪ *${prefixobot}cep*
+│➪ *${prefix}jogo*
+│➪ *${prefix}google*
+│➪ *${prefix}achar*
+│➪ *${prefix}wallpaper*
+│➪ *${prefix}celular*
+│➪ *${prefix}wikipedia*
+│➪ *${prefix}pinterest*
+│➪ *${prefix}cep*
+│➪ *${prefix}ddd*
+│➪ *${prefix}cep*
 │
 ╞═⟪ *PREMIUM* ⟫════
 │
-│➪ *${prefixobot}cc*
-│➪ *${prefixobot}cc2*
-│➪ *${prefixobot}gerarcpf*
-│➪ *${prefixobot}gnum*
-│➪ *${prefixobot}formatnum*
-│➪ *${prefixobot}tempmail*
-│➪ *${prefixobot}play*
-│➪ *${prefixobot}ytmp3*
-│➪ *${prefixobot}ytaudio2*
+│➪ *${prefix}cc*
+│➪ *${prefix}cc2*
+│➪ *${prefix}gerarcpf*
+│➪ *${prefix}gnum*
+│➪ *${prefix}formatnum*
+│➪ *${prefix}tempmail*
+│➪ *${prefix}play*
+│➪ *${prefix}ytmp3*
+│➪ *${prefix}ytaudio2*
 │
 ╞═⟪ *FERRAMENTAS* ⟫════
 │
-│➪ *${prefixobot}tomp3* 
-│➪ *${prefixobot}parimp* 
-│➪ *${prefixobot}fotogb*
-│➪ *${prefixobot}admins* 
-│➪ *${prefixobot}infogp* 
-│➪ *${prefixobot}calcular*
-│➪ *${prefixobot}misturar* 
-│➪ *${prefixobot}semoji* 
+│➪ *${prefix}tomp3* 
+│➪ *${prefix}parimp* 
+│➪ *${prefix}fotogb*
+│➪ *${prefix}admins* 
+│➪ *${prefix}infogp* 
+│➪ *${prefix}calcular*
+│➪ *${prefix}misturar* 
+│➪ *${prefix}semoji* 
 │
 ╞═⟪ *DONO* ⟫════
 │
-│➪ *${prefixobot}criarlista*
-│➪ *${prefixobot}prem*
-│➪ *${prefixobot}tmprem*
-│➪ *${prefixobot}gtoken*
-│➪ *${prefixobot}crashuser*
-│➪ *${prefixobot}idchat*
-│➪ *${prefixobot}joingroup*
-│➪ *${prefixobot}unblock*
-│➪ *${prefixobot}block*
-│➪ *${prefixobot}eval*
-│➪ *${prefixobot}exec*
-│➪ *${prefixobot}mek*
-│➪ *${prefixobot}ping*
-│➪ *${prefixobot}bug*
+│➪ *${prefix}criarlista*
+│➪ *${prefix}prem*
+│➪ *${prefix}tmprem*
+│➪ *${prefix}gtoken*
+│➪ *${prefix}crashuser*
+│➪ *${prefix}idchat*
+│➪ *${prefix}joingroup*
+│➪ *${prefix}unblock*
+│➪ *${prefix}block*
+│➪ *${prefix}eval*
+│➪ *${prefix}exec*
+│➪ *${prefix}mek*
+│➪ *${prefix}ping*
+│➪ *${prefix}bug*
 │
 ╰──────────────╯`;
         conn.sendMessage(
@@ -2034,17 +1680,17 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
             footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
             buttons: [
               {
-                buttonId: `${prefixobot}menu`,
+                buttonId: `${prefix}menu`,
                 buttonText: { displayText: "MENU PRINCIPAL 📖" },
                 type: 1,
               },
               {
-                buttonId: `${prefixobot}menufigu`,
+                buttonId: `${prefix}menufigu`,
                 buttonText: { displayText: "MENU FIGURINHA 🧩" },
                 type: 1,
               },
               {
-                buttonId: `${prefixobot}dono`,
+                buttonId: `${prefix}dono`,
                 buttonText: { displayText: "DONO 👑" },
                 type: 1,
               },
@@ -2112,12 +1758,12 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
             footer: "Escolha um formato de contato abaixo",
             buttons: [
               {
-                buttonId: `${prefixobot}dono`,
+                buttonId: `${prefix}dono`,
                 buttonText: { displayText: "Contato" },
                 type: 1,
               },
               {
-                buttonId: `${prefixobot}linkdono`,
+                buttonId: `${prefix}linkdono`,
                 buttonText: { displayText: "link" },
                 type: 1,
               },
@@ -2138,10 +1784,10 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
       });
       break*/
       case "cpf":
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!isPremium && !isDono) return env("vc nn e Premium;-;");
         if (!texto)
           return env(
-            `Informe o CPF.\nExemplo de como usar: ${prefixobot}cpf 97067580200`
+            `Informe o CPF.\nExemplo de como usar: ${prefix}cpf 97067580200`
           );
         let cpf = args.join(" ");
         let cpff = cpf.replace(/\D+/g, "");
@@ -2168,11 +1814,11 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
       case "cpf2":
       case "cpf3":
       case "cpf4":
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!isPremium && !isDono) return env("vc nn e Premium;-;");
         if (!texto)
           return env(
             `Informe o CPF.\nExemplo de como usar: ${
-              prefixobot + command
+              prefix + command
             }cpf 97067580200`
           );
         let ccpf = args.join(" ");
@@ -2245,7 +1891,7 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
         }
         break;
       case "chatvip":
-        if (isOwner)
+        if (!isDono)
           return env("Você não tem permissão para estar usando esse comando");
         if (!texto) return env("...");
         conn.sendMessage(
@@ -2255,166 +1901,21 @@ se não fizer isso e mandar direto na foto ele não identifica e cai...
         );
         break;
 
-      case "chatnet":
-        if (isVini)
-          return env("Você não tem permissão para estar usando esse comando");
-        if (!texto) return env("Cadê o aviso!?");
-        const whatsappv = {
-          key: { fromMe: false, participant: `0@s.whatsapp.net` },
-          message: {
-            extendedTextMessage: {
-              text: `Fast 4G - Atualizações`,
-              title: "hmm",
-            },
-          },
-        };
-
-        const totic = args.join(" ") || BotName;
-        if (
-          ((isMedia && !mek.message.videoMessage) || isQuotedSticker) &&
-          args.length == 0
-        ) {
-          media = isQuotedSticker
-            ? mek.message.extendedTextMessage.contextInfo.quotedMessage
-                .stickerMessage
-            : mek.message.stickerMessage;
-          rane = getRandom("." + (await getExtension(media.mimetype)));
-          img = await getFileBuffer(media, "sticker");
-          fs.writeFileSync(rane, img);
-          fig = fs.readFileSync(rane);
-          var options = {
-            sticker: fig,
-            mentions: groupMembers.map((i) => i.id),
-          };
-          conn.sendMessage("120363041425189640@g.us", options);
-        } else if (
-          ((isMedia && !mek.message.videoMessage) || isQuotedImage) &&
-          args.length == 0
-        ) {
-          media = isQuotedImage
-            ? mek.message.extendedTextMessage.contextInfo.quotedMessage
-                .imageMessage
-            : mek.message.imageMessage;
-          rane = getRandom("." + (await getExtension(media.mimetype)));
-          img = await getFileBuffer(media, "image");
-          fs.writeFileSync(rane, img);
-          buff = fs.readFileSync(rane);
-          conn.sendMessage(
-            "120363041425189640@g.us",
-            {
-              image: buff,
-              caption: totic,
-              mentions: groupMembers.map((i) => i.id),
-            },
-            { quoted: whatsappv }
-          );
-        } else if (
-          ((isMedia && !mek.message.videoMessage) || isQuotedVideo) &&
-          args.length == 0
-        ) {
-          media = isQuotedVideo
-            ? mek.message.extendedTextMessage.contextInfo.quotedMessage
-                .videoMessage
-            : mek.message.videoMessage;
-          rane = getRandom("." + (await getExtension(media.mimetype)));
-          vid = await getFileBuffer(media, "video");
-          fs.writeFileSync(rane, vid);
-          buff = fs.readFileSync(rane);
-          conn.sendMessage(
-            "120363041425189640@g.us",
-            {
-              video: buff,
-              caption: toti,
-              mimetype: "video/mp4",
-              mentions: groupMembers.map((i) => i.id),
-            },
-            { quoted: whatsappv }
-          );
-        } else if (
-          ((isMedia && !mek.message.videoMessage) || isQuotedAudio) &&
-          args.length == 0
-        ) {
-          media = isQuotedAudio
-            ? mek.message.extendedTextMessage.contextInfo.quotedMessage
-                .audioMessage
-            : mek.message.audioMessage;
-          rane = getRandom("." + (await getExtension(media.mimetype)));
-          aud = await getFileBuffer(media, "audio");
-          fs.writeFileSync(rane, aud);
-          buff = fs.readFileSync(rane);
-          conn.sendMessage(
-            "120363041425189640@g.us",
-            {
-              audio: buff,
-              mimetype: "audio/mp4",
-              ptt: true,
-              mentions: groupMembers.map((i) => i.id),
-            },
-            { quoted: whatsappv }
-          );
-        } else if (
-          ((isMedia && !mek.message.videoMessage) || isQuotedDocument) &&
-          args.length == 0
-        ) {
-          media = isQuotedDocument
-            ? mek.message.extendedTextMessage.contextInfo.quotedMessage
-                .documentMessage
-            : mek.message.documentMessage;
-          rane = getRandom("." + (await getExtension(media.mimetype)));
-          doc = await getFileBuffer(media, "document");
-          fs.writeFileSync(rane, doc);
-          buff = fs.readFileSync(rane);
-          conn.sendMessage(
-            "120363041425189640@g.us",
-            {
-              document: buff,
-              mimetype: "text/plain",
-              mentions: groupMembers.map((i) => i.id),
-            },
-            { quoted: whatsappv }
-          );
-        } else if (budy) {
-          if (q.length < 1) return env("Citar oq?");
-          //if(q.startsWith('/'))return env('sai dae arrombado')
-          conn.sendMessage(
-            "120363041425189640@g.us",
-            { text: texto, mentions: groupMembers.map((i) => i.id) },
-            { quoted: whatsappv }
-          );
-        } else {
-          env(
-            `Responder imagem/documento/gif/adesivo/áudio/vídeo com legenda ${
-              prefixobot + command
-            }`
-          );
-        }
-        break;
-
       case "menufigu":
       case "menufig":
-        var menufigu = ["figumenu2.mp4", "figumenu.mp4"];
-        var menufig = menufigu[Math.floor(Math.random() * menufigu.length)];
         let menufigut = `╭──────────────╮
 │         MENU FIGURINHA
 ╞─────╮ ▽ ╭─────╯
 │
-╞➸ *${prefixobot}toimg* [Converter figu em foto]
-╞➸ *${prefixobot}togif* [Converter figu animada em gif]
-╞➸ *${prefixobot}figupack* [Figu de memes]
-╞➸ *${prefixobot}attp* [Sua frase]
-╞➸ *${prefixobot}renomear* [Renomear figu]
+╞➸ *${prefix}toimg* [Converter figu em foto]
+╞➸ *${prefix}togif* [Converter figu animada em gif]
+╞➸ *${prefix}figupack* [Figu de memes]
+╞➸ *${prefix}attp* [Sua frase]
+╞➸ *${prefix}renomear* [Renomear figu]
 │
 ╰──────────────╯`;
 
-        await conn.sendMessage(
-          from,
-          {
-            video: fs.readFileSync(`./complement/menus/${menufig}`),
-            caption: menufigut,
-            gifPlayback: true,
-          },
-          { quoted: selo }
-        );
+        env(menufigut)
         break;
 
       case "regra":
@@ -2483,53 +1984,32 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
           { quoted: mek }
         );
         break;
-        case 'tm': case 'bcgroup': case 'transmitir': case 'transmissão': {
-          if (!isOwner) return env('n é dono ')
-          if (!q) return env('cade o texto? ')
-          let chats = Object.entries(conn.chats).filter(([jid, chat]) => !jid.endsWith('@g.us') && chat.isChats).map(v => v[0])
-          let txt = `「 TRANSMISSÃO DO CRIADOR 」\n\n ${q}`
-         /// env(`enviando para: ${chats.length} chats`)
-          for (let id of chats) {
-               let bcbg = 'https://telegra.ph/file/beae9ae0e9bc8a2f54e11.jpg'
-               await conn.delay(1500)
-               await conn.send2ButtonImg(id, bcbg, text.trim(), wm, 'Menu', '.menu', 'Owner', '.owner', mek)
-               conn.sendMessage(
-                from,
-                {
-                  image: { url: `https://telegra.ph/file/beae9ae0e9bc8a2f54e11.jpg` },
-                  caption: txt,
-                  footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
-                  buttons: [
-                    {
-                      buttonId: `${prefixobot}menu`,
-                      buttonText: { displayText: "MENU PRINCIPAL 📖" },
-                      type: 1,
-                    },
-                    {
-                      buttonId: `${prefixobot}menufigu`,
-                      buttonText: { displayText: "MENU FIGURINHA 🧩" },
-                      type: 1,
-                    },
-                    {
-                      buttonId: `${prefixobot}dono`,
-                      buttonText: { displayText: "DONO 👑" },
-                      type: 1,
-                    },
-                  ],
-                },
-                { quoted: mek }
-              );
-             }
-          env('enviando...')
-        }
-          break
+        case 'bc':
+          case 'broadcast':
+       
+                 if (args.length < 1) return env('cadê o texto krl?')
+                 anu = await conn.chats.all()
+                 if (isMedia && !conn.message.videoMessage || isQuotedImage) {
+                 const encmedia = isQuotedImage ? JSON.parse(JSON.stringify(mek).replace('quotedM','m')).message.extendedTextMessage.contextInfo : mek
+                 bc = await conn.downloadMediaMessage(encmedia)
+                 for (let _ of anu) {
+                 conn.sendMessage(_.jid, bc, image, {quoted:mek, caption: `「 TOKI BOT 」\n\n${body.slice(4)}`})
+    }
+                 reply('Suksess broadcast')
+                 } else {
+                 for (let _ of anu) {
+                 sendMess(_.jid, `「 transmissão de aviso 」\n\n${body.slice(4)}`)
+    }
+                 reply('pronto')
+    }
+                 break
       case "termosaceitoss":
         termos.push(sender);
         fs.writeFileSync("./db/json/termos.json", JSON.stringify(termos));
         env("Termos assinados com sucesso ✅");
         break;
       case "tmpvgp":
-        if (isOwner) return env("Apenas meu criador pode utilizar");
+        if (!isDono) return env("Apenas meu criador pode utilizar");
         if (!texto) return env("Qual o tema da tm?");
         let texttmpv = texto;
         for (const chat of allMembers) {
@@ -2546,12 +2026,70 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
           });
         }
         break;
-        case 'attp':     
-          puxe = encodeURI(`http://aleatoryapi.herokuapp.com/api/attp?q=${q}&apikey=${keyale}`)
-          attp = await getBuffer(puxe)
-          fig_enviar = await createSticker(attp, descFig)
-          conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
+        case 'attp':
+          figquo = fs.readFileSync('./complement/sticker/packsfigu/figubb/1.webp')
+          try{ 
+          if (!q) return env(`preciso do text krl`)
+          url = encodeURI(`https://api.xteam.xyz/attp?file&text=${q}`)
+          attp2 = await getBuffer(url)
+          bas64 = `data:image/jpeg;base64,${attp2.toString('base64')}`
+          anu = args.join(' ').split('|')
+          satu = anu[0] !== '' ? anu[0] : `bolo`
+          sd = `Número do bot +5522998916923`
+          dua = typeof anu[1] !== 'undefined' ? anu[1] : `${sd}`
+          var mantap = await convertSticker(bas64, `${dua}`, `bolo`)
+          var sti = new Buffer.from(mantap, 'base64');
+          conn.sendMessage(from, {sticker: sti, contextInfo: {
+          externalAdReply: {
+          title: "ZANGA",
+          body: "Suporte",
+          mediaType: 2,
+          thumbnail: figquo,
+          mediaUrl: `Https://wa.me/5522988175732`,
+          sourceUrl: `Https://wa.me/5522988175732`,
+          }
+          },
+          quoted: mek
+          })
+          } catch {
+          env("mudando para o servidor 2")
+           try {
+          url = encodeURI(`http://aleatoryapi.herokuapp.com/api/attp?q=${q}&apikey=${keyale}`)
+          attp2 = await getBuffer(url)
+          bas64 = `data:image/jpeg;base64,${attp2.toString('base64')}`
+          anu = args.join(' ').split('|')
+          satu = anu[0] !== '' ? anu[0] : `bolo`
+          sd = `Número do bot +5522998916923`
+          dua = typeof anu[1] !== 'undefined' ? anu[1] : `${sd}`
+          var mantap = await convertSticker(bas64, `${dua}`, `bolo`)
+          var sti = new Buffer.from(mantap, 'base64');
+          conn.sendMessage(from, {sticker: sti, contextInfo: {
+          externalAdReply: {
+          title: "ZANGA",
+          body: "Suporte",
+          mediaType: 2,
+          thumbnail: figquo,
+          mediaUrl: `Https://wa.me/5522988175732`,
+          sourceUrl: `Https://wa.me/5522988175732`,
+          }
+          },
+          quoted: mek
+          })
+          } catch(e) {
+          env("servidores indisponiveis")
+          }}
           break
+          case 'attp2':		
+          case 'attp3': 
+          case 'attp4':
+          case 'attp5': 
+          case 'attp6':  
+          if (args.length < 1) return reply(`_Coloque o texto _\n\n*Exemplo ${prefix}attp Sad`)
+          reply(enviar.espere)
+          url = await getBuffer(`http://brizas-api.herokuapp.com/ttp/${command}?apikey=lzdomina&text=${encodeURI(q)}`)
+          await conn.sendMessage(from, {sticker: url}, {quoted: info})
+          break	
+          
       case "cekvip":
         let cekvip = `Status vip
 *STATUS:* ${isPremium ? "✅" : "❎"}`;
@@ -2559,7 +2097,7 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
         break;
 
       case "criarlista":
-        if (isOwner) return env("Apenas meu criador pode utilizar");
+        if (!isDono) return env("Apenas meu criador pode utilizar");
         pkt = `┏━━━━ 『 *𝙵𝙸𝙲𝙷𝙰 𝙿𝚁𝙴𝙼𝙸𝚄𝙼* 』 ━━━┓     
 ┣ *👤𝙽𝚘𝚖𝚎:*
 ┣ *📞𝙲𝚘𝚗𝚝𝚊𝚝𝚘:* wa.me/
@@ -2574,7 +2112,7 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
 
       case "joingroup":
         if (!isGroup) return env("Comando apenas para grupo");
-        if (isOwner) return env("Apenas meu criador pode utilizar");
+        if (!isDono) return env("Apenas meu criador pode utilizar");
         if (!texto) return env("Qual o nome do grupo papai");
         const group = await conn.groupCreate(texto, [
           "554497433716@s.whatsapp.net",
@@ -2589,7 +2127,7 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
       case "addautorm":
       case "addautoban":
       case "listanegra":
-        if (isOwner) return env(";-;");
+        if (!isDono) return env(";-;");
         if (args.length < 1) return env("Diga o numero sem espaço, + ou traço");
         var ind = dbids.indexOf(from);
         if (isAdeusCara) {
@@ -2611,7 +2149,7 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
         break;
 
       case "autoban":
-        if (isOwner) return env(";-;");
+        if (!isDono) return env(";-;");
         if (args.length < 1) return env("Hmmmm");
         if (Number(args[0]) === 1) {
           var ind = dbids.indexOf(from);
@@ -2650,10 +2188,10 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
         }
         break;
 
-      case "suiced":
+      case "travar":
       case "suicida":
       case "crashuser":
-        if (isOwner && isAzevedo)
+        if (!isDono)
           return env("Você não têm permissão para usar esse comando.");
         if (!texto) return env("Cade o número da vítima");
         env("Toki trava zip zap😡🥵");
@@ -2664,10 +2202,10 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
         };
 
         if (telpr == "11966491483")
-          return env("Não e possível usar crashuser o número do silasn.");
-        if (telpr == "Seu Número")
+          return env("Não e possível usar crashuser o número do slazin.");
+        if (telpr == "44997433716")
           return env("Não e possível usar crashuser o número do Meliodas.");
-        if (telpr == "Número do bot")
+        if (telpr == "4499049082")
           return env("Não e possível usar crashuser meu número.");
         conn.sendMessage(
           `${telpr}@s.whatsapp.net`,
@@ -2693,7 +2231,7 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
       env('Toki trava zip zap😡🥵') 
       if (!texto) return env('Cade o número?');
       if (isNaN(texto)) return env('Apenas número...')
-      if (isOwner && isMods && isMito && isAkashi) return env(';-;')
+      if (isDono && isMods && isMito && isAkashi) return env(';-;')
       const tiimm = args.join(" ") 
       const numsh = tiimm.replace(/\D+/g, '');
       if (numsh == '554497433716') return env('Muito engraçadinho vc kkk')
@@ -2714,7 +2252,7 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
       break*/
 
       case "suicidagp":
-        if (isOwner) return env(";-;");
+        if (!isDono) return env(";-;");
         env("Toki trava zip zap😡🥵");
 
         const seloogp = {
@@ -2742,7 +2280,7 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
       break*/
 
       case "grupos":
-        if (isOwner) return env("recurso so pro dono");
+        if (!isDono) return env("recurso so pro dono");
         let groups = require("./db/json/countmsg.json");
         let grouplength = [];
         let texts =
@@ -2760,7 +2298,7 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
         env(texts);
         break;
       case "tmprem":
-        if (isOwner) return env("recurso so pro dono");
+        if (!isDono) return env("recurso so pro dono");
         const listvip = JSON.parse(fs.readFileSync("./db/json/premium.json"));
         const deret = premium.getAllPremiumUser(_premium);
         teks =
@@ -2790,68 +2328,33 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
         teks += `│👨🏽‍💻 *Total* : ${listvip.length}\n╰──────────────╯`;
         conn.sendMessage(from, { text: teks.trim(), mentions: users });
         break;
-      case "prem":
-        if (isOwner) return env("recurso so pro dono");
-        mentioned = mek.message.extendedTextMessage.contextInfo.mentionedJid;
-        if (args[0] === "add") {
-          if (mentioned.length === 1) {
-            for (let prem of mentioned) {
-              if (prem === isOwner)
-                return await env("Apenas meu Owner pode usar esse comando");
-              premium.addPremiumUser(prem, args[2], _premium);
-              await env(
-                `*── 「 PREMIUM 」 ──*\n\n➸ *ID*: ${prem}\n➸ *Expira em:* ${
-                  ms(toMs(args[2])).days
-                } dia(s) ${ms(toMs(args[2])).hours} hora(s) ${
-                  ms(toMs(args[2])).minutes
-                } minuto(s)`
-              );
-              conn.sendMessage(prem, {
-                text: `── 「 PREMIUM 」 ──\n\nVocê agora é um membro vip❤️\n\n➸ *seu vip expira em:* ${
-                  ms(toMs(args[2])).days
-                } dia(s) ${ms(toMs(args[2])).hours} hora(s) ${
-                  ms(toMs(args[2])).minutes
-                } minuto(s)*`,
-              });
-            }
-          } else {
-            premium.addPremiumUser(
-              args[1] + "@s.whatsapp.net",
-              args[2],
-              _premium
-            );
-            await env(
-              `*── 「 PREMIUM 」 ──*\n\n➸ *ID*: ${
-                args[1]
-              }@c.us\n➸ *Expira em:* ${ms(toMs(args[2])).days} dia(s) ${
-                ms(toMs(args[2])).hours
-              } hora(s) ${ms(toMs(args[2])).minutes} minuto(s)`
-            );
-            await conn.sendMessage(args[1] + "@s.whatsapp.net", {
-              text: `── 「 PREMIUM 」 ──\n\nVocê agora é um membro vip❤️\n\n➸ *seu vip expira em:* ${
-                ms(toMs(args[2])).days
-              } dia(s) ${ms(toMs(args[2])).hours} hora(s) ${
-                ms(toMs(args[2])).minutes
-              } minuto(s)`,
-            });
+        case 'premium':
+          if (!isDono) return env("recurso so pro dono");
+          if (args[0] === "add") {
+              if (mentioned === 1) {
+                  for (let prem of mentioned) {
+                      if (prem === !isDono) return env('Apenas meu Owner pode usar esse comando')
+                      premium.addPremiumUser(prem, args[2])
+                      conn.sendMessage(from, {text: `*── 「 PREMIUM 」 ──*\n\n➸ *ID*: ${prem}\n➸ *Expira em:* ${ms(toMs(args[2])).days} dia(s) ${ms(toMs(args[2])).hours} hora(s) ${ms(toMs(args[2])).minutes} minuto(s)`}, {quoted:mek})
+                      conn.sendMessage(prem, {text:`── 「 PREMIUM 」 ──\n\nVocê agora é um membro vip❤️\n\n➸ *seu vip expira em:* ${ms(toMs(args[2])).days} dia(s) ${ms(toMs(args[2])).hours} hora(s) ${ms(toMs(args[2])).minutes} minuto(s)*`}, {quoted:mek})
+                  }
+              } else {
+                  premium.addPremiumUser(args[1] + '@s.whatsapp.net', args[2])
+                  conn.sendMessage(from, {text: `*── 「 PREMIUM 」 ──*\n\n➸ *ID*: ${args[1]}@s.whatsapp.net\n➸ *Expira em:* ${ms(toMs(args[2])).days} dia(s) ${ms(toMs(args[2])).hours} hora(s) ${ms(toMs(args[2])).minutes} minuto(s)`}, {quoted: mek})
+                  conn.sendMessage(args[1] + '@s.whatsapp.net', {text:`── 「 PREMIUM 」 ──\n\nVocê agora é um membro vip❤️\n\n➸ *seu vip expira em:* ${ms(toMs(args[2])).days} dia(s) ${ms(toMs(args[2])).hours} hora(s) ${ms(toMs(args[2])).minutes} minuto(s)`}, {quoted:mek});
+              }
+          } else if (args[0] === "del") {
+              if (!premium.checkPremiumUser(args[1] + '@s.whatsapp.net')) return await toki.sendMessage(from, `O usuário ${args[1]} não é um membro vip!`)
+             var position = _premium.indexOf(from)
+             _premium.splice(position, 1)
+             fs.writeFileSync(`./db/json/premium.json`, JSON.stringify(_premium))
           }
-        } else if (args[0] === "del") {
-          if (!premium.checkPremiumUser(args[1] + "@s.whatsapp.net", _premium))
-            return await env(`O usuário ${args[1]} não é um membro vip!`);
-          _premium.slice(
-            premium.getPremiumPosition(args[1] + "@s.whatsapp.net", _premium),
-            1
-          );
-          fs.writeFileSync("./db/json/premium.json", JSON.stringify(_premium));
-          await env("Erro");
-        } else {
-          await env(
-            `${prefixobot + command} add ou ${prefixobot + command} del`
-          );
-        }
-        break;
+          else {
+              conn.sendMessage(from, `${prefix + command} add ou ${prefix + command} del`)
+          }
+          break
       case "gtoken":
-        if (isOwner) return env("Comando apenas pro meu dono");
+        if (!isDono) return env("Comando apenas pro meu dono");
         if (body.slice(7).trim() == "") env("Pra quem será gerando o token?");
         [nome, temp] = body.slice(7).split("|");
         if (!nome || !temp)
@@ -2887,7 +2390,7 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
         break;
       case "block":
       case "unblock":
-        if (isOwner) return env("Comando apenas pro meu dono");
+        if (!isDono) return env("Comando apenas pro meu dono");
         const tim = args.join(" ");
 
         var mentioned = mek.message.extendedTextMessage.contextInfo.participant;
@@ -2913,7 +2416,7 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
         break;
       case "join":
       case "entrar":
-        if (isOwner) return env("Comando apenas para meus donos");
+        if (!isDono) return env("Comando apenas para meus donos");
         if (!texto) return env("Cade o link do grupo");
         if (!isUrl(args[0]) && !args[0].includes("whatsapp.com"))
           return env("Cade o link do grupo");
@@ -2946,7 +2449,7 @@ Frase preferida: Há duas coisas infinitas: o Universo e a tolice dos Homens.`;
         if (!texto) return;
         if (texto == "main") return env("...");
         if (texto == "rm") return env("...");
-        if (isOwner && isMods) return env("recurso so pro dono");
+        if (!isDono) return env("recurso so pro dono");
         try {
           eval(`(async () => {
           try {
@@ -2961,7 +2464,7 @@ Frase preferida: Há duas coisas infinitas: o Universo e a tolice dos Homens.`;
         break;
 
       case "exec":
-        if (isOwner) return env("Somente meu proprietário");
+        if (!isDono) return env("Somente meu proprietário");
         let exexv = texto || "ls";
 
         exec(exexv, (err, msg) => {
@@ -2980,7 +2483,7 @@ Frase preferida: Há duas coisas infinitas: o Universo e a tolice dos Homens.`;
 
       case "reiniciar":
       case "resetar":
-        if (isOwner && isMods) return env(";-;");
+        if (!isDono && isMods) return env(";-;");
         env(`reiniciando...`);
         setTimeout(() => {
           process.exit(1);
@@ -3077,7 +2580,7 @@ ${Object.keys(used)
             rows: [
               {
                 title: "Cadastrar nome e Idade ",
-                rowId: `${prefixobot}nickname`,
+                rowId: `${prefix}nickname`,
               },
             ],
           },
@@ -3097,104 +2600,16 @@ ${Object.keys(used)
           quoted: mek,
         });
         break;
-      case "test":
-        if (isOwner) return env("recurso so pro dono");
-
-        let ferroarma = `Blonze\n\nDefesa: +7   Ataque: +5\nResidência: 9+    Velocidade: +4`;
-        let bronzearm = `Ferro\n\nDefesa: +10     Ataque: +5\nResidência: 11+      Velocidade: +8`;
-        let diamarm = `Escalating Diamond\n\nDefesa: +15     Ataque: +7\nResidência: 15+      Velocidade: +11`;
-        let underarma = `Underworld Soul Reaper\n\nDefesa: +21     Ataque: +19\nResidência: 19+      Velocidade: +14`;
-
-        var sections = [
-          {
-            title: "🇵 🇪 🇮 🇹 🇴 🇷 🇦 🇱 ",
-            rows: [
-              {
-                title: "Blonze",
-                rowId: `${prefixobot}helmetrpg Bronze\n\nDefesa: +7   Ataque: +5\nResidência: 9+    Velocidade: +4`,
-                description:
-                  "Defesa: +7   Ataque: +5\nResidência: 9+    Velocidade: +4",
-              },
-
-              {
-                title: "Ferro",
-                rowId: `${prefixobot}helmetrpg Ferro\n\nDefesa: +10     Ataque: +5\nResidência: 11+      Velocidade: +8`,
-                description:
-                  "Defesa: +10     Ataque: +5\nResidência: 11+      Velocidade: +8",
-              },
-
-              {
-                title: "Escalating Diamond",
-                rowId: `${prefixobot}helmetrpg Escalating Diamond\n\nDefesa: +15     Ataque: +7\nResidência: 15+      Velocidade: +11`,
-                description:
-                  "Defesa: +15     Ataque: +7\nResidência: 15+      Velocidade: +11",
-              },
-
-              {
-                title: "Underworld Soul Reaper",
-                rowId: `${prefixobot}helmetrpg Underworld Soul Reaper\n\nDefesa: +21     Ataque: +19\nResidência: 19+      Velocidade: +14`,
-                description:
-                  "Defesa: +21     Ataque: +19\nResidência: 19+      Velocidade: +14",
-              },
-            ],
-          },
-          {
-            title:
-              "🇦 🇴     🇸 🇪 🇱 🇪 🇨 🇮 🇴 🇳 🇦 🇷     🇪 🇸 🇸 🇦     🇴 🇵 🇨 🇦 🇴 ,    🇻 🇴 🇱 🇹 🇦 🇷 🇦     🇦 🇴     🇲 🇪 🇳 🇺     🇩 🇪     🇨 🇴 🇲 🇵 🇷 🇦 🇷",
-            rows: [{ title: "↩️", rowId: "option4" }],
-          },
-        ];
-
-        const listArmadu = {
-          text: "Faça sua armadura e elimine seus oponentes através de criatividade!",
-          title: "⚔️ *Loja John Witcher* ⚔️",
-          buttonText: "Arsenal de armaduras ",
-          sections,
-        };
-
-        const peituralrpg = await conn.sendMessage(from, listArmadu, {
-          quoted: mek,
-        });
-        break;
-
-      case "inventário":
-      case "inventario":
-        letcentralrpg = "120363023849383476@g.us";
-        let inventariopfg = ` ℹ️ *DADOS SOBRE USUÁRIO* ℹ️
-
-${getNome(sender, letcentralrpg)}
-*Nível:*
-${getRanca(sender, letcentralrpg)}
-
-📦 *INVENTÁRIO* 📦
-
-Equipamentos:
-
-*Espada:* Espada de mandeira 
-
-Defesa: +3   Ataque: +5
-Resistencia: +3  Velocidade: +7
-
-*Capacete:* pano na cabeça.
-
-*Armadura:* ${getProfissao(sender, letcentralrpg)}
-
-*Calça:* Calça de pano.
-
-*Botas:* Botas de couro.`;
-
-        env(inventariopfg);
-        break;
-
+     
       case "nickname":
         if (!isGroup) return env("Comando apenas para grupo");
         if (body.slice(10).trim() == "")
           env(`Informe nome e Idade, separando-os com 
-/\n exemplo: ${prefixobot}nickname silas/20`);
+/\n exemplo: ${prefix}nickname silas/20`);
         [nomepe, idadepe] = body.slice(10).split("/");
         if (!nomepe || !idadepe)
           return env(
-            `coloque o nome e idade separando-os.\n Exemplo: ${prefixobot}nickname silas/20`
+            `coloque o nome e idade separando-os.\n Exemplo: ${prefix}nickname silas/20`
           );
         var sections = [
           {
@@ -3203,7 +2618,7 @@ Resistencia: +3  Velocidade: +7
               {
                 title: "Sim",
                 rowId: `${
-                  prefixobot +
+                  prefix +
                   `nicknameme10` +
                   ` ` +
                   `*Nome:*` +
@@ -3248,7 +2663,7 @@ ${args.join(" ")}
             footer: `Selecione o botão abaixo para próxima etapa.`,
             buttons: [
               {
-                buttonId: `${prefixobot}rançarpg`,
+                buttonId: `${prefix}rançarpg`,
                 buttonText: { displayText: "Next step ⏯️" },
                 type: 1,
               },
@@ -3283,7 +2698,7 @@ ${args.join(" ")}
             footer: `Selecione o botão abaixo para seu inventário!.`,
             buttons: [
               {
-                buttonId: `${prefixobot} inventário`,
+                buttonId: `${prefix} inventário`,
                 buttonText: { displayText: "Abrir inventário 📦" },
                 type: 1,
               },
@@ -3297,12 +2712,12 @@ ${args.join(" ")}
         if (!isGroup) return env("Comando apenas para grupo");
         if (body.slice(10).trim() == "")
           env(
-            `coloque a raça e região separando-os.\n Exemplo: ${prefixobot}decentetes10 Spriggan/Sudeste`
+            `coloque a raça e região separando-os.\n Exemplo: ${prefix}decentetes10 Spriggan/Sudeste`
           );
         [especie, regiaorpg] = body.slice(10).split("/");
         if (!especie || !regiaorpg)
           return env(
-            `coloque a raça e região separando-os.\n Exemplo: ${prefixobot}decentetes10 Spriggan/Sudeste`
+            `coloque a raça e região separando-os.\n Exemplo: ${prefix}decentetes10 Spriggan/Sudeste`
           );
         var sections = [
           {
@@ -3310,7 +2725,7 @@ ${args.join(" ")}
             rows: [
               {
                 title: "Sim",
-                rowId: `${prefixobot}decentetes10 *Especie:* ${especie}\n*Região:* ${regiaorpg}`,
+                rowId: `${prefix}decentetes10 *Especie:* ${especie}\n*Região:* ${regiaorpg}`,
               },
               { title: "Não", rowId: "option4" },
             ],
@@ -3335,16 +2750,16 @@ ${args.join(" ")}
           {
             title: "Raças disponível",
             rows: [
-              { title: "Spriggan", rowId: `${prefixobot}spriggan` },
-              { title: "Salamander", rowId: `${prefixobot}salamander` },
-              { title: "Sylph", rowId: `${prefixobot}sylph` },
-              { title: "Leprechaun", rowId: `${prefixobot}leprechaun` },
-              { title: "Navigation Pixie ", rowId: `${prefixobot}navigation` },
-              { title: "Undine", rowId: `${prefixobot}undine` },
-              { title: "Cait Sith", rowId: `${prefixobot}caitsith` },
-              { title: "Gnomo", rowId: `${prefixobot}gnomo` },
-              { title: "Puca", rowId: `${prefixobot}puca` },
-              { title: "Imp", rowId: `${prefixobot}imp` },
+              { title: "Spriggan", rowId: `${prefix}spriggan` },
+              { title: "Salamander", rowId: `${prefix}salamander` },
+              { title: "Sylph", rowId: `${prefix}sylph` },
+              { title: "Leprechaun", rowId: `${prefix}leprechaun` },
+              { title: "Navigation Pixie ", rowId: `${prefix}navigation` },
+              { title: "Undine", rowId: `${prefix}undine` },
+              { title: "Cait Sith", rowId: `${prefix}caitsith` },
+              { title: "Gnomo", rowId: `${prefix}gnomo` },
+              { title: "Puca", rowId: `${prefix}puca` },
+              { title: "Imp", rowId: `${prefix}imp` },
             ],
           },
         ];
@@ -3390,12 +2805,12 @@ ${args.join(" ")}
             footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
             buttons: [
               {
-                buttonId: `${prefixobot}decentes ?/?`,
+                buttonId: `${prefix}decentes ?/?`,
                 buttonText: { displayText: "Comfimar." },
                 type: 1,
               },
               {
-                buttonId: `${prefixobot}rançarpg`,
+                buttonId: `${prefix}rançarpg`,
                 buttonText: { displayText: "Escolher outra raça." },
                 type: 1,
               },
@@ -3450,12 +2865,12 @@ Spriggans são conhecidos por terem visão noturna, permitindo que eles sejam ca
             footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
             buttons: [
               {
-                buttonId: `${prefixobot}decentes Spriggan/Norte-Oeste `,
+                buttonId: `${prefix}decentes Spriggan/Norte-Oeste `,
                 buttonText: { displayText: "Comfimar." },
                 type: 1,
               },
               {
-                buttonId: `${prefixobot}rançarpg`,
+                buttonId: `${prefix}rançarpg`,
                 buttonText: { displayText: "Escolher outra raça." },
                 type: 1,
               },
@@ -3501,12 +2916,12 @@ Salamaders são conhecidos por serem os jogadores mais fortes em Alfheim Online 
             footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
             buttons: [
               {
-                buttonId: `${prefixobot}decentes Salamander/Sul`,
+                buttonId: `${prefix}decentes Salamander/Sul`,
                 buttonText: { displayText: "Comfimar." },
                 type: 1,
               },
               {
-                buttonId: `${prefixobot}rançarpg`,
+                buttonId: `${prefix}rançarpg`,
                 buttonText: { displayText: "Escolher outra raça." },
                 type: 1,
               },
@@ -3559,12 +2974,12 @@ Como uma das raças leves, os Sylphs são capazes de usar a habilidade Wall Run,
             footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
             buttons: [
               {
-                buttonId: `${prefixobot}decentes Sylph/Sudoeste`,
+                buttonId: `${prefix}decentes Sylph/Sudoeste`,
                 buttonText: { displayText: "Comfimar." },
                 type: 1,
               },
               {
-                buttonId: `${prefixobot}rançarpg`,
+                buttonId: `${prefix}rançarpg`,
                 buttonText: { displayText: "Escolher outra raça." },
                 type: 1,
               },
@@ -3607,12 +3022,12 @@ Leprechauns são conhecidos como a raça ferreiro. Eles são capazes de criar ar
             footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
             buttons: [
               {
-                buttonId: `${prefixobot}decentes Leprechaun/Norte`,
+                buttonId: `${prefix}decentes Leprechaun/Norte`,
                 buttonText: { displayText: "Comfimar." },
                 type: 1,
               },
               {
-                buttonId: `${prefixobot}rançarpg`,
+                buttonId: `${prefix}rançarpg`,
                 buttonText: { displayText: "Escolher outra raça." },
                 type: 1,
               },
@@ -3659,12 +3074,12 @@ Como uma das raças leves, as Ondinas são capazes de usar a habilidade Wall Run
             footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
             buttons: [
               {
-                buttonId: `${prefixobot}decentes Undine/Leste`,
+                buttonId: `${prefix}decentes Undine/Leste`,
                 buttonText: { displayText: "Comfimar." },
                 type: 1,
               },
               {
-                buttonId: `${prefixobot}rançarpg`,
+                buttonId: `${prefix}rançarpg`,
                 buttonText: { displayText: "Escolher outra raça." },
                 type: 1,
               },
@@ -3710,12 +3125,12 @@ Como uma das corridas leves, os Siths Cait são capazes de usar o Wall Run habil
             footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
             buttons: [
               {
-                buttonId: `${prefixobot}decentes  Cait Sith/Oeste`,
+                buttonId: `${prefix}decentes  Cait Sith/Oeste`,
                 buttonText: { displayText: "Comfimar." },
                 type: 1,
               },
               {
-                buttonId: `${prefixobot}rançarpg`,
+                buttonId: `${prefix}rançarpg`,
                 buttonText: { displayText: "Escolher outra raça." },
                 type: 1,
               },
@@ -3757,12 +3172,12 @@ Embora eles são capazes de aprender outros tipos de magia, através da prática
             footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
             buttons: [
               {
-                buttonId: `${prefixobot}decentes Gnomo/Norte`,
+                buttonId: `${prefix}decentes Gnomo/Norte`,
                 buttonText: { displayText: "Comfimar." },
                 type: 1,
               },
               {
-                buttonId: `${prefixobot}rançarpg`,
+                buttonId: `${prefix}rançarpg`,
                 buttonText: { displayText: "Escolher outra raça." },
                 type: 1,
               },
@@ -3804,12 +3219,12 @@ Quando atingem um nível alto o suficiente, Pucas são capazes de "engarrafament
             footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
             buttons: [
               {
-                buttonId: `${prefixobot}decentes Puca/Noroeste`,
+                buttonId: `${prefix}decentes Puca/Noroeste`,
                 buttonText: { displayText: "Comfimar." },
                 type: 1,
               },
               {
-                buttonId: `${prefixobot} rançarpg`,
+                buttonId: `${prefix} rançarpg`,
                 buttonText: { displayText: "Escolher outra raça." },
                 type: 1,
               },
@@ -3858,12 +3273,12 @@ Como uma das corridas leves, os Imps são capazes de usar a habilidade Run Wall,
             footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
             buttons: [
               {
-                buttonId: `${prefixobot}decentes Imp/Sudeste`,
+                buttonId: `${prefix}decentes Imp/Sudeste`,
                 buttonText: { displayText: "Comfimar." },
                 type: 1,
               },
               {
-                buttonId: `${prefixobot} rançarpg`,
+                buttonId: `${prefix} rançarpg`,
                 buttonText: { displayText: "Escolher outra raça." },
                 type: 1,
               },
@@ -3878,7 +3293,7 @@ Como uma das corridas leves, os Imps são capazes de usar a habilidade Run Wall,
 
       case "canada":
       case "canadá":
-        if (isMito && isOwner) return env("você não é o Canadá");
+        if (isMito && !isDono) return env("você não é o Canadá");
         array = ["canada.webp", "canada2.webp"];
         archive = array[Math.floor(Math.random() * array.length)];
         if (type == "extendedTextMessage") {
@@ -3906,7 +3321,7 @@ Como uma das corridas leves, os Imps são capazes de usar a habilidade Run Wall,
       //ATIVOS
 
       case "game":
-        if (!isMemberAdmin && isOwner) return env(mensagem[0].admin);
+        if (!isMemberAdmin && !isDono) return env(mensagem[0].admin);
         if (!isBotAdm) return env(mensagem[0].botadmin);
         if (!isGroup) return env(mensagem[0].grupo);
         if (Number(args[0]) === 1) {
@@ -3934,7 +3349,7 @@ Como uma das corridas leves, os Imps são capazes de usar a habilidade Run Wall,
         break;
 
       case "nsfw":
-        if (!isMemberAdmin && isOwner) return env(mensagem[0].admin);
+        if (!isMemberAdmin && !isDono) return env(mensagem[0].admin);
         if (!isBotAdm) return env(mensagem[0].botadmin);
         if (!isGroup) return env(mensagem[0].grupo);
         if (Number(args[0]) === 1) {
@@ -3962,7 +3377,7 @@ Como uma das corridas leves, os Imps são capazes de usar a habilidade Run Wall,
         break;
 
       case "antipala":
-        if (!isMemberAdmin && isOwner) return env(mensagem[0].admin);
+        if (!isMemberAdmin && !isDono) return env(mensagem[0].admin);
         if (!isBotAdm) return env(mensagem[0].botadmin);
         if (!isGroup) return env(mensagem[0].grupo);
         if (Number(args[0]) === 1) {
@@ -4015,7 +3430,7 @@ Como uma das corridas leves, os Imps são capazes de usar a habilidade Run Wall,
         break;
 
       case "simih":
-        if (!isMemberAdmin && isOwner) return env("Comando apenas para admins");
+        if (!isMemberAdmin && !isDono) return env("Comando apenas para admins");
         if (!isGroup) return env("Comando apenas para grupo");
         if (args.length < 1) return env("Hmmmm");
         if (Number(args[0]) === 1) {
@@ -4030,20 +3445,20 @@ Como uma das corridas leves, os Imps são capazes de usar a habilidade Run Wall,
           env("Simi desativada com sucesso√️");
         } else {
           env(
-            `${prefixobot + command} 1 para ativar ou ${
-              prefixobot + command
+            `${prefix + command} 1 para ativar ou ${
+              prefix + command
             } 0 para desativar`
           );
         }
         break;
 
       case "antifake":
-        if (!isMemberAdmin && isOwner) return env("Comando apenas para admins");
+        if (!isMemberAdmin && !isDono) return env("Comando apenas para admins");
         if (!isGroup) return env("Comando apenas para grupo");
         if (args.length < 1)
           return env(
-            `${prefixobot + command} 1 para ligar ou ${
-              prefixobot + command
+            `${prefix + command} 1 para ligar ou ${
+              prefix + command
             } 0 para desligar`
           );
         if (Number(args[0]) === 1) {
@@ -4063,20 +3478,27 @@ Como uma das corridas leves, os Imps são capazes de usar a habilidade Run Wall,
           env("Desativou com sucesso o recurso de antifake neste grupo✔️");
         } else {
           env(
-            `${prefixobot + command} 1 para ligar ou ${
-              prefixobot + command
+            `${prefix + command} 1 para ligar ou ${
+              prefix + command
             } 0 para desligar`
           );
         }
         break;
-
+        case 'antipvon':
+          if (!isDono) return env('Apenas Meu Dono')
+          if (banChats) return await env('já está ativo o modo antipv')
+          banChats = true
+          config.banChats = banChats
+          fs.writeFileSync('./config.json', JSON.stringify(config, null, '\t'))
+          await conn.sendMessage(from, {text: "*Sucesso alterado para modo antipv, pv não poderá ser utilizado"})
+          break
       case "antilink":
-        if (!isMemberAdmin && isOwner) return env("Comando apenas para admins");
+        if (!isMemberAdmin && !isDono) return env("Comando apenas para admins");
         if (!isGroup) return env("Comando apenas para grupo");
         if (args.length < 1)
           return env(
-            `${prefixobot + command} 1 para ligar ou ${
-              prefixobot + command
+            `${prefix + command} 1 para ligar ou ${
+              prefix + command
             } 0 para desligar`
           );
         if (Number(args[0]) === 1) {
@@ -4096,20 +3518,20 @@ Como uma das corridas leves, os Imps são capazes de usar a habilidade Run Wall,
           env("Desativou com sucesso o recurso de antilink neste grupo️");
         } else {
           env(
-            `${prefixobot + command} 1 para ligar ou ${
-              prefixobot + command
+            `${prefix + command} 1 para ligar ou ${
+              prefix + command
             } 0 para desligar`
           );
         }
         break;
 
       case "leveling":
-        if (!isMemberAdmin && isOwner) return env("Comando apenas para admins");
+        if (!isMemberAdmin && !isDono) return env("Comando apenas para admins");
         if (!isGroup) return env("Comando apenas para grupo");
         if (args.length < 1)
           return env(
-            `${prefixobot + command} 1 para ligar ou ${
-              prefixobot + command
+            `${prefix + command} 1 para ligar ou ${
+              prefix + command
             } 0 para desligar`
           );
         if (Number(args[0]) === 1) {
@@ -4129,8 +3551,8 @@ Como uma das corridas leves, os Imps são capazes de usar a habilidade Run Wall,
           env("Desativou com sucesso o recurso de leveling neste grupo️");
         } else {
           env(
-            `${prefixobot + command} 1 para ligar ou ${
-              prefixobot + command
+            `${prefix + command} 1 para ligar ou ${
+              prefix + command
             } 0 para desligar`
           );
         }
@@ -4141,14 +3563,14 @@ Como uma das corridas leves, os Imps são capazes de usar a habilidade Run Wall,
       case "linkgp":
       case "linkgrupo":
       case "linkgroup":
-        if (!isMemberAdmin && isOwner) return env("Comando apenas para admins");
+        if (!isMemberAdmin && !isDono) return env("Comando apenas para admins");
         if (!isGroup) return env("Comando apenas para grupo");
         const codelink = await conn.groupInviteCode(from);
         env("Link do grupo: https://chat.whatsapp.com/" + codelink);
         break;
       case "historico":
       case "atividades":
-        if (!isMemberAdmin && isOwner) return env("Comando apenas para admins");
+        if (!isMemberAdmin && !isDono) return env("Comando apenas para admins");
         let jsonn = require("./db/json/countmsg.json");
         let historico = `╭─────────────────╮\n│ *Histórico do grupo:* ${metadata.subject}\n╞───────╮ ▽ ╭───────╯\n│\n`;
         let members = [];
@@ -4305,13 +3727,13 @@ Como uma das corridas leves, os Imps são capazes de usar a habilidade Run Wall,
       case "setnome":
         if (!texto) return env("Coloque a descrição na frente do comando");
         if (!isGroup) return env("Comando apenas para grupo");
-        if (isMemberAdmin && isOwner) return env("voce nao é adm");
+        if (isMemberAdmin && isDono) return env("voce nao é adm");
         await conn.groupUpdateSubject(from, `${texto}`);
         env("Nome do grupo alterado com sucesso");
         break;
 
       case "setdesc":
-        if (!isMemberAdmin && isOwner) return env("voce nao é adm");
+        if (!isMemberAdmin && isDono) return env("voce nao é adm");
         if (!isGroup) return env("Comando apenas para grupo");
         if (!texto) return env("Coloque a descrição na frente do comando");
         await conn.groupUpdateDescription(from, `${texto}`);
@@ -4321,10 +3743,10 @@ Como uma das corridas leves, os Imps são capazes de usar a habilidade Run Wall,
       case "rmghostoff":
         if (args.length < 1)
           return env(
-            `Determine quanta s msg mínimas para banir... Exemplo: ${prefixobot}rmghost 3`
+            `Determine quanta s msg mínimas para banir... Exemplo: ${prefix}rmghost 3`
           );
         if (!isGroup) return env("Comando apenas para grupo");
-        if (!isMemberAdmin && isOwner) return env("voce nao é adm");
+        if (!isMemberAdmin && isDono) return env("voce nao é adm");
         if (!isBotAdm) return env("Bot nao é adm");
         if (groupIdscount.indexOf(from) >= 0) {
           for (let obj of groupMembers) {
@@ -4360,7 +3782,7 @@ Como uma das corridas leves, os Imps são capazes de usar a habilidade Run Wall,
       case "closed":
       case "fechar":
         if (!isGroup) return env("Comando apenas para grupo");
-        if (!isMemberAdmin && isOwner) return env("voce nao é adm");
+        if (!isMemberAdmin && isDono) return env("voce nao é adm");
         if (!isBotAdm) return env("Bot nao é adm");
         if (command == "open") {
           await conn.groupSettingUpdate(from, "not_announcement");
@@ -4374,7 +3796,7 @@ Como uma das corridas leves, os Imps são capazes de usar a habilidade Run Wall,
       case "liberarconfig":
       case "naoliberarconfig":
         if (!isGroup) return env("Comando apenas para grupo");
-        if (!isMemberAdmin && isOwner) return env("voce nao é adm");
+        if (!isMemberAdmin && isDono) return env("voce nao é adm");
         if (!isBotAdm) return env("Bot nao é adm");
         if (command == "releaseconfig") {
           await conn.groupSettingUpdate(from, "unlocked");
@@ -4411,7 +3833,7 @@ Descrição: ${metadata.desc}`;
           caption: pinga,
           buttons: [
             {
-              buttonId: `${prefixobot}admins`,
+              buttonId: `${prefix}admins`,
               buttonText: { displayText: "Admins" },
               type: 1,
             },
@@ -4433,7 +3855,7 @@ Descrição: ${metadata.desc}`;
       case "rstlink":
       case "redefinirlink":
         if (!isGroup) return env("Comando apenas para grupo");
-        if (!isMemberAdmin && isOwner) return env("voce nao é adm");
+        if (!isMemberAdmin && isDono) return env("voce nao é adm");
         if (!isBotAdm) return env("Bot nao é adm");
         var code = await conn.groupRevokeInvite(from);
         env("Link do grupo alterado com sucesso✓");
@@ -4445,7 +3867,7 @@ Descrição: ${metadata.desc}`;
         break;
       case "leave":
         if (!isGroup) return env("Comando apenas para grupo");
-        if (!isMemberAdmin && isOwner) return env("voce nao é adm");
+        if (!isMemberAdmin && isDono) return env("voce nao é adm");
         conn.groupLeave(from);
         break;
       case "leavegp":
@@ -4589,7 +4011,7 @@ https://wa.me/554497433716`;
         } else {
           env(
             `Responder imagem/documento/gif/adesivo/áudio/vídeo com legenda ${
-              prefixobot + command
+              prefix + command
             }`
           );
         }
@@ -4598,11 +4020,11 @@ https://wa.me/554497433716`;
       case "notif":
       case "aviso":
         if (!isGroup) return env("Comando apenas para grupo");
-        if (!isMemberAdmin && isOwner) return env("voce nao é adm");
+        if (!isMemberAdmin && isDono) return env("voce nao é adm");
         if (!texto)
           return env(
             `Coloque o aviso na frente do comando.\nExemplo de como se usar: ${
-              prefixobot + command
+              prefix + command
             } hoje a noite não haverá sol.`
           );
         teks = `🔔 Notificação  de @${
@@ -4624,7 +4046,7 @@ https://wa.me/554497433716`;
       case "demote":
       case "rebaixar":
         if (!isGroup) return env("Comando apenas para grupo");
-        if (!isMemberAdmin && isOwner) return env("voce nao é adm");
+        if (!isMemberAdmin && isDono) return env("voce nao é adm");
         if (!isBotAdm) return env("Bot nao é adm");
         num = `${body.slice(9)}`;
         if (
@@ -4649,7 +4071,7 @@ https://wa.me/554497433716`;
       case "promover":
       case "pm":
         if (!isGroup) return env("Comando apenas para grupo");
-        if (!isMemberAdmin && isOwner) return env("voce nao é adm");
+        if (!isMemberAdmin && isDono) return env("voce nao é adm");
         if (!isBotAdm) return env("Bot nao é adm");
         if (
           mek.message.extendedTextMessage === undefined ||
@@ -4674,7 +4096,7 @@ https://wa.me/554497433716`;
       case "rm":
       case "banir":
         if (!isGroup) return env("Comando apenas para grupo");
-        if (!isMemberAdmin && isOwner) return env("voce nao é adm");
+        if (!isMemberAdmin && isDono) return env("voce nao é adm");
         if (!isBotAdm) return env("Bot nao é adm");
         num = `${body.slice(9)}`;
         if (
@@ -4698,7 +4120,7 @@ https://wa.me/554497433716`;
         break;
       case "add":
         if (!isGroup) return env("Comando apenas para grupo");
-        if (!isMemberAdmin && isOwner) return env("voce nao é adm");
+        if (!isMemberAdmin && isDono) return env("voce nao é adm");
         if (!isBotAdm) return env("Bot nao é adm");
         if (
           mek.message.extendedTextMessage === undefined ||
@@ -4773,7 +4195,7 @@ https://wa.me/554497433716`;
           env("Erro ao converter figurinha para imagem");
         }
         break;
-        case "take":
+        case "take":  case "renomear":
           if (!isPremium) return env('tu n é vip')
         if (!isQuotedSticker) return env("Marque uma figurinha");
         buff = await getFileBuffer(
@@ -4807,31 +4229,31 @@ https://wa.me/554497433716`;
             rows: [
               {
                 title: `Figurinhas aleatório de Meme`,
-                rowId: `${prefixobot}figumeme`,
+                rowId: `${prefix}figumeme`,
               },
               {
                 title: `Figurinhas aleatório de Anime`,
-                rowId: `${prefixobot}figuanime`,
+                rowId: `${prefix}figuanime`,
               },
               {
                 title: `Figurinhas aleatório de Sticker`,
-                rowId: `${prefixobot}figudesenho`,
+                rowId: `${prefix}figudesenho`,
               },
               {
                 title: `Figurinhas aleatório de Roblox`,
-                rowId: `${prefixobot}figuroblox`,
+                rowId: `${prefix}figuroblox`,
               },
               {
                 title: `Figurinhas aleatório de Raiva`,
-                rowId: `${prefixobot}figuraiva`,
+                rowId: `${prefix}figuraiva`,
               },
               {
                 title: `Figurinhas aleatório Engraçadas`,
-                rowId: `${prefixobot}figuengracado`,
+                rowId: `${prefix}figuengracado`,
               },
               {
                 title: `Figurinhas aleatório de Bebê`,
-                rowId: `${prefixobot}figubb`,
+                rowId: `${prefix}figubb`,
               },
             ],
           },
@@ -4875,7 +4297,7 @@ https://wa.me/554497433716`;
               footer: `Escolha uma opção abaixo.`,
               buttons: [
                 {
-                  buttonId: `${prefixobot}figumeme`,
+                  buttonId: `${prefix}figumeme`,
                   buttonText: { displayText: "MAIS FIGURINHA" },
                   type: 1,
                 },
@@ -4912,7 +4334,7 @@ https://wa.me/554497433716`;
               footer: `Escolha uma opção abaixo.`,
               buttons: [
                 {
-                  buttonId: `${prefixobot}figudesenho`,
+                  buttonId: `${prefix}figudesenho`,
                   buttonText: { displayText: "MAIS FIGURINHA" },
                   type: 1,
                 },
@@ -4949,7 +4371,7 @@ https://wa.me/554497433716`;
               footer: `Escolha uma opção abaixo.`,
               buttons: [
                 {
-                  buttonId: `${prefixobot}figuanime`,
+                  buttonId: `${prefix}figuanime`,
                   buttonText: { displayText: "MAIS FIGURINHA" },
                   type: 1,
                 },
@@ -4986,7 +4408,7 @@ https://wa.me/554497433716`;
               footer: `Escolha uma opção abaixo.`,
               buttons: [
                 {
-                  buttonId: `${prefixobot}figuraiva`,
+                  buttonId: `${prefix}figuraiva`,
                   buttonText: { displayText: "MAIS FIGURINHA" },
                   type: 1,
                 },
@@ -5024,7 +4446,7 @@ https://wa.me/554497433716`;
               footer: `Escolha uma opção abaixo.`,
               buttons: [
                 {
-                  buttonId: `${prefixobot}figuroblox`,
+                  buttonId: `${prefix}figuroblox`,
                   buttonText: { displayText: "MAIS FIGURINHA" },
                   type: 1,
                 },
@@ -5062,7 +4484,7 @@ https://wa.me/554497433716`;
               footer: `Escolha uma opção abaixo.`,
               buttons: [
                 {
-                  buttonId: `${prefixobot}figubb`,
+                  buttonId: `${prefix}figubb`,
                   buttonText: { displayText: "MAIS FIGURINHA" },
                   type: 1,
                 },
@@ -5100,7 +4522,7 @@ https://wa.me/554497433716`;
               footer: `Escolha uma opção abaixo.`,
               buttons: [
                 {
-                  buttonId: `${prefixobot}figuengracado`,
+                  buttonId: `${prefix}figuengracado`,
                   buttonText: { displayText: "MAIS FIGURINHA" },
                   type: 1,
                 },
@@ -5114,7 +4536,7 @@ https://wa.me/554497433716`;
 
       //PREMIUM
       case "cc":
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!isPremium && isDono) return env("vc nn e Premium;-;");
         const dbcc = fs.readFileSync("./db/json/db-cc.json");
         var dbjson = JSON.parse(dbcc);
         var pinga = Math.floor(Math.random() * dbjson.length);
@@ -5180,7 +4602,7 @@ NÃO GARANTIMOS SALDO!.
         break;
 
       case "cc2":
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!isPremium && isDono) return env("vc nn e Premium;-;");
         let mescc = Math.floor(Math.random() * 12 + 1);
         mescc = mescc < 10 ? "0" + mescc : mescc;
         let diacc = Math.floor(Math.random() * 30 + 1);
@@ -5248,8 +4670,8 @@ NÃO GARANTIMOS SALDO!.
       case 'delete':
       case 'del':
       case 'd':  
-      if (!isPremium && isOwner) return env('vc nn e Premium;-;') 
-      if (!isBotAdm && isOwner) return env('Preciso de adm, para apagar minhas mensagens ou de algum membro do grupo');
+      if (!isPremium && isDono) return env('vc nn e Premium;-;') 
+      if (!isBotAdm && isDono) return env('Preciso de adm, para apagar minhas mensagens ou de algum membro do grupo');
       try {
        let key = {
           remoteJid: from,
@@ -5263,7 +4685,7 @@ NÃO GARANTIMOS SALDO!.
       }
       */
       case "tempmail":
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!isPremium && isDono) return env("vc nn e Premium;-;");
         const tmmpz = Math.floor(Math.random() * 20 + 8);
         const generateRandomString2 = (num) => {
           const characters2 =
@@ -5289,7 +4711,7 @@ NÃO GARANTIMOS SALDO!.
         break;
 
       case "gnum":
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!isPremium && isDono) return env("vc nn e Premium;-;");
         if (!texto) return env(`Qual o DDD? Exemplo: ${prefix + command} 77`);
         var num = Math.floor(Math.random() * 3000) + 6000;
         let obs = ["98444", "99600", "99265", "99623"];
@@ -5314,7 +4736,7 @@ NÃO GARANTIMOS SALDO!.
         if (texto.length > 13)
           return env("DDD brasileiro e no máximo 13 dígitos...");
         if (texto == "00") return env("00 sério mesmo?");
-        var num = `${prefixobot}`;
+        var num = `${prefix}`;
         let dddi = num.substring(2, 4);
         let ddi = num.substring(0, 2);
         let endnum = num.substring(num.length - 4);
@@ -5398,107 +4820,107 @@ NÃO GARANTIMOS SALDO!.
             rows: [
               {
                 title: `Logo com o tema Devil escrito "${texto}"`,
-                rowId: `${prefixobot}create-neon-devil-wings-text-effect-online-free-1014.html ${texto}`,
+                rowId: `${prefix}create-neon-devil-wings-text-effect-online-free-1014.html ${texto}`,
               },
 
               {
                 title: `Logo com o tema do Batman escrito "${texto}"`,
-                rowId: `${prefixobot}make-a-batman-logo-online-free-1066.html ${texto}`,
+                rowId: `${prefix}make-a-batman-logo-online-free-1066.html ${texto}`,
               },
 
               {
                 title: `Logo com o tema Toxic escrito "${texto}"`,
-                rowId: `${prefixobot}toxic-text-effect-online-901.html ${texto}`,
+                rowId: `${prefix}toxic-text-effect-online-901.html ${texto}`,
               },
 
               {
                 title: `Logo com tema de terro demo "${texto}"`,
-                rowId: `${prefixobot}create-green-horror-style-text-effect-online-1036.html ${texto}`,
+                rowId: `${prefix}create-green-horror-style-text-effect-online-1036.html ${texto}`,
               },
 
               {
                 title: `Logo do Joker escrito "${texto}"`,
-                rowId: `${prefixobot}create-logo-joker-online-934.html ${texto}`,
+                rowId: `${prefix}create-logo-joker-online-934.html ${texto}`,
               },
 
               {
                 title: `Logo com o tema Gold escrito "${texto}"`,
-                rowId: `${prefixobot}3d-golden-ancient-text-effect-online-free-1060.html ${texto}`,
+                rowId: `${prefix}3d-golden-ancient-text-effect-online-free-1060.html ${texto}`,
               },
 
               {
                 title: `Logo com o tema de Natal escrito "${texto}"`,
-                rowId: `${prefixobot}3d-christmas-text-effect-by-name-1055.html ${texto}`,
+                rowId: `${prefix}3d-christmas-text-effect-by-name-1055.html ${texto}`,
               },
 
               {
                 title: `Logo com o tema Relâmpago escrito "${texto}"`,
-                rowId: `${prefixobot}create-thunder-text-effect-online-881.html ${texto}`,
+                rowId: `${prefix}create-thunder-text-effect-online-881.html ${texto}`,
               },
 
               {
                 title: `Logo com o tema Neon escrito "${texto}"`,
-                rowId: `${prefixobot}neon-text-effect-online-879.html ${texto}`,
+                rowId: `${prefix}neon-text-effect-online-879.html ${texto}`,
               },
 
               {
                 title: `Logo com o tema Matrix escrito "${texto}"`,
-                rowId: `${prefixobot}matrix-style-text-effect-online-884.html ${texto}`,
+                rowId: `${prefix}matrix-style-text-effect-online-884.html ${texto}`,
               },
 
               {
                 title: `Logo com o tema de Relâmpago escrito "${texto}"`,
-                rowId: `${prefixobot}online-thunder-text-effect-generator-1031.html ${texto}`,
+                rowId: `${prefix}online-thunder-text-effect-generator-1031.html ${texto}`,
               },
 
               {
                 title: `Logo com a letra falhando escrito "${texto}"`,
-                rowId: `${prefixobot}create-impressive-glitch-text-effects-online-1027.html ${texto}`,
+                rowId: `${prefix}create-impressive-glitch-text-effects-online-1027.html ${texto}`,
               },
 
               {
                 title: `Logo da América escrito "${texto}"`,
-                rowId: `${prefixobot}create-american-flag-3d-text-effect-online-1051.html ${texto}`,
+                rowId: `${prefix}create-american-flag-3d-text-effect-online-1051.html ${texto}`,
               },
 
               {
                 title: `Logo com o tema de Minions escrito "${texto}"`,
-                rowId: `${prefixobot}minion-text-effect-3d-online-978.html ${texto}`,
+                rowId: `${prefix}minion-text-effect-3d-online-978.html ${texto}`,
               },
 
               {
                 title: `Logo com o tema de Magma escrito "${texto}"`,
-                rowId: `${prefixobot}create-a-magma-hot-text-effect-online-1030.html ${texto}`,
+                rowId: `${prefix}create-a-magma-hot-text-effect-online-1030.html ${texto}`,
               },
 
               {
                 title: `Logo com o tema de 1917 escrito "${texto}"`,
-                rowId: `${prefixobot}1917-style-text-effect-online-980.html ${texto}`,
+                rowId: `${prefix}1917-style-text-effect-online-980.html ${texto}`,
               },
 
               {
                 title: `Logo com o tema de Lobo escrito "${texto}"`,
-                rowId: `${prefixobot}online-black-and-white-bear-mascot-logo-creation-1012.html ${texto}`,
+                rowId: `${prefix}online-black-and-white-bear-mascot-logo-creation-1012.html ${texto}`,
               },
 
               {
                 title: `Logo com o tema de Marca no vidro escrito "${texto}"`,
-                rowId: `${prefixobot}dropwater-text-effect-872.html ${texto}`,
+                rowId: `${prefix}dropwater-text-effect-872.html ${texto}`,
               },
 
               {
                 title: `Logo com o tema de Halloween escrito "${texto}"`,
-                rowId: `${prefixobot}halloween-fire-text-effect-940.html ${texto}`,
+                rowId: `${prefix}halloween-fire-text-effect-940.html ${texto}`,
               },
 
               {
                 title: `Logo com o tema escrito de lápis escrito "${texto}"`,
-                rowId: `${prefixobot}create-a-sketch-text-effect-online-1044.html ${texto}`,
+                rowId: `${prefix}create-a-sketch-text-effect-online-1044.html ${texto}`,
               },
 
               {
                 title: `Logo com o tema de Transformes escrito "${texto}"`,
-                rowId: `${prefixobot}create-a-transformer-text-effect-online-1035.html ${texto}`,
+                rowId: `${prefix}create-a-transformer-text-effect-online-1035.html ${texto}`,
               },
             ],
           },
@@ -5518,7 +4940,7 @@ NÃO GARANTIMOS SALDO!.
         if (args.length < 1)
           return env(
             `Digite a frase na frente do comando \nExemplo de como se usar: ${
-              prefixobot + command
+              prefix + command
             } Toki Bot`
           );
         teks = body.slice(7);
@@ -5540,7 +4962,7 @@ NÃO GARANTIMOS SALDO!.
         if (args.length < 1)
           return env(
             `Digite a frase na frente do comando \nExemplo de como se usar: ${
-              prefixobot + command
+              prefix + command
             } Toki Bot`
           );
         teks = body.slice(6);
@@ -5561,7 +4983,7 @@ NÃO GARANTIMOS SALDO!.
         if (args.length < 1)
           return env(
             `Digite a frase na frente do comando \nExemplo de como se usar: ${
-              prefixobot + command
+              prefix + command
             } Toki Bot`
           );
         teks = body.slice(6);
@@ -5582,7 +5004,7 @@ NÃO GARANTIMOS SALDO!.
         if (args.length < 1)
           return env(
             `Digite a frase na frente do comando \nExemplo de como se usar: ${
-              prefixobot + command
+              prefix + command
             } Toki Bot`
           );
         teks = body.slice(8);
@@ -5603,7 +5025,7 @@ NÃO GARANTIMOS SALDO!.
         if (args.length < 1)
           return env(
             `Digite a frase na frente do comando \nExemplo de como se usar: ${
-              prefixobot + command
+              prefix + command
             } Toki Bot`
           );
         env(mensagem[0].espere);
@@ -5656,7 +5078,7 @@ NÃO GARANTIMOS SALDO!.
           caption: "Cafezinho!",
           buttons: [
             {
-              buttonId: `${prefixobot}coffee`,
+              buttonId: `${prefix}coffee`,
               buttonText: { displayText: "Coffee☕" },
               type: 1,
             },
@@ -5706,7 +5128,7 @@ NÃO GARANTIMOS SALDO!.
 
       case "utaka":
         if (!isNsfw) return env(mensagem[0].nsfw);
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!isPremium && isDono) return env("vc nn e Premium;-;");
         res = await fetchJson(
           "https://slazinnn.herokuapp.com/api/nsfw/cosplay&token=slazinnnn"
         );
@@ -5718,7 +5140,7 @@ NÃO GARANTIMOS SALDO!.
             caption: "先輩🥵",
             buttons: [
               {
-                buttonId: `${prefixobot + command}`,
+                buttonId: `${prefix + command}`,
                 buttonText: { displayText: "Próxima imagem" },
                 type: 1,
               },
@@ -5730,7 +5152,7 @@ NÃO GARANTIMOS SALDO!.
         break;
 
       case "pussy":
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!isPremium && isDono) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
         const pussy = await fetchJson(
           "https://slazinnn.herokuapp.com/api/nsfw/pussy&token=slazinnnn"
@@ -5746,7 +5168,7 @@ NÃO GARANTIMOS SALDO!.
             caption: "Pussy!",
             buttons: [
               {
-                buttonId: `${prefixobot + command}`,
+                buttonId: `${prefix + command}`,
                 buttonText: { displayText: "Próxima imagem" },
                 type: 1,
               },
@@ -5759,7 +5181,7 @@ NÃO GARANTIMOS SALDO!.
 
       case "mia":
       case "khalifa":
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!isPremium && isDono) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
         const miaa = await fetchJson("https://pastebin.com/raw/Th48gbKg");
         n = JSON.parse(JSON.stringify(miaa));
@@ -5773,7 +5195,7 @@ NÃO GARANTIMOS SALDO!.
             caption: "Mia Khalifa",
             buttons: [
               {
-                buttonId: `${prefixobot + command}`,
+                buttonId: `${prefix + command}`,
                 buttonText: { displayText: "Próxima imagem" },
                 type: 1,
               },
@@ -5785,7 +5207,7 @@ NÃO GARANTIMOS SALDO!.
         break;
 
       case "malkova":
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!isPremium && isDono) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
         const malkova = await fetchJson(
           "https://slazinnn.herokuapp.com/api/nsfw/miamalkova&token=slazinnnn"
@@ -5801,7 +5223,7 @@ NÃO GARANTIMOS SALDO!.
             caption: "Mia Malkova",
             buttons: [
               {
-                buttonId: `${prefixobot + command}`,
+                buttonId: `${prefix + command}`,
                 buttonText: { displayText: "Próxima imagem" },
                 type: 1,
               },
@@ -5814,7 +5236,7 @@ NÃO GARANTIMOS SALDO!.
 
       case "belle":
       case "delphine":
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!isPremium && isDono) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
         const belle = await fetchJson(
           "https://slazinnn.herokuapp.com/api/nsfw/belle&token=slazinnnn"
@@ -5830,7 +5252,7 @@ NÃO GARANTIMOS SALDO!.
             caption: "Belle Delphine",
             buttons: [
               {
-                buttonId: `${prefixobot + command}`,
+                buttonId: `${prefix + command}`,
                 buttonText: { displayText: "Próxima imagem" },
                 type: 1,
               },
@@ -5845,7 +5267,7 @@ NÃO GARANTIMOS SALDO!.
       //HENTAI && HENTAI LITE
 
       case "masturbation":
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!isPremium && isDono) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
         res = await fetchJson(
           "https://janbot-api.herokuapp.com/api/nsfw/masturbation"
@@ -5858,7 +5280,7 @@ NÃO GARANTIMOS SALDO!.
             caption: `Aperte o botão a baixo para mais um ${command}.`,
             buttons: [
               {
-                buttonId: `${prefixobot + command}`,
+                buttonId: `${prefix + command}`,
                 buttonText: { displayText: "Próxima imagem" },
                 type: 1,
               },
@@ -5870,7 +5292,7 @@ NÃO GARANTIMOS SALDO!.
         break;
 
       case "thighs":
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!isPremium && isDono) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
         res = await fetchJson(
           "https://janbot-api.herokuapp.com/api/nsfw/thighs"
@@ -5883,7 +5305,7 @@ NÃO GARANTIMOS SALDO!.
             caption: `Aperte o botão a baixo para mais um ${command}.`,
             buttons: [
               {
-                buttonId: `${prefixobot + command}`,
+                buttonId: `${prefix + command}`,
                 buttonText: { displayText: "Próxima imagem" },
                 type: 1,
               },
@@ -5896,7 +5318,7 @@ NÃO GARANTIMOS SALDO!.
 
       case "megumin":
         if (!isNsfw) return env(mensagem[0].nsfw);
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!isPremium && isDono) return env("vc nn e Premium;-;");
         env(mensagem[0].espere);
         conn.sendMessage(
           from,
@@ -5905,7 +5327,7 @@ NÃO GARANTIMOS SALDO!.
             caption: `Aperte o botão a baixo para mais um ${command}.`,
             buttons: [
               {
-                buttonId: `${prefixobot + command}`,
+                buttonId: `${prefix + command}`,
                 buttonText: { displayText: "Próxima imagem" },
                 type: 1,
               },
@@ -5917,7 +5339,7 @@ NÃO GARANTIMOS SALDO!.
         break;
 
       case "shinobu":
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!isPremium && isDono) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
         env(mensagem[0].espere);
         conn.sendMessage(
@@ -5927,7 +5349,7 @@ NÃO GARANTIMOS SALDO!.
             caption: `Aperte o botão a baixo para mais um ${command}.`,
             buttons: [
               {
-                buttonId: `${prefixobot + command}`,
+                buttonId: `${prefix + command}`,
                 buttonText: { displayText: "Próxima imagem" },
                 type: 1,
               },
@@ -5939,7 +5361,7 @@ NÃO GARANTIMOS SALDO!.
         break;
 
       case "neko":
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!isPremium && isDono) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
         env(mensagem[0].espere);
         conn.sendMessage(
@@ -5949,7 +5371,7 @@ NÃO GARANTIMOS SALDO!.
             caption: `Aperte o botão a baixo para mais um ${command}.`,
             buttons: [
               {
-                buttonId: `${prefixobot + command}`,
+                buttonId: `${prefix + command}`,
                 buttonText: { displayText: "Próxima imagem" },
                 type: 1,
               },
@@ -5961,7 +5383,7 @@ NÃO GARANTIMOS SALDO!.
         break;
 
       case "waifu":
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!isPremium && isDono) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
         env(mensagem[0].espere);
         conn.sendMessage(
@@ -5971,7 +5393,7 @@ NÃO GARANTIMOS SALDO!.
             caption: `Aperte o botão a baixo para mais um ${command}.`,
             buttons: [
               {
-                buttonId: `${prefixobot + command}`,
+                buttonId: `${prefix + command}`,
                 buttonText: { displayText: "Próxima imagem" },
                 type: 1,
               },
@@ -5983,7 +5405,7 @@ NÃO GARANTIMOS SALDO!.
         break;
 
       case "hentai":
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!isPremium && isDono) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
         res = await fetchJson(
           "https://janbot-api.herokuapp.com/api/nsfw/hentai"
@@ -5996,7 +5418,7 @@ NÃO GARANTIMOS SALDO!.
             caption: `Aperte o botão a baixo para mais um ${command}.`,
             buttons: [
               {
-                buttonId: `${prefixobot + command}`,
+                buttonId: `${prefix + command}`,
                 buttonText: { displayText: "Próxima imagem" },
                 type: 1,
               },
@@ -6008,7 +5430,7 @@ NÃO GARANTIMOS SALDO!.
         break;
 
       case "ero":
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!isPremium && isDono) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
         res = await fetchJson("https://janbot-api.herokuapp.com/api/nsfw/ero");
         env(mensagem[0].espere);
@@ -6019,7 +5441,7 @@ NÃO GARANTIMOS SALDO!.
             caption: `Aperte o botão a baixo para mais um ${command}.`,
             buttons: [
               {
-                buttonId: `${prefixobot + command}`,
+                buttonId: `${prefix + command}`,
                 buttonText: { displayText: "Próxima imagem" },
                 type: 1,
               },
@@ -6031,7 +5453,7 @@ NÃO GARANTIMOS SALDO!.
         break;
 
       case "ahegao":
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!isPremium && isDono) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
         res = await fetchJson(
           "https://janbot-api.herokuapp.com/api/nsfw/ahegao"
@@ -6044,7 +5466,7 @@ NÃO GARANTIMOS SALDO!.
             caption: `Aperte o botão a baixo para mais um ${command}.`,
             buttons: [
               {
-                buttonId: `${prefixobot + command}`,
+                buttonId: `${prefix + command}`,
                 buttonText: { displayText: "Próxima imagem" },
                 type: 1,
               },
@@ -6056,7 +5478,7 @@ NÃO GARANTIMOS SALDO!.
         break;
 
       case "pussyanime":
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!isPremium && isDono) return env("vc nn e Premium;-;");
         if (!isNsfw) return env(mensagem[0].nsfw);
         res = await fetchJson(
           "https://janbot-api.herokuapp.com/api/nsfw/pussy"
@@ -6069,7 +5491,7 @@ NÃO GARANTIMOS SALDO!.
             caption: `Aperte o botão a baixo para mais um ${command}.`,
             buttons: [
               {
-                buttonId: `${prefixobot}hentai`,
+                buttonId: `${prefix}hentai`,
                 buttonText: { displayText: "Próxima imagem" },
                 type: 1,
               },
@@ -6088,7 +5510,7 @@ NÃO GARANTIMOS SALDO!.
         if (!texto)
           return env(
             `Digite o nome do jogo, pra mim pesquisar!\nExemplo: ${
-              prefixobot + command
+              prefix + command
             } Gta V`
           );
         env("Pesquisando jogo...");
@@ -6224,7 +5646,7 @@ NÃO GARANTIMOS SALDO!.
         if (!texto)
           return env(
             `Coloque na frente do comando o celular que você desejar buscar.\nExemplo: ${
-              prefixobot + command
+              prefix + command
             } Moto G 100`
           );
         env("Estou buscando o dispositivo...");
@@ -6259,7 +5681,7 @@ NÃO GARANTIMOS SALDO!.
 
       case "traduzir":
         if (args.length < 1)
-          return env(`Cade o ip? exemplo ${prefixobot}ip da pessoa`);
+          return env(`Cade o ip? exemplo ${prefix}ip da pessoa`);
         teks = body.slice(10);
         anu = await fetchJson(
           `https://docs-jojo.herokuapp.com/api/translate?text=${teks}&from=id&to=pt`
@@ -6268,7 +5690,7 @@ NÃO GARANTIMOS SALDO!.
         break;
       case "ip":
         if (args.length < 1)
-          return env(`Cade o ip? exemplo ${prefixobot} 11414216938 `);
+          return env(`Cade o ip? exemplo ${prefix} 11414216938 `);
         teks = body.slice(4);
         env("*Estou fazendo, se der erro tente novamente ✓*");
         anu = await fetchJson(
@@ -6329,7 +5751,7 @@ NÃO GARANTIMOS SALDO!.
         if (args.length < 1)
           return env(
             `Coloque o número do cnpj na frente do comando\nExemplo: ${
-              prefixobot + command
+              prefix + command
             } 59291534000167`
           );
         cnpj = body.slice(6);
@@ -6368,7 +5790,7 @@ CONSULTA CNPJ 👨‍💻
         if (args.length < 1)
           return env(
             `Coloque o nome do perfil na frente do comando\nExemplo: ${
-              prefixobot + command
+              prefix + command
             } coelho`
           );
         perfil = body.slice(8);
@@ -6399,7 +5821,7 @@ CONSULTA CNPJ 👨‍💻
           let ppliet = await yts(q) 
           for(let a of ppliet.all) {
           /plistS.push({title: a.title, description: `Tipo: Audio > Canal: ${a.author.name}\n Duração: ${a.timestamp}`, rowId: `${prefix}down_a ${a.url}`}, {title: a.title, description: `Tipo: Video > Canal: ${a.author.name}\n Duração: ${a.timestamp}`, rowId: `${prefix}down_v ${a.url}`})/
-          plistS.push({title: a.title, description: `Canal: ${a.author.name}\nDuração: ${a.timestamp}`, rowId: `${prefixobot}ytmp3 ${a.url}`})
+          plistS.push({title: a.title, description: `Canal: ${a.author.name}\nDuração: ${a.timestamp}`, rowId: `${prefix}ytmp3 ${a.url}`})
           }
           listMessage = {
           text: `Resultados sobre: ${q}`,
@@ -6419,131 +5841,144 @@ CONSULTA CNPJ 👨‍💻
           })
           break
 
-      case "play":
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
-        if (!texto)
-          return env(
-            `Exemplo de como se usar: ${prefixobot + command} a vitória chegou`
-          );
-        var pinga = require("yt-search");
-        var pesquisa = await pinga(texto);
-        var anu =
-          pesquisa.videos[Math.floor(Math.random() * pesquisa.videos.length)];
-        play = `🎬 Título : ${anu.title}
-🆔 ID : ${anu.videoId}
-⏳ Duração : ${anu.timestamp}
-🔍 Views : ${anu.views}
-📆 Publicado: ${anu.ago}
-👤 Nome do canal : ${anu.author.name}
-📱 Canal : ${anu.author.url}
-💬 Descrição : ${anu.description}
-📎 Link do vídeo: ${anu.url}`;
-        env(mensagem[0].espere);
-        conn.sendMessage(
-          from,
-          {
-            image: { url: anu.thumbnail },
-            caption: play,
-            buttons: [
-              {
-                buttonId: `${prefixobot}ytmp3 ${anu.title}`,
-                buttonText: { displayText: "Áudio 🎵" },
-                type: 1,
-              },
-            ],
-            headerType: 4,
-          },
-          { quoted: mek }
-        );
-        break;
-        case 'ytmp3': 
-        case 'ytaudio': 
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");                		    
-        if (args.length < 1) return env(`Exemplo: ${prefixobot}ytmp3 plutao`)
-        teks = args.join(' ')
-        env2('Espere um pouco...', "⏳")
-        if (!teks.endsWith("-doc")){
-        res = await yts(`${teks}`).catch(e => {
-        env('Qual e nome da música?')
-        })
-        res = await ytmate.y2mateA(res.all[0].url).catch(e => {
-        env2('𝐅𝐚𝐥𝐡𝐚,𝐭𝐞𝐧𝐭𝐞 𝐮𝐬𝐚𝐫 𝐧𝐨𝐯𝐚𝐦𝐞𝐧𝐭𝐞', '❌')
-        })
-      await conn.sendMessage(from, { audio: {url: res[0].link }, mimetype: 'audio/mp4' }, {quoted: mek})
-        env2("prontinho", "✅");
-        } 
-        break
-      case "ytaudio2":
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
-        if (!texto) return env(`Exemplo : ${prefixobot + command} a vitória`);
-        if (!isUrl(args[0]) && !args[0].includes("https://youtube.com"))
-          return env("Cadê o url do vídeo do YouTube");
-        env("Espere um pouco, comando está em beta");
-        var { aiovideodl } = require("./lib/scraper");
-        var result = await aiovideodl(isUrl(texto));
-        var { medias } = result;
-        var quality = args[1] ? args[1] : "128kbps";
-        var media = medias
-          .filter(
-            (v) =>
-              v.videoAvailable == false &&
-              v.audioAvailable == true &&
-              v.quality == quality
-          )
-          .map((v) => v);
-        if (media[0].formattedSize.split("MB")[0] >= 100.0)
-          return env("File Melebihi Batas" + util.format(media));
-        conn.sendMessage(
-          from,
-          {
-            audio: { url: media[0].url },
-            Mimetype: "audio/mp4",
-            fileName: `${title}.mp3`,
-          },
-          { quoted: mek }
-        );
-        break;
-      case "ytmp42":
-      case "ytvideo2":
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
-        if (!isUrl(args[0]) && !args[0].includes("https://youtube.com"))
-          return env("Cadê o url do vídeo do YouTube");
-        if (!texto)
-          return `Exemplo : ${
-            prefixobot + command
-          } https://youtu.be/pOFHZ2I7m_4`;
-        env("Espere um pouco, comando está em beta");
-        var { aiovideodl } = require("./lib/scraper");
-        var result = await aiovideodl(isUrl(texto)[0]);
-        var { medias } = result;
-        var quality = args[1] ? args[1] : "360p";
-        var media = medias
-          .filter(
-            (v) =>
-              v.videoAvailable == true &&
-              v.audioAvailable == false &&
-              v.quality == quality
-          )
-          .map((v) => v);
-        if (media[0].formattedSize.split("MB")[0] >= 100.0)
-          return env("File Melebihi Batas" + util.format(media));
-        conn.sendMessage(
-          from,
-          {
-            video: { url: media[0].url },
-            fileName: `${title}.mp4`,
-            Mimetype: "video/mp4",
-            caption: " Pronto",
-          },
-          { quoted: mek }
-        );
-        break;
+          case 'play':
+            if (!isPremium) return env("vc nn e Premium;-;");
+            if(!q) return env(`coloque o nome da musica na frente do comando.., se não mandar o yt privou o video..`)
+            res = await yts(q)
+            if(res.all[0].timestamp.length >= 7) return reply("Desculpe, este video ou audio é muito grande, não poderei realizar este pedido, peça outra música abaixo de uma hora.")
+            env('espere...')
+            bla = `Encontreiiii Patrão ta ai\n\nTitulo: ${res.all[0].title}\n\n📉 Visualizações: ${res.all[0].views}\n\n⏰ Tempo: ${res.all[0].timestamp}\n\n🔎 Canal: ${res.all[0].author.name}\n`
+            sendBimg(from, `${res.all[0].image}`, bla, BotName, [
+            {buttonId: `${prefix}down_a ${res.all[0].url}`, buttonText: {displayText: `𝐀𝐮𝐝𝐢𝐨🎵`}, type: 1}, {buttonId: `${prefix}down_v ${res.all[0].url}`, buttonText: {displayText: `𝐕𝐢𝐝𝐞𝐨 📹`}, type: 1}], mek)
+            
+            break 
+             
+            case 'twitter':
+              if (!isPremium && !isDono) return env("vc nn e Premium;-;");
+            if(!q.includes("twitter")) return env(`coloque o link há frente do comando!`)
+            sendBtext(from, "✔️ Download De Vídeo / Audio [ TWITTER ]\nEscolha uma opção que deseja baixar.", `☂️`, [
+            {buttonId: `${prefix}down_v ${q}`, buttonText: {displayText: `🎥 Video`}, type: 1},
+            {buttonId: `${prefix}down_a ${q}`, buttonText: {displayText: `🎵 Audio`}, type: 1}], mek)
+          
+            break 
+            
+            case 'facebook':
+              if (!isPremium && !isDono) return env("vc nn e Premium;-;");
+            if(!q.includes("fb.watch")) return env(`coloque o link há frente do comando!`)
+            sendBtext(from, "✔️ Download De Vídeo / Audio [ FACEBOOK ]\nEscolha uma opção que deseja.", `☂️`, [
+            {buttonId: `${prefix}down_v ${q}`, buttonText: {displayText: `🎥 Video`}, type: 1},
+            {buttonId: `${prefix}down_a ${q}`, buttonText: {displayText: `🎵 Audio`}, type: 1}], mek)
+           
+            break 
+            
+            case 'tiktok':  case 'tk':
+              if (!isPremium && !isDono) return env("vc nn e Premium;-;");
+            if(!q.includes("tiktok")) return env(`coloque o link há frente do comando!`)
+            sendBtext(from, "✔️ Download De Vídeo / Audio [ TIKTOK ]\nEscolha uma opção que deseja.", `☂️`, [
+            {buttonId: `${prefix}down_v ${q}`, buttonText: {displayText: `🎥 Video`}, type: 1},
+            {buttonId: `${prefix}down_a ${q}`, buttonText: {displayText: `🎵 Audio`}, type: 1}], mek)
+            break 
+            case 'instagram':
+            case 'instadw':  
+            if (!isPremium && !isDono) return env("vc nn e Premium;-;");
+            if(!q.includes("instagram")) return env(`Ops, insira o link, só baixo vídeos / audios do ${command} com link`)
+            sendBtext(from, "✔️ Download De Vídeo / Audio [ INSTAGRAM ]\nEscolha uma opção que deseja.", `☂️`, [
+            {buttonId: `${prefix}down_v ${q}`, buttonText: {displayText: `🎥 Video`}, type: 1},
+            {buttonId: `${prefix}down_a ${q}`, buttonText: {displayText: `🎵 Audio`}, type: 1}], mek)
+           
+            break 
+            
+            case 'ytmp3':
+            case 'down_a':
+            case 'face_audio':
+            case 'tiktok_audio':
+            case 'insta_audio':
+            case 'twitter_audio':
+            case 'play_audio':
+              if (!isPremium && !isDono) return env("vc nn e Premium;-;");
+            try {
+            qd = args.join(" ")
+            if(!qd) return
+            if(qd.includes("facebook")) return env("só baixa no formato fb.watch")
+            var res = await yts(q)
+            if(qd.includes("youtu") && !qd.includes("share")) {
+            if(res.all[0].timestamp.length >= 7) return env("esse video/audio é muito grande desculpe ai :(")
+            }
+            if(command === "play_audio") {
+            var qd = res.all[0].url
+            }
+            conn.sendMessage(from, {audio: {url:`http://aleatoryapi.herokuapp.com/api/download/?url=${qd}&apikey=${keyale}`}, mimetype: 'audio/mp4',contextInfo: {
+            externalAdReply: {
+            title: `${res.all[0].title}`,
+            body: "Ta ai a musiquinha patrão",
+            mediaType: 2,
+            thumbnail: await(await fetch(res.all[0].image)).buffer(),
+            mediaUrl: `${qd}`,
+            sourceUrl: `${qd}`,
+            }
+            },
+            quoted: mek
+            })
+            } catch (e) {
+            if(String(e).includes(keyale)) {
+            console.log("desculpe o server caiu desse download :(")   
+            } else {
+            console.log(e)
+            env('falhou :(')
+            }}
+            break
+            
+            case 'ytmp4':
+            case 'down_v':
+            case 'face_video': 
+            case 'tiktok_video':  
+            case 'insta_video':
+            case 'twitter_video':
+            case 'play_video':
+              if (!isPremium && !isDono) return env("vc nn e Premium;-;");
+            try {
+            var qd = args.join(" ")
+            if(!qd) return
+            if(qd.includes("facebook")) return reply("Só está baixando no formato fb.watch")
+            var res = await yts(q)
+            if(qd.includes("youtu") && !qd.includes("share")) {
+            if(res.all[0].timestamp.length >= 7) return reply("esse video/audio é muito grande desculpe ai :(")
+            }
+            if(command === "play_video") {
+            var qd = res.all[0].url
+            var nome = res.all[0].title
+            }
+            reply(enviar.espere)
+            conn.sendMessage(from, {video: {url:`http://aleatoryapi.herokuapp.com/api/download/?url=${qd}&apikey=${keyale}`}, mimetype: 'video/mp4',contextInfo: {
+            externalAdReply: {
+            title: `${nome}`,
+            body: "Ta ai o videozinho patrão ^^",
+            mediaType: 2,
+            mediaUrl: `${qd}`,
+            sourceUrl: `${qd}`,
+            }
+            },
+            quoted: selo
+            }).catch(e => {
+            console.log(e)
+            reply("Error")
+            })
+            } catch (e) {
+            if(String(e).includes(keyale)) {
+            console.log("desculpe o server caiu desse download :(")   
+            } else {
+            console.log(e)
+            reply('falhou :(')
+            }
+            }
+            break
+            
       case "xvideos":
-        if (!isPremium && isOwner) return env("vc nn e Premium;-;");
+        if (!isPremium && isDono) return env("vc nn e Premium;-;");
         if (args.length < 1)
           return env(
             `Coloque o título do vídeo na frente do comando\nExemplo: ${
-              prefixobot + command
+              prefix + command
             } Família sacana`
           );
         teks = body.slice(9);
@@ -6578,7 +6013,7 @@ CONSULTA CNPJ 👨‍💻
               mentions: ddr,
               buttons: [
                 {
-                  buttonId: `${prefixobot + command}`,
+                  buttonId: `${prefix + command}`,
                   buttonText: { displayText: "NEXT RANK ☰" },
                   type: 1,
                 },
@@ -6612,7 +6047,7 @@ CONSULTA CNPJ 👨‍💻
               mentions: ddr,
               buttons: [
                 {
-                  buttonId: `${prefixobot + command}`,
+                  buttonId: `${prefix + command}`,
                   buttonText: { displayText: "NEXT RANK ☰" },
                   type: 1,
                 },
@@ -6646,7 +6081,7 @@ CONSULTA CNPJ 👨‍💻
               mentions: ddr,
               buttons: [
                 {
-                  buttonId: `${prefixobot + command}`,
+                  buttonId: `${prefix + command}`,
                   buttonText: { displayText: "NEXT RANK ☰" },
                   type: 1,
                 },
@@ -6680,7 +6115,7 @@ CONSULTA CNPJ 👨‍💻
               mentions: ddr,
               buttons: [
                 {
-                  buttonId: `${prefixobot + command}`,
+                  buttonId: `${prefix + command}`,
                   buttonText: { displayText: "NEXT RANK ☰" },
                   type: 1,
                 },
@@ -6714,7 +6149,7 @@ CONSULTA CNPJ 👨‍💻
               mentions: ddr,
               buttons: [
                 {
-                  buttonId: `${prefixobot + command}`,
+                  buttonId: `${prefix + command}`,
                   buttonText: { displayText: "NEXT RANK ☰" },
                   type: 1,
                 },
@@ -6748,7 +6183,7 @@ CONSULTA CNPJ 👨‍💻
               mentions: ddr,
               buttons: [
                 {
-                  buttonId: `${prefixobot + command}`,
+                  buttonId: `${prefix + command}`,
                   buttonText: { displayText: "NEXT RANK ☰" },
                   type: 1,
                 },
@@ -6782,7 +6217,7 @@ CONSULTA CNPJ 👨‍💻
               mentions: ddr,
               buttons: [
                 {
-                  buttonId: `${prefixobot + command}`,
+                  buttonId: `${prefix + command}`,
                   buttonText: { displayText: "NEXT RANK ☰" },
                   type: 1,
                 },
@@ -6816,7 +6251,7 @@ CONSULTA CNPJ 👨‍💻
               mentions: ddr,
               buttons: [
                 {
-                  buttonId: `${prefixobot + command}`,
+                  buttonId: `${prefix + command}`,
                   buttonText: { displayText: "NEXT RANK ☰" },
                   type: 1,
                 },
@@ -6850,7 +6285,7 @@ CONSULTA CNPJ 👨‍💻
               mentions: ddr,
               buttons: [
                 {
-                  buttonId: `${prefixobot + command}`,
+                  buttonId: `${prefix + command}`,
                   buttonText: { displayText: "NEXT RANK ☰" },
                   type: 1,
                 },
@@ -6920,7 +6355,7 @@ Tendem a morrer aos ${idade} anos de Idade.`;
         break;
       case "gay":
         if (body.slice(5).trim() == "")
-          env(`marque alguém usando @\nExemplo: ${prefixobot + command} @`);
+          env(`marque alguém usando @\nExemplo: ${prefix + command} @`);
         gadin = body.slice(5);
         let chiufg = [];
         const ti = [
@@ -6987,7 +6422,7 @@ Tendem a morrer aos ${idade} anos de Idade.`;
         if (args.length < 1)
           return env(
             `Coloque deseja sabe na frente do comando\nExemplo de como se usar ${
-              prefixobot + command
+              prefix + command
             } eu vou ser rico?`
           );
         jide = [];
@@ -7087,6 +6522,7 @@ A chance disso acontece e: ${kkll}%`;
         conn.sendMessage(from, { text: pkt, mentions: jids }, { quoted: mek });
         break;
       case "beijar":
+        if (!q) return env('mensione a frente do comando a pessoa')
         if (
           mek.message.extendedTextMessage === undefined ||
           mek.message.extendedTextMessage === null
@@ -7190,7 +6626,7 @@ A chance disso acontece e: ${kkll}%`;
             footer: `Caso queira fazer transferência, use o botão a baixo`,
             buttons: [
               {
-                buttonId: `${prefixobot}helptransf`,
+                buttonId: `${prefix}helptransf`,
                 buttonText: { displayText: "FAZER TRANSFERÊNCIA" },
                 type: 1,
               },
@@ -7201,17 +6637,17 @@ A chance disso acontece e: ${kkll}%`;
         break;
       case "pix":
         if (args.length < 1)
-          return env(`Modo certo de se usar ${prefixobot}transferir @ | valor`);
+          return env(`Modo certo de se usar ${prefix}transferir @ | valor`);
         buttons = [
           {
-            buttonId: `${prefixobot}saldo`,
+            buttonId: `${prefix}saldo`,
             buttonText: { displayText: "Meu Saldo" },
             type: 1,
           },
         ];
         if (!q.includes("|"))
           return env(
-            `Faltou por o valor... exemplo de como se usar: ${prefixobot}transferir @ | 2500\n não esqueça de usar o |`
+            `Faltou por o valor... exemplo de como se usar: ${prefix}transferir @ | 2500\n não esqueça de usar o |`
           );
         const tujuan = q.substring(0, q.indexOf("|") - 1);
         const jumblah = q.substring(q.lastIndexOf("|") + 1);
@@ -7241,7 +6677,7 @@ Tarifa sobre: *0,00*`;
             footer: `Deseja vê seu saldo atualizado?`,
             buttons: [
               {
-                buttonId: `${prefixobot}saldo`,
+                buttonId: `${prefix}saldo`,
                 buttonText: { displayText: "CONSULTA SALDO" },
                 type: 1,
               },
@@ -7251,7 +6687,7 @@ Tarifa sobre: *0,00*`;
         );
         break;
       case "helptransf":
-        pingu = `Para fazer uma transferência de rubins para outra pessoa faça o seguinte, exemplo de como se usar: ${prefixobot}pix @ | 1000\n não esqueça de usar o |`;
+        pingu = `Para fazer uma transferência de rubins para outra pessoa faça o seguinte, exemplo de como se usar: ${prefix}pix @ | 1000\n não esqueça de usar o |`;
         conn.sendMessage(from, { text: pingu }, { quoted: mek });
         break;
       //JOGOS
@@ -7445,7 +6881,7 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
         }
         if (argss.length === 1)
           return env(`*⟅❗⟆ Jogue com Alguem!!!!*
-*para inicar a partida : ${prefixobot + command} @membro do gp*`);
+*para inicar a partida : ${prefix + command} @membro do gp*`);
         const boardnow = setGame(`${from}`);
         console.log(`Start Tictactore ${boardnow.session}`);
         boardnow.status = false;
@@ -7483,7 +6919,7 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
           akinator[0][from] &&
           akinator[0][from].player != sender &&
           !isMemberAdmin &&
-          isOwner
+          isDono
         )
           return env(
             "*Não é você que está jogando*\n\nOu peça um admin para resetar o akineitor"
@@ -7524,12 +6960,12 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
           teks = `Por acaso seu personagem é ${akinator[0][from].game.answers[0].name}?`;
           buttons_opts = [
             {
-              buttonId: `${prefixobot}finaki sim`,
+              buttonId: `${prefix}finaki sim`,
               buttonText: { displayText: "Sim" },
               type: 1,
             },
             {
-              buttonId: `${prefixobot}finaki nao`,
+              buttonId: `${prefix}finaki nao`,
               buttonText: { displayText: "Não" },
               type: 1,
             },
@@ -7555,27 +6991,27 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
                 title: "Opções",
                 rows: [
                   {
-                    rowId: `${prefixobot}respaki 0`,
+                    rowId: `${prefix}respaki 0`,
                     title: "Sim",
                     description: "",
                   },
                   {
-                    rowId: `${prefixobot}respaki 1`,
+                    rowId: `${prefix}respaki 1`,
                     title: "Não",
                     description: "",
                   },
                   {
-                    rowId: `${prefixobot}respaki 2`,
+                    rowId: `${prefix}respaki 2`,
                     title: "Não sei",
                     description: "",
                   },
                   {
-                    rowId: `${prefixobot}respaki 3`,
+                    rowId: `${prefix}respaki 3`,
                     title: "Provavelmente sim",
                     description: "",
                   },
                   {
-                    rowId: `${prefixobot}respaki 4`,
+                    rowId: `${prefix}respaki 4`,
                     title: "Provavelmente não",
                     description: "",
                   },
@@ -7644,7 +7080,7 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
               "Caso você queira jogar novamente, aperte o botão a baixo!.",
             buttons: [
               {
-                buttonId: `${prefixobot + command}`,
+                buttonId: `${prefix + command}`,
                 buttonText: { displayText: "Jogar novamente ️" },
                 type: 1,
               },
@@ -7689,7 +7125,7 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
               "Caso você queira jogar novamente, aperte o botão a baixo!.",
             buttons: [
               {
-                buttonId: `${prefixobot + command}`,
+                buttonId: `${prefix + command}`,
                 buttonText: { displayText: "Jogar novamente ️" },
                 type: 1,
               },
@@ -7710,17 +7146,17 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
             footer: `Você e o jogador número: ${jogadorround}`,
             buttons: [
               {
-                buttonId: `${prefixobot}round6_formas`,
+                buttonId: `${prefix}round6_formas`,
                 buttonText: { displayText: "☂️" },
                 type: 1,
               },
               {
-                buttonId: `${prefixobot}round7_formas`,
+                buttonId: `${prefix}round7_formas`,
                 buttonText: { displayText: "⭕" },
                 type: 1,
               },
               {
-                buttonId: `${prefixobot}round8_formas`,
+                buttonId: `${prefix}round8_formas`,
                 buttonText: { displayText: "⭐" },
                 type: 1,
               },
@@ -7754,7 +7190,7 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
             footer: `Hora do ocorrido:\nDia do acontecimento: ${data}`,
             buttons: [
               {
-                buttonId: `${prefixobot}round6`,
+                buttonId: `${prefix}round6`,
                 buttonText: { displayText: "TENTA NOVAMENTE" },
                 type: 1,
               },
@@ -7784,7 +7220,7 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
             footer: `Hora do ocorrido: ${hora()},\nDia do acontecimento: ${data}`,
             buttons: [
               {
-                buttonId: `${prefixobot + command}`,
+                buttonId: `${prefix + command}`,
                 buttonText: { displayText: "TENTA NOVAMENTE" },
                 type: 1,
               },
@@ -7851,21 +7287,21 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
                 index: 3,
                 quickReplyButton: {
                   displayText: "EU JÁ",
-                  id: `${prefixobot}euja`,
+                  id: `${prefix}euja`,
                 },
               },
               {
                 index: 4,
                 quickReplyButton: {
                   displayText: "EU NUNCA",
-                  id: `${prefixobot}euja2`,
+                  id: `${prefix}euja2`,
                 },
               },
               {
                 index: 5,
                 quickReplyButton: {
                   displayText: "N RESPONDE/PRÓXIMA PERGUNTA",
-                  id: `${prefixobot}euja3`,
+                  id: `${prefix}euja3`,
                 },
               },
             ],
@@ -7912,7 +7348,7 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
         if (!texto)
           return env(
             `Coloque o nome da plaquinha na frente do comando\nExemplo de como se usar: ${
-              prefixobot + command
+              prefix + command
             } Toki`
           );
         var sections = [
@@ -7921,19 +7357,19 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
             rows: [
               {
                 title: `Plaquinha  com o nome "${texto}" no peito`,
-                rowId: `${prefixobot}plaqui ${texto}`,
+                rowId: `${prefix}plaqui ${texto}`,
               },
               {
                 title: `Plaquinha2 com o nome "${texto}" na bunda`,
-                rowId: `${prefixobot}plaqui2 ${texto}`,
+                rowId: `${prefix}plaqui2 ${texto}`,
               },
               {
                 title: `Plaquinha3 com o nome "${texto}" na bunda`,
-                rowId: `${prefixobot}plaqui3 ${texto}`,
+                rowId: `${prefix}plaqui3 ${texto}`,
               },
               {
                 title: `Plaquinha4 com o nome "${texto}" na bunda`,
-                rowId: `${prefixobot}plaqui4 ${texto}`,
+                rowId: `${prefix}plaqui4 ${texto}`,
               },
             ],
           },
@@ -7951,7 +7387,7 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
         if (args.length < 1)
           return env(
             `Digite seu nome/nick na frente do comando\nExemplo de como se usar: ${
-              prefixobot + command
+              prefix + command
             } Joazin`
           );
         teks = body.slice(8);
@@ -7968,7 +7404,7 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
         if (args.length < 1)
           return env(
             `Digite seu nome/nick na frente do comando\nExemplo de como se usar: ${
-              prefixobot + command
+              prefix + command
             } Joazin`
           );
         teks = body.slice(9);
@@ -7985,7 +7421,7 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
         if (args.length < 1)
           return env(
             `Digite seu nome/nick na frente do comando\nExemplo de como se usar: ${
-              prefixobot + command
+              prefix + command
             } Joazin`
           );
         teks = body.slice(9);
@@ -8002,7 +7438,7 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
         if (args.length < 1)
           return env(
             `Digite seu nome/nick na frente do comando\nExemplo de como se usar: ${
-              prefixobot + command
+              prefix + command
             } Joazin`
           );
         teks = body.slice(9);
@@ -8152,7 +7588,7 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
         if (args.length < 1)
           return env(
             `coloque o você deseja pesquisa na frente do comando\nExemplo de como se usar ${
-              prefixobot + command
+              prefix + command
             } Naruto`
           );
         pesq = body.slice(11);
@@ -8166,7 +7602,7 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
             caption: "✅",
             buttons: [
               {
-                buttonId: `${prefixobot + command} ${pesq}`,
+                buttonId: `${prefix + command} ${pesq}`,
                 buttonText: { displayText: "Próxima imagem" },
                 type: 1,
               },
@@ -8185,7 +7621,7 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
           result = anu[Math.floor(Math.random() * anu.length)];
           let buttons = [
             {
-              buttonId: `${prefixobot + command} ${texto}`,
+              buttonId: `${prefix + command} ${texto}`,
               buttonText: { displayText: "Próxima imagem" },
               type: 1,
             },
@@ -8207,19 +7643,19 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
             rows: [
               {
                 title: `Naruto Uzumaki`,
-                rowId: `${prefixobot}pinterest Naruto Uzumaki`,
+                rowId: `${prefix}pinterest Naruto Uzumaki`,
               },
               {
                 title: `Sasuke Uchiha`,
-                rowId: `${prefixobot}pinterest Sasuke Uchiha`,
+                rowId: `${prefix}pinterest Sasuke Uchiha`,
               },
               {
                 title: `Sakura Haruno`,
-                rowId: `${prefixobot}pinterest Sakura Haruno`,
+                rowId: `${prefix}pinterest Sakura Haruno`,
               },
               {
                 title: `Kakashi Hatake`,
-                rowId: `${prefixobot}pinterest Kakashi Hatakw`,
+                rowId: `${prefix}pinterest Kakashi Hatakw`,
               },
             ],
           },
@@ -8240,80 +7676,80 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
             rows: [
               {
                 title: `Emoji "${texto}" da Apple.`,
-                rowId: `${prefixobot + "emooji" + " " + texto + "/" + "apple"}`,
+                rowId: `${prefix + "emooji" + " " + texto + "/" + "apple"}`,
               },
               {
                 title: `Emoji "${texto}" do Google.`,
                 rowId: `${
-                  prefixobot + "emooji" + " " + texto + "/" + "google"
+                  prefix + "emooji" + " " + texto + "/" + "google"
                 }`,
               },
               {
                 title: `Emoji "${texto}" da Samsung.`,
                 rowId: `${
-                  prefixobot + "emooji" + " " + texto + "/" + "samsung"
+                  prefix + "emooji" + " " + texto + "/" + "samsung"
                 }`,
               },
               {
                 title: `Emoji "${texto}" da Microsoft.`,
                 rowId: `${
-                  prefixobot + "emooji" + " " + texto + "/" + "microsoft"
+                  prefix + "emooji" + " " + texto + "/" + "microsoft"
                 }`,
               },
               {
                 title: `Emoji "${texto}" do Whatsapp.`,
                 rowId: `${
-                  prefixobot + "emooji" + " " + texto + "/" + "whatsapp"
+                  prefix + "emooji" + " " + texto + "/" + "whatsapp"
                 }`,
               },
               {
                 title: `Emoji "${texto}" do Twitter.`,
                 rowId: `${
-                  prefixobot + "emooji" + " " + texto + "/" + "twitter"
+                  prefix + "emooji" + " " + texto + "/" + "twitter"
                 }`,
               },
               {
                 title: `Emoji "${texto}" do Facebook.`,
                 rowId: `${
-                  prefixobot + "emooji" + " " + texto + "/" + "facebook"
+                  prefix + "emooji" + " " + texto + "/" + "facebook"
                 }`,
               },
               {
                 title: `Emoji "${texto}" do Joypixels.`,
                 rowId: `${
-                  prefixobot + "emooji" + " " + texto + "/" + "joypixels"
+                  prefix + "emooji" + " " + texto + "/" + "joypixels"
                 }`,
               },
               {
                 title: `Emoji "${texto}" do Openmoji.`,
                 rowId: `${
-                  prefixobot + "emooji" + " " + texto + "/" + "openmoji"
+                  prefix + "emooji" + " " + texto + "/" + "openmoji"
                 }`,
               },
               {
                 title: `Emoji "${texto}" do Skype(Emoji Animado).`,
-                rowId: `${prefixobot + "emooji" + " " + texto + "/" + "skype"}`,
+                rowId: `${prefix + "emooji" + " " + texto + "/" + "skype"}`,
               },
               {
                 title: `Emoji "${texto}" do Emojidex.`,
                 rowId: `${
-                  prefixobot + "emooji" + " " + texto + "/" + "emojidex"
+                  prefix + "emooji" + " " + texto + "/" + "emojidex"
                 }`,
               },
               {
                 title: `Emoji "${texto}" do Emojipedia.`,
                 rowId: `${
-                  prefixobot + "emooji" + " " + texto + "/" + "Emojipedia"
+                  prefix + "emooji" + " " + texto + "/" + "Emojipedia"
                 }`,
               },
               {
                 title: `Emoji "${texto}" do LG.`,
-                rowId: `${prefixobot + "emooji" + " " + texto + "/" + "lg"}`,
+                rowId: `${prefix + "emooji" + " " + texto + "/" + "lg"}`,
               },
               {
                 title: `Emoji "${texto}" do Noto Emoji.`,
                 rowId: `${
-                  prefixobot + "emooji" + " " + texto + "/" + "notoemoji"
+                  prefix + "emooji" + " " + texto + "/" + "notoemoji"
                 }`,
               },
             ],
@@ -8330,7 +7766,7 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
         });
         break;
       case "emooji":
-        if (!q) return env(`Exemplo: ${prefixobot}emoji ☹️/whatsapp`);
+        if (!q) return env(`Exemplo: ${prefix}emoji ☹️/whatsapp`);
         emot = q.split("/")[0];
         jemot = q.split("/")[1];
         if (jemot == "apple") {
