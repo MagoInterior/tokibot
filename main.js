@@ -1,32 +1,4 @@
-const {
-  default: makeWASocket,
-  DisconnectReason,
-  MessageType,
-  Presence,
-  MessageTypeProto,
-  emitGroupParticipantsUpdate,
-  MessageOptions,
-  Mimetype,
-  BufferJSON,
-  downloadAndSaveMediaMessage,
-  WA_DEFAULT_EPHEMERAL,
-  proto,
-  WAUrlInfo,
-  MediaConnInfo,
-  WAContextInfo,
-  generateWAMessage,
-  areJidsSameUser,
-  getContentType,
-  useSingleFileAuthState,
-  prepareWAMessageMedia,
-  delay,
-  generateWAMessageFromContent,
-  generateMessageID,
-  downloadContentFromMessage,
-  makeInMemoryStore,
-  jidDecode,
-  MessageRetryMap
-} = require("@adiwajshing/baileys");
+const {default: makeWASocket,DisconnectReason,useSingleFileAuthState,delay,downloadContentFromMessage, MessageRetryMap} = require("@adiwajshing/baileys");
 
 //MÚDULOS
 const fs = require("fs");
@@ -56,33 +28,20 @@ const phaticusthiccy = require("@phaticusthiccy/open-apis");
 const { createSticker } = require("wa-sticker-formatter");
 const { exec } = require('child_process')
 const Downloader = require("nodejs-file-downloader");
+const { convertSticker } = require("./lib/swm.js");
 // LIBS
-
 const { validmove, setGame } = require("./db/tictactoe");
 const level = require("./lib/level.js");
 const webp_mp4 = require("./db/js/webp_mp4.js");
 const { getRandom, runtime, formatp, getBuffer } = require("./lib/myfunc");
 const { getAdmins, getMembers } = require("./lib/utils");
-const { data, data2, data3, hora, hora2 } = require("./lib/functions.js");
-const {
-  addToken,
-  removeToken,
-  getAllTokens,
-  getTokenByNumber,
-} = require("./lib/fichas.js");
+const { data, data2, hora } = require("./lib/functions.js");
+const {addToken,removeToken,getAllTokens,getTokenByNumber} = require("./lib/fichas.js");
 const { sendVideoAsSticker } = require('./lib/rename.js');
 //ARQUIVOS JSON
-
 const { state, saveState } = useSingleFileAuthState("auth-info-multi.json");
-const { bemvindo2, _level,antipv,countMessage, _premium, premium, mensagem, dinheiro, antifake,bye_group, bye_group2, welcome_group, termos, welkom, welkom2, antilink, simi, akinator, adeuscara, antiviewonce, game, nsfw, antipala} = require('./func.js')
-
-
+const { bemvindo2, _level,countMessage, _premium, premium, mensagem, dinheiro, antifake,bye_group, bye_group2, welcome_group, termos, welkom, welkom2, antilink, simi, akinator, adeuscara, antiviewonce, game, nsfw, antipala} = require('./func.js');
 //FIM
-
-//PARTE JS
-
-const { convertSticker } = require("./lib/swm.js");
-
 blocked = [];
 BotName = config.nomeBot
 prefix = config.prefix
@@ -90,26 +49,9 @@ pack = config.pack
 author = config.author
 keyale = config.keyale
 banChats = config.banChats 
-
 global.blocked;
-
-const vcard =
-  "BEGIN:VCARD\n" + // Formato Vcard
-  "VERSION:3.0\n" +
-  "FN:Tio Tomioka\n" + // Nome
-  "ORG:Criador do Tomioka bot hihi;\n" + // ORGANIZAÇÃO
-  "TEL;type=CELL;type=VOICE;waid=554497433716:+55 99743 3716\n" + // NÚMERO
-  "END:VCARD";
-
-  const descFig = {
-    type: 'full',
-    pack: `${pack}`,
-    author: `${author}`,
-    categories: [
-    '🌹'
-    ]
-    }
-
+const vcard ="BEGIN:VCARD\n" + "VERSION:3.0\n" + "FN:Tio Tomioka\n" + "ORG:Criador do Tomioka bot hihi;\n" + "TEL;type=CELL;type=VOICE;waid=554497433716:+55 99743 3716\n" + "END:VCARD";
+const descFig = {type: 'full',pack: `${pack}`,author: `${author}`,categories: ['🌹']}
 function connect() {
  const conn = makeWASocket({
 logger: P({ level: 'silent' }),
@@ -119,7 +61,6 @@ msgRetryCounterMap: MessageRetryMap,
 defaultQueryTimeoutMs: undefined, 
 keepAliveIntervalMs: 1000 * 60 * 10 * 3
 })
-
   conn.ev.on("connection.update", (update) => {
     if (update.connection == "close") {
       if (
@@ -2388,32 +2329,26 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
         )}-${generateRandomString(5)}-${generateRandomString(5)}`;
         env(a);
         break;
-      case "block":
-      case "unblock":
-        if (!isDono) return env("Comando apenas pro meu dono");
-        const tim = args.join(" ");
-
-        var mentioned = mek.message.extendedTextMessage.contextInfo.participant;
-        var nuumero = mentioned.replace("@s.whatsapp.net", "");
-
-        var numero = tim.replace("-", "");
-        var number = numero.replace(" ", "");
-        var num = number.replace(" ", "");
-        var numss = num.replace("+", "");
-        if (command == "block") {
-          await conn.updateBlockStatus(
-            `${numss + nuumero}@s.whatsapp.net`,
-            "block"
-          );
-          env("bloqueado com sucesso");
-        } else if (command == "unblock") {
-          conn.updateBlockStatus(
-            `${numss + nuumero}@s.whatsapp.net`,
-            "unblock"
-          );
-          env("Desbloqueado com sucesso!");
-        }
-        break;
+        case "block":
+          case "unblock":
+            if (!isDono) return env("Comando apenas pro meu dono");
+            if (!q) return env('cade o numero?\nnumero com 55 ddd sem o 9 e tudo junto')
+            const tim = args.join(" ")
+    
+            if (command == "block") {
+              await conn.updateBlockStatus(
+                `${tim}@s.whatsapp.net`,
+                "block"
+              );
+              env("bloqueado com sucesso");
+            } else if (command == "unblock") {
+              conn.updateBlockStatus(
+                `${tim}@s.whatsapp.net`,
+                "unblock"
+              );
+              env("Desbloqueado com sucesso!");
+            }
+            break;
       case "join":
       case "entrar":
         if (!isDono) return env("Comando apenas para meus donos");

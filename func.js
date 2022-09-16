@@ -1,4 +1,6 @@
 const fs = require("fs");
+
+/////////-----------JSONS-----------/////////
 exports.bemvindo2 = JSON.parse(fs.readFileSync("./db/json/bemvindo2.json"));
 exports._level = JSON.parse(fs.readFileSync("./db/json/level.json"));
 exports.simipv = JSON.parse(fs.readFileSync("./db/json/simipv.json"));
@@ -23,3 +25,4 @@ exports.antiviewonce = JSON.parse(fs.readFileSync("./db/json/antiviewonce.json")
 exports.game = JSON.parse(fs.readFileSync("./db/json/game.json"));
 exports.nsfw = JSON.parse(fs.readFileSync("./db/json/nsfw.json"));
 exports.antipala = JSON.parse(fs.readFileSync("./db/json/antipala.json"));
+/////////-----------QUOTEDS-----------/////////
