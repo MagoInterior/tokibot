@@ -33,14 +33,14 @@ const { convertSticker } = require("./lib/swm.js");
 const { validmove, setGame } = require("./db/tictactoe");
 const level = require("./lib/level.js");
 const webp_mp4 = require("./db/js/webp_mp4.js");
-const { getRandom, runtime, formatp, getBuffer } = require("./lib/myfunc");
+const { getRandom, runtime, formatp } = require("./lib/myfunc");
 const { getAdmins, getMembers } = require("./lib/utils");
 const { data, data2, hora } = require("./lib/functions.js");
 const {addToken,removeToken,getAllTokens,getTokenByNumber} = require("./lib/fichas.js");
 const { sendVideoAsSticker } = require('./lib/rename.js');
 //ARQUIVOS JSON
 const { state, saveState } = useSingleFileAuthState("auth-info-multi.json");
-const { bemvindo2, _level,countMessage, _premium, premium, mensagem, dinheiro, antifake,bye_group, bye_group2, welcome_group, termos, welkom, welkom2, antilink, simi, akinator, adeuscara, antiviewonce, game, nsfw, antipala} = require('./func.js');
+const { bemvindo2, _level,countMessage, _premium, premium, mensagem, dinheiro, antifake,bye_group, bye_group2, welcome_group, termos, welkom, welkom2, antilink, simi, akinator, adeuscara, antiviewonce, game, nsfw, antipala, getBuffer} = require('./func.js');
 //FIM
 blocked = [];
 BotName = config.nomeBot
@@ -49,7 +49,7 @@ pack = config.pack
 author = config.author
 keyale = config.keyale
 banChats = config.banChats 
-global.blocked;
+const logo = config.logo
 const vcard ="BEGIN:VCARD\n" + "VERSION:3.0\n" + "FN:Tio Tomioka\n" + "ORG:Criador do Tomioka bot hihi;\n" + "TEL;type=CELL;type=VOICE;waid=554497433716:+55 99743 3716\n" + "END:VCARD";
 const descFig = {type: 'full',pack: `${pack}`,author: `${author}`,categories: ['🌹']}
 function connect() {
@@ -375,7 +375,6 @@ keepAliveIntervalMs: 1000 * 60 * 10 * 3
     const info = mek.message;
     const pushname = mek.pushName || "Undefined";
     const type = require("@adiwajshing/baileys").getContentType(info);
-    // console.log(mek);
 
     const body =
       type == "conversation"
@@ -634,7 +633,7 @@ keepAliveIntervalMs: 1000 * 60 * 10 * 3
       rane = getRandom('.'+'webp')
       buffimg = await getFileBuffer(mek.message.imageMessage, 'image')
       fig_enviar = await createSticker(buffimg, descFig)
-await conn.sendMessage(from, {sticker: fig_enviar})
+      await conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
     } else if (!isRayssa && type === "videoMessage") {
        boij = isQuotedVideo ? mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage : mek.message.videoMessage
@@ -1513,14 +1512,6 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
 │➪ *${prefix}papel* 
 │➪ *${prefix}plaquinha*
 │
-╞═⟪ *HENTA +18* ⟫════
-│
-│➪ *${prefix}ahegao*
-│➪ *${prefix}hentai*
-│➪ *${prefix}ero*
-│➪ *${prefix}pussyanime*
-│➪ *${prefix}masturbation*
-│
 ╞═⟪ *HENTA LITE* ⟫════
 │
 │➪ *${prefix}waifu*
@@ -1968,56 +1959,19 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
         }
         break;
         case 'attp':
-          figquo = fs.readFileSync('./complement/sticker/packsfigu/figubb/1.webp')
-          try{ 
           if (!q) return env(`preciso do text krl`)
-          url = encodeURI(`https://api.xteam.xyz/attp?file&text=${q}`)
-          attp2 = await getBuffer(url)
-          bas64 = `data:image/jpeg;base64,${attp2.toString('base64')}`
-          anu = args.join(' ').split('|')
-          satu = anu[0] !== '' ? anu[0] : `bolo`
-          sd = `Número do bot +5522998916923`
-          dua = typeof anu[1] !== 'undefined' ? anu[1] : `${sd}`
-          var mantap = await convertSticker(bas64, `${dua}`, `bolo`)
-          var sti = new Buffer.from(mantap, 'base64');
-          conn.sendMessage(from, {sticker: sti, contextInfo: {
-          externalAdReply: {
-          title: "ZANGA",
-          body: "Suporte",
-          mediaType: 2,
-          thumbnail: figquo,
-          mediaUrl: `Https://wa.me/5522988175732`,
-          sourceUrl: `Https://wa.me/5522988175732`,
-          }
-          },
-          quoted: mek
-          })
-          } catch {
-          env("mudando para o servidor 2")
-           try {
-          url = encodeURI(`http://aleatoryapi.herokuapp.com/api/attp?q=${q}&apikey=${keyale}`)
-          attp2 = await getBuffer(url)
-          bas64 = `data:image/jpeg;base64,${attp2.toString('base64')}`
-          anu = args.join(' ').split('|')
-          satu = anu[0] !== '' ? anu[0] : `bolo`
-          sd = `Número do bot +5522998916923`
-          dua = typeof anu[1] !== 'undefined' ? anu[1] : `${sd}`
-          var mantap = await convertSticker(bas64, `${dua}`, `bolo`)
-          var sti = new Buffer.from(mantap, 'base64');
-          conn.sendMessage(from, {sticker: sti, contextInfo: {
-          externalAdReply: {
-          title: "ZANGA",
-          body: "Suporte",
-          mediaType: 2,
-          thumbnail: figquo,
-          mediaUrl: `Https://wa.me/5522988175732`,
-          sourceUrl: `Https://wa.me/5522988175732`,
-          }
-          },
-          quoted: mek
-          })
-          } catch(e) {
-          env("servidores indisponiveis")
+          try{ 
+          hasil = await getBuffer(`https://api.xteam.xyz/attp?file&text=${q}`);
+          fig_enviar = await createSticker(hasil, descFig)
+          await conn.sendMessage(from, {sticker: fig_enviar}, {quoted:mek})
+        } catch {
+          env('to mudando o server carma ai..')
+          try {
+            hasil = await getBuffer(`http://aleatoryapi.herokuapp.com/api/attp?q=${q}&apikey=${keyale}`);
+            fig_enviar = await createSticker(hasil, descFig)
+            await conn.sendMessage(from, {sticker: fig_enviar}, {quoted:mek})
+        } catch(e) {
+          reply("os servers cairam...")
           }}
           break
           case 'attp2':		
@@ -2025,10 +1979,10 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
           case 'attp4':
           case 'attp5': 
           case 'attp6':  
-          if (args.length < 1) return reply(`_Coloque o texto _\n\n*Exemplo ${prefix}attp Sad`)
-          reply(enviar.espere)
-          url = await getBuffer(`http://brizas-api.herokuapp.com/ttp/${command}?apikey=lzdomina&text=${encodeURI(q)}`)
-          await conn.sendMessage(from, {sticker: url}, {quoted: info})
+          if (args.length < 1) return env(`_Coloque o texto _\n\n*Exemplo ${prefix}attp Sad`)
+          env('espere...')
+          url = await getBuffer(`http://brizas-api.herokuapp.com/ttp/${command}?apikey=lzdomina&text=${q}`)
+          await conn.sendMessage(from, {sticker: url}, {quoted: mek})
           break	
           
       case "cekvip":
@@ -2329,26 +2283,26 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
         )}-${generateRandomString(5)}-${generateRandomString(5)}`;
         env(a);
         break;
-        case "block":
-          case "unblock":
-            if (!isDono) return env("Comando apenas pro meu dono");
-            if (!q) return env('cade o numero?\nnumero com 55 ddd sem o 9 e tudo junto')
-            const tim = args.join(" ")
-    
-            if (command == "block") {
-              await conn.updateBlockStatus(
-                `${tim}@s.whatsapp.net`,
-                "block"
-              );
-              env("bloqueado com sucesso");
-            } else if (command == "unblock") {
-              conn.updateBlockStatus(
-                `${tim}@s.whatsapp.net`,
-                "unblock"
-              );
-              env("Desbloqueado com sucesso!");
-            }
-            break;
+      case "block":
+      case "unblock":
+        if (!isDono) return env("Comando apenas pro meu dono");
+        if (!q) return env('cade o numero?\nnumero com 55 ddd sem o 9 e tudo junto')
+        const tim = args.join(" ")
+
+        if (command == "block") {
+          await conn.updateBlockStatus(
+            `${tim}@s.whatsapp.net`,
+            "block"
+          );
+          env("bloqueado com sucesso");
+        } else if (command == "unblock") {
+          conn.updateBlockStatus(
+            `${tim}@s.whatsapp.net`,
+            "unblock"
+          );
+          env("Desbloqueado com sucesso!");
+        }
+        break;
       case "join":
       case "entrar":
         if (!isDono) return env("Comando apenas para meus donos");
@@ -5197,247 +5151,6 @@ NÃO GARANTIMOS SALDO!.
           { quoted: whatsapp }
         );
         break;
-
-      //Fim
-      //HENTAI && HENTAI LITE
-
-      case "masturbation":
-        if (!isPremium && isDono) return env("vc nn e Premium;-;");
-        if (!isNsfw) return env(mensagem[0].nsfw);
-        res = await fetchJson(
-          "https://janbot-api.herokuapp.com/api/nsfw/masturbation"
-        );
-        env(mensagem[0].espere);
-        conn.sendMessage(
-          from,
-          {
-            image: { url: res.result },
-            caption: `Aperte o botão a baixo para mais um ${command}.`,
-            buttons: [
-              {
-                buttonId: `${prefix + command}`,
-                buttonText: { displayText: "Próxima imagem" },
-                type: 1,
-              },
-            ],
-            headerType: 4,
-          },
-          { quoted: whatsapp }
-        );
-        break;
-
-      case "thighs":
-        if (!isPremium && isDono) return env("vc nn e Premium;-;");
-        if (!isNsfw) return env(mensagem[0].nsfw);
-        res = await fetchJson(
-          "https://janbot-api.herokuapp.com/api/nsfw/thighs"
-        );
-        env(mensagem[0].espere);
-        conn.sendMessage(
-          from,
-          {
-            image: { url: res.result },
-            caption: `Aperte o botão a baixo para mais um ${command}.`,
-            buttons: [
-              {
-                buttonId: `${prefix + command}`,
-                buttonText: { displayText: "Próxima imagem" },
-                type: 1,
-              },
-            ],
-            headerType: 4,
-          },
-          { quoted: whatsapp }
-        );
-        break;
-
-      case "megumin":
-        if (!isNsfw) return env(mensagem[0].nsfw);
-        if (!isPremium && isDono) return env("vc nn e Premium;-;");
-        env(mensagem[0].espere);
-        conn.sendMessage(
-          from,
-          {
-            image: { url: "https://janbot-api.herokuapp.com/api/sfw/megumin" },
-            caption: `Aperte o botão a baixo para mais um ${command}.`,
-            buttons: [
-              {
-                buttonId: `${prefix + command}`,
-                buttonText: { displayText: "Próxima imagem" },
-                type: 1,
-              },
-            ],
-            headerType: 4,
-          },
-          { quoted: whatsapp }
-        );
-        break;
-
-      case "shinobu":
-        if (!isPremium && isDono) return env("vc nn e Premium;-;");
-        if (!isNsfw) return env(mensagem[0].nsfw);
-        env(mensagem[0].espere);
-        conn.sendMessage(
-          from,
-          {
-            image: { url: "https://janbot-api.herokuapp.com/api/sfw/shinobu" },
-            caption: `Aperte o botão a baixo para mais um ${command}.`,
-            buttons: [
-              {
-                buttonId: `${prefix + command}`,
-                buttonText: { displayText: "Próxima imagem" },
-                type: 1,
-              },
-            ],
-            headerType: 4,
-          },
-          { quoted: whatsapp }
-        );
-        break;
-
-      case "neko":
-        if (!isPremium && isDono) return env("vc nn e Premium;-;");
-        if (!isNsfw) return env(mensagem[0].nsfw);
-        env(mensagem[0].espere);
-        conn.sendMessage(
-          from,
-          {
-            image: { url: "https://janbot-api.herokuapp.com/api/sfw/neko" },
-            caption: `Aperte o botão a baixo para mais um ${command}.`,
-            buttons: [
-              {
-                buttonId: `${prefix + command}`,
-                buttonText: { displayText: "Próxima imagem" },
-                type: 1,
-              },
-            ],
-            headerType: 4,
-          },
-          { quoted: whatsapp }
-        );
-        break;
-
-      case "waifu":
-        if (!isPremium && isDono) return env("vc nn e Premium;-;");
-        if (!isNsfw) return env(mensagem[0].nsfw);
-        env(mensagem[0].espere);
-        conn.sendMessage(
-          from,
-          {
-            image: { url: "https://janbot-api.herokuapp.com/api/sfw/waifu" },
-            caption: `Aperte o botão a baixo para mais um ${command}.`,
-            buttons: [
-              {
-                buttonId: `${prefix + command}`,
-                buttonText: { displayText: "Próxima imagem" },
-                type: 1,
-              },
-            ],
-            headerType: 4,
-          },
-          { quoted: whatsapp }
-        );
-        break;
-
-      case "hentai":
-        if (!isPremium && isDono) return env("vc nn e Premium;-;");
-        if (!isNsfw) return env(mensagem[0].nsfw);
-        res = await fetchJson(
-          "https://janbot-api.herokuapp.com/api/nsfw/hentai"
-        );
-        env(mensagem[0].espere);
-        conn.sendMessage(
-          from,
-          {
-            image: { url: res.result },
-            caption: `Aperte o botão a baixo para mais um ${command}.`,
-            buttons: [
-              {
-                buttonId: `${prefix + command}`,
-                buttonText: { displayText: "Próxima imagem" },
-                type: 1,
-              },
-            ],
-            headerType: 4,
-          },
-          { quoted: whatsapp }
-        );
-        break;
-
-      case "ero":
-        if (!isPremium && isDono) return env("vc nn e Premium;-;");
-        if (!isNsfw) return env(mensagem[0].nsfw);
-        res = await fetchJson("https://janbot-api.herokuapp.com/api/nsfw/ero");
-        env(mensagem[0].espere);
-        conn.sendMessage(
-          from,
-          {
-            image: { url: res.result },
-            caption: `Aperte o botão a baixo para mais um ${command}.`,
-            buttons: [
-              {
-                buttonId: `${prefix + command}`,
-                buttonText: { displayText: "Próxima imagem" },
-                type: 1,
-              },
-            ],
-            headerType: 4,
-          },
-          { quoted: whatsapp }
-        );
-        break;
-
-      case "ahegao":
-        if (!isPremium && isDono) return env("vc nn e Premium;-;");
-        if (!isNsfw) return env(mensagem[0].nsfw);
-        res = await fetchJson(
-          "https://janbot-api.herokuapp.com/api/nsfw/ahegao"
-        );
-        env(mensagem[0].espere);
-        conn.sendMessage(
-          from,
-          {
-            image: { url: res.result },
-            caption: `Aperte o botão a baixo para mais um ${command}.`,
-            buttons: [
-              {
-                buttonId: `${prefix + command}`,
-                buttonText: { displayText: "Próxima imagem" },
-                type: 1,
-              },
-            ],
-            headerType: 4,
-          },
-          { quoted: whatsapp }
-        );
-        break;
-
-      case "pussyanime":
-        if (!isPremium && isDono) return env("vc nn e Premium;-;");
-        if (!isNsfw) return env(mensagem[0].nsfw);
-        res = await fetchJson(
-          "https://janbot-api.herokuapp.com/api/nsfw/pussy"
-        );
-        env(mensagem[0].espere);
-        conn.sendMessage(
-          from,
-          {
-            image: { url: res.result },
-            caption: `Aperte o botão a baixo para mais um ${command}.`,
-            buttons: [
-              {
-                buttonId: `${prefix}hentai`,
-                buttonText: { displayText: "Próxima imagem" },
-                type: 1,
-              },
-            ],
-            headerType: 4,
-          },
-          { quoted: whatsapp }
-        );
-        break;
-
-      //FIM
       //PESQUISAR
 
       case "jogo":
