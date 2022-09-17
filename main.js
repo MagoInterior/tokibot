@@ -9,6 +9,7 @@ const mimetype = require("mime-types");
 const speed = require("performance-now");
 const moment = require("moment-timezone");
 const { Aki } = require("aki-api");
+
 const axios = require("axios");
 const ms = require("parse-ms");
 const request = require("request-promise");
@@ -1518,14 +1519,6 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
 │➪ *${prefix}shinobu*
 │➪ *${prefix}thighs*
 │
-╞═⟪ *+18* ⟫════
-│
-│➪ *${prefix}utaka*
-│➪ *${prefix}mia*
-│➪ *${prefix}pussy*
-│➪ *${prefix}malkova*
-│➪ *${prefix}belle*
-│
 ╞═⟪ *IMAGEM* ⟫════
 │
 │➪ *${prefix}placas*
@@ -1541,9 +1534,7 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
 │
 │➪ *${prefix}play*
 │➪ *${prefix}ytmp3* 
-│➪ *${prefix}ytaudio2* 
 │➪ *${prefix}ytmp4*
-│➪ *${prefix}ytmp42*
 │➪ *${prefix}ytsrc* 
 │➪ *${prefix}Instagram*
 │➪ *${prefix}tiktok*
@@ -1563,7 +1554,7 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
 │➪ *${prefix}ddd*
 │➪ *${prefix}cep*
 │
-╞═⟪ *PREMIUM* ⟫════
+╞═⟪ *PRIVADO* ⟫════
 │
 │➪ *${prefix}cc*
 │➪ *${prefix}cc2*
@@ -1571,9 +1562,6 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
 │➪ *${prefix}gnum*
 │➪ *${prefix}formatnum*
 │➪ *${prefix}tempmail*
-│➪ *${prefix}play*
-│➪ *${prefix}ytmp3*
-│➪ *${prefix}ytaudio2*
 │
 ╞═⟪ *FERRAMENTAS* ⟫════
 │
@@ -5464,6 +5452,7 @@ CONSULTA CNPJ 👨‍💻
       //DONWLOADS
         case 'ytsearch':
           case 'ytsrc':
+            case 'buscar':
           if (args.length < 1) return env(`Exemplo:\n${command} A vitória chegou`)
           async function ytsrcp() {
           let plistS = []
@@ -5492,10 +5481,10 @@ CONSULTA CNPJ 👨‍💻
 
           case 'play':
             if (!isPremium) return env("vc nn e Premium;-;");
+            env('espere..')
             if(!q) return env(`coloque o nome da musica na frente do comando.., se não mandar o yt privou o video..`)
             res = await yts(q)
             if(res.all[0].timestamp.length >= 7) return reply("Desculpe, este video ou audio é muito grande, não poderei realizar este pedido, peça outra música abaixo de uma hora.")
-            env('espere...')
             bla = `Encontreiiii Patrão ta ai\n\nTitulo: ${res.all[0].title}\n\n📉 Visualizações: ${res.all[0].views}\n\n⏰ Tempo: ${res.all[0].timestamp}\n\n🔎 Canal: ${res.all[0].author.name}\n`
             sendBimg(from, `${res.all[0].image}`, bla, BotName, [
             {buttonId: `${prefix}down_a ${res.all[0].url}`, buttonText: {displayText: `𝐀𝐮𝐝𝐢𝐨🎵`}, type: 1}, {buttonId: `${prefix}down_v ${res.all[0].url}`, buttonText: {displayText: `𝐕𝐢𝐝𝐞𝐨 📹`}, type: 1}], mek)
@@ -5505,7 +5494,7 @@ CONSULTA CNPJ 👨‍💻
             case 'twitter':
               if (!isPremium && !isDono) return env("vc nn e Premium;-;");
             if(!q.includes("twitter")) return env(`coloque o link há frente do comando!`)
-            sendBtext(from, "✔️ Download De Vídeo / Audio [ TWITTER ]\nEscolha uma opção que deseja baixar.", `☂️`, [
+            sendBtext(from, "Download de Video / audio", `escolha um formato abaixo!`, [
             {buttonId: `${prefix}down_v ${q}`, buttonText: {displayText: `🎥 Video`}, type: 1},
             {buttonId: `${prefix}down_a ${q}`, buttonText: {displayText: `🎵 Audio`}, type: 1}], mek)
           
@@ -5514,7 +5503,7 @@ CONSULTA CNPJ 👨‍💻
             case 'facebook':
               if (!isPremium && !isDono) return env("vc nn e Premium;-;");
             if(!q.includes("fb.watch")) return env(`coloque o link há frente do comando!`)
-            sendBtext(from, "✔️ Download De Vídeo / Audio [ FACEBOOK ]\nEscolha uma opção que deseja.", `☂️`, [
+            sendBtext(from, "Download de Video / audio", `escolha um formato abaixo!`, [
             {buttonId: `${prefix}down_v ${q}`, buttonText: {displayText: `🎥 Video`}, type: 1},
             {buttonId: `${prefix}down_a ${q}`, buttonText: {displayText: `🎵 Audio`}, type: 1}], mek)
            
@@ -5523,15 +5512,15 @@ CONSULTA CNPJ 👨‍💻
             case 'tiktok':  case 'tk':
               if (!isPremium && !isDono) return env("vc nn e Premium;-;");
             if(!q.includes("tiktok")) return env(`coloque o link há frente do comando!`)
-            sendBtext(from, "✔️ Download De Vídeo / Audio [ TIKTOK ]\nEscolha uma opção que deseja.", `☂️`, [
+            sendBtext(from, "Download de Video / audio", `escolha um formato abaixo!`, [
             {buttonId: `${prefix}down_v ${q}`, buttonText: {displayText: `🎥 Video`}, type: 1},
-            {buttonId: `${prefix}down_a ${q}`, buttonText: {displayText: `🎵 Audio`}, type: 1}], mek)
+            {buttonId: `${prefix}tiktok_audio ${q}`, buttonText: {displayText: `🎵 Audio`}, type: 1}], mek)
             break 
             case 'instagram':
             case 'instadw':  
             if (!isPremium && !isDono) return env("vc nn e Premium;-;");
-            if(!q.includes("instagram")) return env(`Ops, insira o link, só baixo vídeos / audios do ${command} com link`)
-            sendBtext(from, "✔️ Download De Vídeo / Audio [ INSTAGRAM ]\nEscolha uma opção que deseja.", `☂️`, [
+            if(!q.includes("instagram")) return env(`coloque o link há frente do comando!`)
+            sendBtext(from, "Download de Video / audio", `escolha um formato abaixo!`, [
             {buttonId: `${prefix}down_v ${q}`, buttonText: {displayText: `🎥 Video`}, type: 1},
             {buttonId: `${prefix}down_a ${q}`, buttonText: {displayText: `🎵 Audio`}, type: 1}], mek)
            
@@ -5545,6 +5534,8 @@ CONSULTA CNPJ 👨‍💻
             case 'twitter_audio':
             case 'play_audio':
               if (!isPremium && !isDono) return env("vc nn e Premium;-;");
+              if (!q) return env('envie o link do yt na frente do comando...')
+              env('espere..\n\ndependendo do tamanho pode demorar uns 2 minutos..')
             try {
             qd = args.join(" ")
             if(!qd) return
@@ -5556,18 +5547,8 @@ CONSULTA CNPJ 👨‍💻
             if(command === "play_audio") {
             var qd = res.all[0].url
             }
-            conn.sendMessage(from, {audio: {url:`http://aleatoryapi.herokuapp.com/api/download/?url=${qd}&apikey=${keyale}`}, mimetype: 'audio/mp4',contextInfo: {
-            externalAdReply: {
-            title: `${res.all[0].title}`,
-            body: "Ta ai a musiquinha patrão",
-            mediaType: 2,
-            thumbnail: await(await fetch(res.all[0].image)).buffer(),
-            mediaUrl: `${qd}`,
-            sourceUrl: `${qd}`,
-            }
-            },
-            quoted: mek
-            })
+            await conn.sendMessage(from, {audio: {url:`http://aleatoryapi.herokuapp.com/api/download/?url=${qd}&apikey=${keyale}`}, mimetype: 'audio/mp4'},{quoted:mek})
+          
             } catch (e) {
             if(String(e).includes(keyale)) {
             console.log("desculpe o server caiu desse download :(")   
@@ -5585,6 +5566,8 @@ CONSULTA CNPJ 👨‍💻
             case 'twitter_video':
             case 'play_video':
               if (!isPremium && !isDono) return env("vc nn e Premium;-;");
+              if (!q) return env('envie o link do yt na frente do comando...')
+              env('espere..\n\ndependendo do tamanho pode demorar uns 2 minutos..')
             try {
             var qd = args.join(" ")
             if(!qd) return
@@ -5597,27 +5580,16 @@ CONSULTA CNPJ 👨‍💻
             var qd = res.all[0].url
             var nome = res.all[0].title
             }
-            reply(enviar.espere)
-            conn.sendMessage(from, {video: {url:`http://aleatoryapi.herokuapp.com/api/download/?url=${qd}&apikey=${keyale}`}, mimetype: 'video/mp4',contextInfo: {
-            externalAdReply: {
-            title: `${nome}`,
-            body: "Ta ai o videozinho patrão ^^",
-            mediaType: 2,
-            mediaUrl: `${qd}`,
-            sourceUrl: `${qd}`,
-            }
-            },
-            quoted: selo
-            }).catch(e => {
+            await conn.sendMessage(from, {video: {url:`http://aleatoryapi.herokuapp.com/api/download/?url=${qd}&apikey=${keyale}`}, mimetype: 'video/mp4'},{quoted:mek}).catch(e => {
             console.log(e)
-            reply("Error")
+            env("Error")
             })
             } catch (e) {
             if(String(e).includes(keyale)) {
             console.log("desculpe o server caiu desse download :(")   
             } else {
             console.log(e)
-            reply('falhou :(')
+            env('falhou :(')
             }
             }
             break
