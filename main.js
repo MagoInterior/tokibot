@@ -38,7 +38,7 @@ const { data, data2, hora } = require("./lib/functions.js");
 const {addToken,removeToken,getAllTokens,getTokenByNumber} = require("./lib/fichas.js");
 const { sendVideoAsSticker } = require('./lib/rename.js');
 //ARQUIVOS JSON
-const { state, saveState } = useSingleFileAuthState("auth-info-multi.json");
+const { state, saveState } = useSingleFileAuthState("tomioka.json");
 const { bemvindo2, _level,countMessage, _premium, premium, mensagem, dinheiro, antifake,bye_group, bye_group2, welcome_group, termos, welkom, welkom2, antilink, simi, akinator, adeuscara, antiviewonce, game, nsfw, antipala, getBuffer} = require('./func.js');
 //FIM
 blocked = [];
@@ -52,14 +52,11 @@ const logo = config.logo
 const vcard ="BEGIN:VCARD\n" + "VERSION:3.0\n" + "FN:Tio Tomioka\n" + "ORG:Criador do Tomioka bot hihi;\n" + "TEL;type=CELL;type=VOICE;waid=554497433716:+55 99743 3716\n" + "END:VCARD";
 const descFig = {type: 'full',pack: `${pack}`,author: `${author}`,categories: ['🌹']}
 function connect() {
- const conn = makeWASocket({
-logger: P({ level: 'silent' }),
-printQRInTerminal: true,
-auth: state,
-msgRetryCounterMap: MessageRetryMap,
-defaultQueryTimeoutMs: undefined, 
-keepAliveIntervalMs: 1000 * 60 * 10 * 3
-})
+  const conn = makeWASocket({
+    logger: P({ level: 'silent' }),
+    browser: ['Toki', 'Toki-Md', '1.0.0'],
+    printQRInTerminal: true,
+    auth: state, })
   conn.ev.on("connection.update", (update) => {
     if (update.connection == "close") {
       if (
