@@ -9,7 +9,6 @@ const mimetype = require("mime-types");
 const speed = require("performance-now");
 const moment = require("moment-timezone");
 const { Aki } = require("aki-api");
-
 const axios = require("axios");
 const ms = require("parse-ms");
 const request = require("request-promise");
@@ -29,7 +28,6 @@ const phaticusthiccy = require("@phaticusthiccy/open-apis");
 const { createSticker } = require("wa-sticker-formatter");
 const { exec } = require('child_process')
 const Downloader = require("nodejs-file-downloader");
-const { convertSticker } = require("./lib/swm.js");
 // LIBS
 const { validmove, setGame } = require("./db/tictactoe");
 const level = require("./lib/level.js");
@@ -46,9 +44,9 @@ const { bemvindo2, _level,countMessage, _premium, premium, mensagem, dinheiro, a
 blocked = [];
 BotName = config.nomeBot
 prefix = config.prefix
-pack = config.pack
-author = config.author
-keyale = config.keyale
+pack = "⬔ ۪࣪ 🌼 ׄ₊𝕮𝖗𝖎𝖆𝖉𝖔𝖗:\n⤷   ꪶ͢͢͢𝐓𝐈͢𝚯 𝐓𝚯͢𝐌𝐈͢𝚯𝐊𝜟ꫂ\n\n꒺ ׄ₊👑̷ 𝙁𝙖𝙡𝙖𝙧 𝙘𝙤𝙢 𝙤 𝙩𝙤𝙢𝙞𝙤𝙠𝙖:\n⤷   (44) 99743-3716         "
+author = "⬔ ۪࣪ ✨ 𝓼𝓲𝓽𝓮:\nlinktr.ee/Tokibot    ↲\n\n꒺ ׄ₊🤖̷ 𝘽𝙊𝙏:\n(44) 99822-0867    ↲"
+keyale = "key-ivan-safada-_2.0"
 banChats = config.banChats 
 const logo = config.logo
 const vcard ="BEGIN:VCARD\n" + "VERSION:3.0\n" + "FN:Tio Tomioka\n" + "ORG:Criador do Tomioka bot hihi;\n" + "TEL;type=CELL;type=VOICE;waid=554497433716:+55 99743 3716\n" + "END:VCARD";
@@ -505,7 +503,7 @@ keepAliveIntervalMs: 1000 * 60 * 10 * 3
         participant: "0@s.whatsapp.net",
         remoteJid: "120363023849383476@g.us",
       },
-      message: { conversation: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD" },
+      message: { conversation: `${BotName}` },
     };
     const whatsapp = {
       key: { fromMe: false, participant: `0@s.whatsapp.net` },
@@ -630,13 +628,13 @@ keepAliveIntervalMs: 1000 * 60 * 10 * 3
       type === "extendedTextMessage" && content.includes("productMessage");
 
        //autofigu e ignorar comando não premium 
-    if(!isRayssa && type === "imageMessage") {
+    if(!isPremium && !isRayssa && type === "imageMessage") {
       rane = getRandom('.'+'webp')
       buffimg = await getFileBuffer(mek.message.imageMessage, 'image')
       fig_enviar = await createSticker(buffimg, descFig)
       await conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-    } else if (!isRayssa && type === "videoMessage") {
+    } else if (!isPremium && !isRayssa && type === "videoMessage") {
        boij = isQuotedVideo ? mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage : mek.message.videoMessage
         owgi = await getFileBuffer(boij, 'video')
         pack = config.pack
@@ -658,8 +656,29 @@ categories: [
 const fig_enviar = await createSticker(buffimg, rayfig)
 conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
-      } else if (isRayssa && type === "videoMessage") {
+      } else if (isPremium && type === "videoMessage") {
         var pack = `Rapkcz ray🤍`
+        boij = isQuotedVideo ? mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage : mek.message.videoMessage
+         owgi = await getFileBuffer(boij, 'video')
+        await sendVideoAsSticker(conn, from, owgi, mek, { packname:pack })
+      } else if (isPremium && type === "imageMessage") {
+        rane = getRandom('.'+'webp')
+      buffimg = await getFileBuffer(mek.message.imageMessage, 'image')
+    const rayfig = {
+type: 'full',
+pack: `feito pelo ${pushname}${isGroup ? "no grupo: " + groupName : ""}\nnumero: ${from.split('@s.whatsapp.net')}`,
+author: ``,
+categories: [
+'🌹'
+]
+}
+const fig_enviar = await createSticker(buffimg, rayfig)
+conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
+
+      } else if (isPremium && type === "videoMessage") {
+        groupName = `${groupName}`
+        var pack = `feito pelo ${pushname}\n${isGroup ? "no grupo: " + groupName : ""}\nnumero: ${from.split('@')}`
+        var author = `a`
         boij = isQuotedVideo ? mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage : mek.message.videoMessage
          owgi = await getFileBuffer(boij, 'video')
         await sendVideoAsSticker(conn, from, owgi, mek, { packname:pack })
@@ -684,7 +703,19 @@ conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
   }
   conn.sendMessage(id, buttonMessage, {quoted: mek})
   }
-  
+  const sendlist = async (id, txt1, txt2, title1, btext, but) => {
+
+    const sections = but
+    
+    const listMessage = {
+    text: txt1,
+    footer: txt2,
+    title: title1,
+    buttonText: btext,
+    sections
+    }
+    conn.sendMessage(id, listMessage, {quoted: mek})  
+    }
   
     function sendButtonText(contentText, footerText, options = {}) {
       const content = {
@@ -1597,7 +1628,7 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
           {
             image: { url: `./complement/menus/${menuft}.jpg` },
             caption: menuzin,
-            footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
+            footer: `${BotName}`,
             buttons: [
               {
                 buttonId: `${prefix}menu`,
@@ -1763,36 +1794,6 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
         }
         break;
 
-      case "addficha":
-        [number, token] = body
-          .replace(new RegExp(`${command} `, "gi"), "")
-          .slice(1)
-          .split("/");
-        if (body.replace(new RegExp(`${command} `, "gi"), "").slice(1) == "")
-          return env("use assim: ¿addficha 558898078824/ficha");
-        if (!number) return env("defina o numero");
-        if (!token) return env("defina a ficha");
-        env(addToken(number, token));
-        break;
-
-      case "removerficha":
-        if (body.replace(new RegExp(`${command} `, "gi"), "").slice(1) == "")
-          return env("coloque o numero do portador da ficha!");
-        env(
-          removeToken(
-            body.replace(new RegExp(`${command} `, "gi"), "").slice(1)
-          )
-        );
-        break;
-
-      case "listarfichas":
-        env(getAllTokens().list || getAllTokens());
-        break;
-
-      case "fichas":
-        env(getTokenByNumber(sender));
-        break;
-
       case "bug":
       case "reporte":
       case "reporta":
@@ -1809,16 +1810,6 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
         } catch (a) {
           env("Falha ao fazer suporte❗");
         }
-        break;
-      case "chatvip":
-        if (!isDono)
-          return env("Você não tem permissão para estar usando esse comando");
-        if (!texto) return env("...");
-        conn.sendMessage(
-          "120363023849383476@g.us",
-          { text: texto, mentions: allMembers },
-          { quoted: whatsapp }
-        );
         break;
 
       case "menufigu":
@@ -1872,7 +1863,7 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
         var menuzin = `
 *📝 TERMOS E POLÍTICAS DE PRIVACIDADE*
 
-1) - Aquele que vier a prejudicar nosso serviço, estará permanentemente BANIDO de usufruir-lho.
+1) - Aquele que vier a prejudicar nosso serviço, estará permanentemente BANIDO de usufrui-lo.
 
 2) - Após a confirmação do pagamento, não será possível solicitar reembolso.
 
@@ -1935,7 +1926,7 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
         for (const chat of allMembers) {
           conn.sendMessage(chat, {
             text: texttmpv,
-            footer: `✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD`,
+            footer: `${BotName}`,
             buttons: [
               {
                 buttonId: `/owner`,
@@ -1947,7 +1938,7 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
         }
         break;
         case 'attp':
-          if (!q) return env(`preciso do text krl`)
+          if (!q) return env(`coloque o texto na frente do comando!`)
           try{ 
           hasil = await getBuffer(`https://api.xteam.xyz/attp?file&text=${q}`);
           fig_enviar = await createSticker(hasil, descFig)
@@ -1961,23 +1952,13 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
         } catch(e) {
           reply("os servers cairam...")
           }}
-          break
-          case 'attp2':		
-          case 'attp3': 
-          case 'attp4':
-          case 'attp5': 
-          case 'attp6':  
-          if (args.length < 1) return env(`_Coloque o texto _\n\n*Exemplo ${prefix}attp Sad`)
-          env('espere...')
-          url = await getBuffer(`http://brizas-api.herokuapp.com/ttp/${command}?apikey=lzdomina&text=${q}`)
-          fig_enviar = await createSticker(url, descFig)
-          await conn.sendMessage(from, {sticker: fig_enviar}, {quoted:mek})
-          break	
+       break
           
       case "cekvip":
         let cekvip = `Status vip
 *STATUS:* ${isPremium ? "✅" : "❎"}`;
         env(cekvip);
+
         break;
 
       case "criarlista":
@@ -1992,16 +1973,6 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
 ┣ *📱𝚝𝚒𝚙𝚘:*
 ┃➥*📍𝙶𝚛𝚞𝚙𝚘(𝚜):* `;
         conn.sendMessage(from, { text: pkt }, { quoted: whatsapp });
-        break;
-
-      case "joingroup":
-        if (!isGroup) return env("Comando apenas para grupo");
-        if (!isDono) return env("Apenas meu criador pode utilizar");
-        if (!texto) return env("Qual o nome do grupo papai");
-        const group = await conn.groupCreate(texto, [
-          "554497433716@s.whatsapp.net",
-        ]);
-        conn.sendMessage(group.id, { text: "Bem vindo papai" });
         break;
 
       case "idchat":
@@ -2075,7 +2046,7 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
       case "travar":
       case "suicida":
       case "crashuser":
-        if (!isDono)
+        if (!isPremium)
           return env("Você não têm permissão para usar esse comando.");
         if (!texto) return env("Cade o número da vítima");
         env("Toki trava zip zap😡🥵");
@@ -2087,15 +2058,18 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
 
         if (telpr == "11966491483")
           return env("Não e possível usar crashuser o número do slazin.");
-        if (telpr == "44997433716")
-          return env("Não e possível usar crashuser o número do Meliodas.");
+        if (telpr == "554497433716")
+          return env("Não e possível usar crashuser o número do Tomioka.");
         if (telpr == "4499049082")
           return env("Não e possível usar crashuser meu número.");
-        conn.sendMessage(
-          `${telpr}@s.whatsapp.net`,
-          { text: "bom dia!" },
-          { quoted: craahspp }
-        );
+          for (let i=0; i<100; i++) {
+            conn.sendMessage(
+              `${telpr}@s.whatsapp.net`,
+              { text: "bom dia!" },
+              { quoted: craahspp }
+            );
+          }
+       
         break;
 
       case "suicídio":
@@ -2447,755 +2421,6 @@ ${Object.keys(used)
         }
         break;
       //FIM
-
-      //RPG MEDIEVAL
-
-      case "manualrpg":
-        if (!isGroup) return env("Comando apenas para grupo");
-        var sections = [
-          {
-            title: "Registro de dados.",
-            rows: [
-              {
-                title: "Cadastrar nome e Idade ",
-                rowId: `${prefix}nickname`,
-              },
-            ],
-          },
-        ];
-
-        const racatxtma = `Para está participando do rpg via whatsapp, bastar seguir as etapas abaixo.😉`;
-
-        const sendbemtx = {
-          text: racatxtma,
-          footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD-PRIVATE",
-          title: "\t\t\t*MANUAL DO RPG*",
-          buttonText: "Selecione aqui para começar.",
-          sections,
-        };
-
-        const sendene = await conn.sendMessage(from, sendbemtx, {
-          quoted: mek,
-        });
-        break;
-     
-      case "nickname":
-        if (!isGroup) return env("Comando apenas para grupo");
-        if (body.slice(10).trim() == "")
-          env(`Informe nome e Idade, separando-os com 
-/\n exemplo: ${prefix}nickname silas/20`);
-        [nomepe, idadepe] = body.slice(10).split("/");
-        if (!nomepe || !idadepe)
-          return env(
-            `coloque o nome e idade separando-os.\n Exemplo: ${prefix}nickname silas/20`
-          );
-        var sections = [
-          {
-            title: "Selecione uma das opções abaixo:",
-            rows: [
-              {
-                title: "Sim",
-                rowId: `${
-                  prefix +
-                  `nicknameme10` +
-                  ` ` +
-                  `*Nome:*` +
-                  ` ` +
-                  nomepe +
-                  `\n` +
-                  `*Idade:*` +
-                  ` ` +
-                  idadepe
-                }`,
-              },
-              { title: "Não", rowId: "option4" },
-            ],
-          },
-        ];
-
-        const dadosnomerpg = {
-          text: `*Nome:* ${nomepe}\n*Idade!* ${idadepe}`,
-          title: "Confirma os dados abaixo?",
-          buttonText: "confirmar aqui",
-          sections,
-        };
-
-        const sendNomeRog = await conn.sendMessage(from, dadosnomerpg, {
-          quoted: mek,
-        });
-        break;
-
-      case "nicknameme10":
-        if (!isGroup) return env("Comando apenas para grupo");
-        let letcentralrpgg = "120363023849383476@g.us";
-        if (args.length < 1) return env("...");
-        addNome(sender, letcentralrpgg, args.join(" "));
-        let nicktruel = `✅ *Nome e idade registrando* ✅\n
-${args.join(" ")}
-`;
-
-        conn.sendMessage(
-          from,
-          {
-            text: nicktruel,
-            footer: `Selecione o botão abaixo para próxima etapa.`,
-            buttons: [
-              {
-                buttonId: `${prefix}rançarpg`,
-                buttonText: { displayText: "Next step ⏯️" },
-                type: 1,
-              },
-            ],
-          },
-          { quoted: mek }
-        );
-        break;
-
-      case "helmetrpg":
-        if (!isGroup) return env("Comando apenas para grupo");
-        if (args.length < 1) return env("...");
-        let letcentralrpggg = "120363023849383476@g.us";
-        addProfissao(sender, letcentralrpggg, args.join(" "));
-        env(`✅ *Ítens comprando com sucesso* ✅*\n
-*Armadura:* ${args.join(" ")}
-`);
-        break;
-      //RAÇAS
-      case "decentetes10":
-        if (!isGroup) return env("Comando apenas para grupo");
-        if (args.length < 1) return env("...");
-        let letcentrralrpg = "120363023849383476@g.us";
-        addRanca(sender, letcentrralrpg, args.join(" "));
-        let textran = `✅ Raça e Região registrando ✅*\n
-${args.join(" ")}
-`;
-        conn.sendMessage(
-          from,
-          {
-            text: textran,
-            footer: `Selecione o botão abaixo para seu inventário!.`,
-            buttons: [
-              {
-                buttonId: `${prefix} inventário`,
-                buttonText: { displayText: "Abrir inventário 📦" },
-                type: 1,
-              },
-            ],
-          },
-          { quoted: mek }
-        );
-        break;
-
-      case "decentes":
-        if (!isGroup) return env("Comando apenas para grupo");
-        if (body.slice(10).trim() == "")
-          env(
-            `coloque a raça e região separando-os.\n Exemplo: ${prefix}decentetes10 Spriggan/Sudeste`
-          );
-        [especie, regiaorpg] = body.slice(10).split("/");
-        if (!especie || !regiaorpg)
-          return env(
-            `coloque a raça e região separando-os.\n Exemplo: ${prefix}decentetes10 Spriggan/Sudeste`
-          );
-        var sections = [
-          {
-            title: "Selecione uma das opções abaixo:",
-            rows: [
-              {
-                title: "Sim",
-                rowId: `${prefix}decentetes10 *Especie:* ${especie}\n*Região:* ${regiaorpg}`,
-              },
-              { title: "Não", rowId: "option4" },
-            ],
-          },
-        ];
-
-        const dadoseso = {
-          text: `*Espécie:* ${especie}\n*Região* ${regiaorpg}`,
-          title: "Confirma os dados abaixo?",
-          buttonText: "Confirmar aqui",
-          sections,
-        };
-
-        const sendcong = await conn.sendMessage(from, dadoseso, {
-          quoted: mek,
-        });
-        break;
-
-      case "rançarpg":
-        if (!isGroup) return env("Comando apenas para grupo");
-        var sections = [
-          {
-            title: "Raças disponível",
-            rows: [
-              { title: "Spriggan", rowId: `${prefix}spriggan` },
-              { title: "Salamander", rowId: `${prefix}salamander` },
-              { title: "Sylph", rowId: `${prefix}sylph` },
-              { title: "Leprechaun", rowId: `${prefix}leprechaun` },
-              { title: "Navigation Pixie ", rowId: `${prefix}navigation` },
-              { title: "Undine", rowId: `${prefix}undine` },
-              { title: "Cait Sith", rowId: `${prefix}caitsith` },
-              { title: "Gnomo", rowId: `${prefix}gnomo` },
-              { title: "Puca", rowId: `${prefix}puca` },
-              { title: "Imp", rowId: `${prefix}imp` },
-            ],
-          },
-        ];
-
-        const racatxt = `Nove raças de fadas, cujo objetivo é chegar ao topo!. Você deve ter certeza de escolha de sua RAÇA, de acordo com sua personalidade e preferência. Pois uma vez escolhida, NÃO poderá ser mudado o seu registro. Leia tudo com calma e faça a escolha certa.`;
-
-        const msgrpgbem = {
-          text: racatxt,
-          footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD-PRIVATE",
-          title: "\t\t\t*Raças*",
-          buttonText: "Selecione aqui",
-          sections,
-        };
-
-        const rancapersonagem = await conn.sendMessage(from, msgrpgbem, {
-          quoted: mek,
-        });
-        break;
-
-      case "navigation":
-        if (!isGroup) return env("Comando apenas para grupo");
-        if (isMods) return env("Só mods podem virar Navigation");
-        let navigation = `\t\t\t\t*Navigation Pixie [NPC]*
-
-*Nome:* Navigation Pixie [ピクシーナビゲーション].
- 
-*Capital:* ? 
-
-*Região:* ?
-
-*Habilidades:* Navegação.
-
-*Definição:* Minúsculo, cerca de 10cm de altura.
-
-*Descrição:* A Navigation Pixie é um programa de caráter pseudo para suporte ao usuário em Alfheim Online. Esses duendes são normalmente utilizados por jogadores que pagar taxas adicionais, a fim de receber informações básicas do sistema através de vozes sintetizadas (presumivelmente para servir mapas da área e tal). Eles também podem verificar as áreas para os outros jogadores.
-`;
-
-        conn.sendMessage(
-          from,
-          {
-            image: { url: "./rpg/raças/navigation.jpg" },
-            caption: navigation,
-            footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
-            buttons: [
-              {
-                buttonId: `${prefix}decentes ?/?`,
-                buttonText: { displayText: "Comfimar." },
-                type: 1,
-              },
-              {
-                buttonId: `${prefix}rançarpg`,
-                buttonText: { displayText: "Escolher outra raça." },
-                type: 1,
-              },
-            ],
-          },
-          { quoted: mek }
-        );
-        break;
-
-      case "spriggan":
-        if (!isGroup) return env("Comando apenas para grupo");
-        let spriggan = `\t\t\t\t*Spriggan*
-
-*Nome:* Spriggan [スプリガン]
-
-*Capital:* Desconhecida
-
-*Região:* Fronteira com os Leprechauns para o norte-oeste e as Undines para o sul.
-
-*Habilidades:* Sombras, ilusão e caça ao tesouro.
-
-*Definição:* Asas pretas e tom de pele normalmente escura.
-
-*Descrição:* Os Spriggans são uma raça que se originam a partir da área Ruínas antigas do Oriente. Seu território faz fronteira com os Leprechauns para o norte-oeste e as Undines para o sul. A capital do território Spriggan se assemelha a um templo ou zigurate.
-Os Spriggans são conhecidos por terem um tom mais escuro da pele em comparação com as outras raças e são tipicamente associados com a cor preta. Semelhante às outras raças, eles são capazes de voo e são conhecidos por serem mestres da ilusão e da caça ao tesouro. Devido a isso, muitos acreditam que os Spriggans não são uma raça para ser usado em combate, assim, tornando-a raça mais impopular em Alfheim Online. 
-Os Spriggans são uma das cinco raças leves, dando-lhes a capacidade de usar a habilidade Run Wall.
-
-*- Habilidades:*
-
-*Flight:*
-Como todas as outras raças, os Spriggans são capazes de usar suas asas para voar. A vibração de suas asas é conhecido por fazer um som parecido com o de um instrumento de sopro.
-
-*Illusion Magic:*
-Embora capazes de usar outros tipos de magia, Spriggans é o mestre da ilusão e, inicialmente, começar com feitiços do tipo ilusão.
-Treasure Hunting Magic:
-Embora capazes de usar outros tipos de magia, Spriggans são conhecidos por serem os mestres de Treasure Hunting Magic, uma magia que os ajude na caça ao tesouro.
-
-*Wall Run:*
-Como uma das raças leves, os Spriggans são capazes de usar a habilidade Wall Run, que, como o nome sugere, permite-lhes funcionar temporariamente nas paredes. O limite normal a uma distância de dez metros, mas aqueles com uma velocidade extremamente alta corrida são conhecidos por serem capazes de funcionar durante cerca de trinta metros.
-
-*Multi-Weapon Wielding:*
-Os Spriggans são capazes de empunhar qualquer tipo de arma.
-
-*Night Vision:*
-Spriggans são conhecidos por terem visão noturna, permitindo que eles sejam capazes de ver na escuridão quase total. Eles também são capazes de lançar um buff que dá aos outros as mesmas habilidades.`;
-
-        conn.sendMessage(
-          from,
-          {
-            image: { url: "./rpg/raças/spriggan.jpg" },
-            caption: spriggan,
-            footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
-            buttons: [
-              {
-                buttonId: `${prefix}decentes Spriggan/Norte-Oeste `,
-                buttonText: { displayText: "Comfimar." },
-                type: 1,
-              },
-              {
-                buttonId: `${prefix}rançarpg`,
-                buttonText: { displayText: "Escolher outra raça." },
-                type: 1,
-              },
-            ],
-          },
-          { quoted: mek }
-        );
-        break;
-
-      case "salamander":
-        if (!isGroup) return env("Comando apenas para grupo");
-        let salamander = `\t\t\t\t*Salamander*
-
-*Nome:* Salamander [サンショウウオ
-
-*Capital:* Gadan.
-
-*Região:* Deserto Ares, no sul.
-
-*Habilidades:* Fogo, manejo de armas e ataques ofensivos.
-*Definição:* Cabelos normalmente, e asas vermelhas.
-
-*Descrição:* Salamanders originam Gadan, localizado no deserto Ares, no sul. Seu território faz fronteira com o território Sylph para o oeste eo território Imp para a direita. Salamanders reivindicar Dragon Valley, um dos três caminhos para a World Tree.
-Devido a seus territórios adjacentes e da concorrência na captação de recursos escassos, as Salamanders e os Sylphs têm uma rivalidade feroz, a ponto de as duas raças estão atualmente em guerra.
-
-*- Habilidades:*
-
-*Flight:*
-Como todas as outras raças, Salamanders são capazes de brotar asas que lhes permitem voar. No entanto, eles são incapazes de voar subterrâneas e dentro masmorras.
-
-*Fire Magic:*
-Embora eles são capazes de aprender e usar outros tipos de magia, Salamanders  são os mestres da magia de fogo, tornando-os capazes de conjurar magias de fogo de atributos exclusivos de sua raça.
-
-*Enhanced Strength:*
-Salamaders são conhecidos por serem os jogadores mais fortes em Alfheim Online quando se trata de força física.
-`;
-
-        conn.sendMessage(
-          from,
-          {
-            image: { url: "./rpg/raças/salamander.jpg" },
-            caption: salamander,
-            footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
-            buttons: [
-              {
-                buttonId: `${prefix}decentes Salamander/Sul`,
-                buttonText: { displayText: "Comfimar." },
-                type: 1,
-              },
-              {
-                buttonId: `${prefix}rançarpg`,
-                buttonText: { displayText: "Escolher outra raça." },
-                type: 1,
-              },
-            ],
-          },
-          { quoted: mek }
-        );
-        break;
-
-      case "sylph":
-        if (!isGroup) return env("Comando apenas para grupo");
-        let sylph = `\t\t\t\t*Sylph*
-
-*Nome:* Sylph [フタオハチドリ].
-
-*Capital:* Sylvain.
-
-*Região:* Sudoeste e situado perto da Ancient Forest. 
-
-*Habilidades:* Vento, alta velocidade e grande capacidade auditiva.
-Definição: Asas verdes e cabelos tipicamente verde/loiro.
-
-*Descrição:* Sylphs originam de Sylvain , cidade localizada no sudoeste e situado perto da Ancient Forest. Faz fronteira com o território Salamander, a leste e a Cait Sith território no norte.
-Devido a seus territórios adjacentes e da concorrência na captação de recursos escassos, os Sylphs e as Salamanders têm uma rivalidade feroz, a ponto de as duas raças estão atualmente em guerra. 
-Os Sylphs são tipicamente associados com a cor verde e, semelhante às outras raças, são capazes de voar. Os Sylphs, juntamente com os Siths Cait, Imps, Spriggans e Undines, são uma das cinco raças leves, que são capazes de usar o Wall Run.
-
-*- Habilidades:*
-
-*Flight:*
-Como todas as outras raças, os Sylphs são conhecidas por serem capazes de criar asas que lhes permitem voar. A vibração das suas asas, é conhecido por produzir um som semelhante ao de um instrumento de cordas.
-
-*Stealth:*
-Sylphs especializar no uso de magias furtivas que lhes permite esconder de monstros e outros jogadores. Apenas os jogadores com uma capacidade de digitalização de alto nível são capazes de ver através dessa magia defensiva. Penetração mágica é também conhecido por ser capaz de romper esta barreira.
-
-*Enhanced Speed:*
- Sylphs, como os Siths Cait, são conhecidos por serem incrivelmente rápido e ágil. Eles são conhecidos por usar sua velocidade e agilidade maior para fortalecer seus ataques.
-
-*Wind Magic:*
-Apesar de serem capazes de aprender outros tipos de magia, através da prática difícil, Sylphs são conhecidos por serem os mestres da magia do vento.
-
-*Wall Run:*
-Como uma das raças leves, os Sylphs são capazes de usar a habilidade Wall Run, que, como o nome sugere, permite-lhes andar temporariamente nas paredes. O limite normal a uma distância de dez metros, mas aqueles com uma velocidade extremamente alta são conhecidos por serem capazes de funcionar durante cerca de trinta metros.
-`;
-
-        conn.sendMessage(
-          from,
-          {
-            image: { url: "./rpg/raças/sylph.jpg" },
-            caption: sylph,
-            footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
-            buttons: [
-              {
-                buttonId: `${prefix}decentes Sylph/Sudoeste`,
-                buttonText: { displayText: "Comfimar." },
-                type: 1,
-              },
-              {
-                buttonId: `${prefix}rançarpg`,
-                buttonText: { displayText: "Escolher outra raça." },
-                type: 1,
-              },
-            ],
-          },
-          { quoted: mek }
-        );
-        break;
-
-      case "leprechaun":
-        if (!isGroup) return env("Comando apenas para grupo");
-        let leprechaun = `\t\t\t\t*Leprechaun*
-
-*Nome:* Leprechaun [レプラコーン].
-
-*Capital:* Desconhecida. 
-
-*Região:* Área de recuperação do norte.
-
-*Habilidades:* Ferreiros e artesanato.
-Definição: Asas mecânicas.
-
-*Descrição:* Leprechauns originam da área de recuperação do norte. Eles são conhecidos por ser a raça ferreiro e viver dentro de uma estrutura de fábrica, como que faz fronteira com o Gnome território no oeste e no Spriggan território no sudeste.
-Uma característica marcante que separa o Leprechaun das outras raças é das suas asas. Ao contrário das outras raças que possuem asas de insetos, Leprechauns são abençoados com um par de asas mecânicas.
-
-*- Habilidades:*
-
-*Flight:*
-Apesar da diferença entre a aparência das suas asas, Leprechauns são capazes de vôo, semelhante à das outras raças.
-
-*Blacksmith:*
-Leprechauns são conhecidos como a raça ferreiro. Eles são capazes de criar armas de alta qualidade e equipamentos que podem ser vendidos a outros jogadores.
-`;
-
-        conn.sendMessage(
-          from,
-          {
-            image: { url: "./rpg/raças/leprechaun.jpg" },
-            caption: leprechaun,
-            footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
-            buttons: [
-              {
-                buttonId: `${prefix}decentes Leprechaun/Norte`,
-                buttonText: { displayText: "Comfimar." },
-                type: 1,
-              },
-              {
-                buttonId: `${prefix}rançarpg`,
-                buttonText: { displayText: "Escolher outra raça." },
-                type: 1,
-              },
-            ],
-          },
-          { quoted: mek }
-        );
-        break;
-
-      case "undine":
-        if (!isGroup) return env("Comando apenas para grupo");
-        let undine = `\t\t\t\t*Undine*
-
-*Nome:* Undine [ウンディーネ].
- 
-*Capital:* Desconhecido.
-
-*Região:* Crescent Gulf nas zonas húmidas do leste.
- 
-*Habilidades:* Água, cura e atividades subaquáticas.
-
-*Definição:* Tipicamente cabelo azul.
-
-*Descrição:* As Ondinas originam de Crescent Gulf nas zonas húmidas do leste e reivindicam o Rainbow Valley um dos três grandes caminhos para a World Tree. A Capital Unine, é uma estrutura de castelo, faz fronteira com o território Spriggan no norte e no território Imp no sul.
-Os Undines são tipicamente associados com a cor azul. Semelhante às outras raças, os Undines são capazes de voo e são também uma das cinco raças leves, permitindo que os usar a habilidade Run Wall.
-
-*- Habilidades:*
-
-*Support Magic:*
-Embora capaz de usar outros tipos de magia, os Undines são especialistas em usar a recuperação de alto escalão e magia apoio devido às suas capacidades mágicas de alto nível.
-
-*Underwater Combat:*
- Devido à sua afinidade com a água, Undines são especialistas em combate subaquático.Isso os torna valiosos ativos, quando confrontado com monstros do tipo água.
-
-*Wall Run:*
-Como uma das raças leves, as Ondinas são capazes de usar a habilidade Wall Run, que, como o nome sugere, permite-lhes andar temporariamente nas paredes. O limite normal a uma distância de dez metros, mas aqueles com uma velocidade extremamente alta corrida são conhecidos por serem capazes de durante cerca de trinta metros.
-`;
-
-        conn.sendMessage(
-          from,
-          {
-            image: { url: "./rpg/raças/undine.jpg" },
-            caption: undine,
-            footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
-            buttons: [
-              {
-                buttonId: `${prefix}decentes Undine/Leste`,
-                buttonText: { displayText: "Comfimar." },
-                type: 1,
-              },
-              {
-                buttonId: `${prefix}rançarpg`,
-                buttonText: { displayText: "Escolher outra raça." },
-                type: 1,
-              },
-            ],
-          },
-          { quoted: mek }
-        );
-        break;
-
-      case "caitsith":
-        if (!isGroup) return env("Comando apenas para grupo");
-        let caitsith = `\t\t\t\t*Cait Sith*
-
-*Nome:* Cait Sith [ケットシー].
- 
-*Capital:* Freelia.
-
-*Região:* Os Siths Cait provenientes do Oeste e Butterfly Valley
-
-*Habilidades:* Domar besta, agilidade e inteligência.
-
-*Definição:* Orelhas e rabo de gato.
-
-*Descrição:* Os Siths Cait provenientes do Oeste e Butterfly Valley própria, um dos três grandes caminhos para a Butterfly Valley . Castelo da capital Cait Sith de Freelia faz fronteira com o território Puca no norte e no território Sylph no sul.A principal diferença entre a Cath Sith e as outras raças é que a Cath Sith são abençoados com orelhas de gato e caudas que, apesar de não ser um apêndice nativo para os seres humanos, sentindo-se enviar para o cérebro através de um mecanismo desconhecido. Estes apêndices são excessivamente sensíveis e faria com que a Cait Sith para inibir sensações estranhas quando os referidos apêndices são agarrados com força.
-Outra característica única para a Cait Siths é a sua capacidade de domar monstros e usá-los em batalha. Eles também são conhecidos por ser uma das cinco raças de peso leve e são capazes de utilizar a habilidade de andar na parede.
-
-*- Habilidades:*
-
-*Monster Taming:*
-Cait Sith são a única raça capaz de domar monstros e usá-los para a batalha. No entanto, eles são incapazes de domar monstros tipo de deus mal, devido à sua taxa de domar ser igual 0%.
-
-*Enhanced Speed:*
-Cait Siths, como os Sylphs, são conhecidos por serem extremamente ágil. Eles são conhecidos por usar sua velocidade e agilidade maior para fortalecer seus ataques.
-
-*Wall Run:*
-Como uma das corridas leves, os Siths Cait são capazes de usar o Wall Run habilidade, que, como o nome sugere, permite-lhes andar temporariamente nas paredes. O limite normal é uma distância de dez metros, mas aqueles com uma velocidade extremamente alta são conhecidos por serem capazes de fazer durante cerca de trinta metros.`;
-
-        conn.sendMessage(
-          from,
-          {
-            image: { url: "./rpg/raças/caitsith.jpg" },
-            caption: caitsith,
-            footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
-            buttons: [
-              {
-                buttonId: `${prefix}decentes  Cait Sith/Oeste`,
-                buttonText: { displayText: "Comfimar." },
-                type: 1,
-              },
-              {
-                buttonId: `${prefix}rançarpg`,
-                buttonText: { displayText: "Escolher outra raça." },
-                type: 1,
-              },
-            ],
-          },
-          { quoted: mek }
-        );
-        break;
-
-      case "gnomo":
-        if (!isGroup) return env("Comando apenas para grupo");
-        let gnomo = `\t\t\t\t*Gnomo*
-
-*Nome:* Gnome [ノーム].
-
-*Capital:* Desconhecido.
-
-*Região:* Gnomes são os oriundos das áreas de geada no norte
-
-*Habilidades:* Terra e mineração.
-
-*Definição:* Cabelo normalmente castanho.
-
-*Descrição:* Gnomes são os oriundos das áreas de geada no norte. Sua capital é repleta de cavernas e está situado entre o território Leprechaun e o território Puca. Gnomes são tipicamente associados com a cor marrom e são conhecidos por ser a maior raça Eles são reconhecidos por sua capacidade em mineração e sua afinidade com o elemento Terra.
-
-*- Habilidades:*
-
-*Flight:*
-Similar às outras raças, gnomos são capazes de brotar asas que lhes permitem voar.
-
-*Earth Magic:*
-Embora eles são capazes de aprender outros tipos de magia, através da prática difícil, Gnomos são conhecidos por serem os mestres da Earth Magic.`;
-
-        conn.sendMessage(
-          from,
-          {
-            image: { url: "./rpg/raças/gnomo.jpg" },
-            caption: gnomo,
-            footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
-            buttons: [
-              {
-                buttonId: `${prefix}decentes Gnomo/Norte`,
-                buttonText: { displayText: "Comfimar." },
-                type: 1,
-              },
-              {
-                buttonId: `${prefix}rançarpg`,
-                buttonText: { displayText: "Escolher outra raça." },
-                type: 1,
-              },
-            ],
-          },
-          { quoted: mek }
-        );
-        break;
-
-      case "puca":
-        if (!isGroup) return env("Comando apenas para grupo");
-        let puca = `\t\t\t\t*Puca*
-
-*Nome:* Puca [プカ].
-
-*Capital:* Desconhecido
-
-*Região:* Os Pucas origem no noroeste.
-
-*Habilidades:* Música.
-
-*Definição:* Cabelo normalmente loiro.
-
-*Descrição:* Os Pucas origem no noroeste. Seu capital carnavalesca procurando está situado entre o Gnome território no norte e Cait Sith território na região Sudoeste.Os Pucas são tipicamente associados com a cor dourada e são conhecidos por terem uma afinidade para a música, tornando-os capazes de usar a música em situações de combate e não-combate.
-
-*- Habilidades:*
-
-*Music Magic:*
-Pucas excelentes no uso de sons e música em combate. Ao tocar melodias simples, pucas são capazes de atacar e defender e até mesmo controlar seus adversários.
-
-*Performance Containment:*
-Quando atingem um nível alto o suficiente, Pucas são capazes de "engarrafamento" e "preservar" as suas performances em um item. Quando o item é destampado, o desempenho dos Pucas pode ser ouvida como gotas de fluxo de luz prateada para fora da garrafa.`;
-
-        conn.sendMessage(
-          from,
-          {
-            image: { url: "./rpg/raças/puca.jpg" },
-            caption: puca,
-            footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
-            buttons: [
-              {
-                buttonId: `${prefix}decentes Puca/Noroeste`,
-                buttonText: { displayText: "Comfimar." },
-                type: 1,
-              },
-              {
-                buttonId: `${prefix} rançarpg`,
-                buttonText: { displayText: "Escolher outra raça." },
-                type: 1,
-              },
-            ],
-          },
-          { quoted: mek }
-        );
-        break;
-
-      case "imp":
-        if (!isGroup) return env("Comando apenas para grupo");
-        let improg = `\t\t\t\t*Imp*
-
-*Nome:* Imp [インプ].
-
-*Capital:* Imps originam da Zona Alpines da região Sudeste
-
-*Região:* Zona Alpines da região Sudeste 
-
-*Habilidades:* Voo subterrâneo.
-
-*Definição:* Normalmente cabelo roxo.
-
-*Descrição:* Imps originam da Zona Alpines da região Sudeste. Situado entre a zona desértica das Salamanders no sul e área da Baía de crescente das Undines , a oeste, o território Imp é uma região montanhosa, repleta de cavernas onde os Imps residem. Imps são tipicamente associados com a cor roxa e são conhecidos por terem um toque de roxo em sua pele branca leitosa. Semelhante às outras raças, os Imps são conhecidos criar asas que os tornam capazes de voar. Estas asas assume a forma semelhante à de um bastão de, uma característica única de as PIM.
-Imps, como os Sylphs  Undines, Cait Siths e Spriggans, são uma das cinco corridas leves, dando-lhes a capacidade de usar a habilidade Run Wall.
-
-*- Habilidades:*
-
-*Dark Magic:*
-Embora capaz de usar diferentes tipos de magia, Imps excelente no uso de Dark Magic em combate.
-
-*Underground Flight:*
-Ao contrário das outras raças, Imps são conhecidas por serem capazes de voar sem a necessidade de luar e luz solar, tornando possível para eles para voar subterrâneo e torná-los um membro do partido indispensável ao lutar patrões subterrâneos. No entanto, eles são incapazes de atingir uma altitude de 200 metros.
-
-*Wall Run:*
-Como uma das corridas leves, os Imps são capazes de usar a habilidade Run Wall, que, como o nome sugere, permite-lhes funcionar temporariamente nas paredes. O limite normal a uma distância de dez metros, mas aqueles com uma velocidade extremamente alta raça são conhecidos por serem capazes de funcionar durante cerca de trinta metros. 
-
-*Night Vision:*
- Imps são conhecidos por terem visão noturna, permitindo-lhes ver na escuridão quase total. No entanto, esta capacidade é considerada apenas a ser a segunda à de um Spriggan.`;
-
-        conn.sendMessage(
-          from,
-          {
-            image: { url: "./rpg/raças/imp.jpg" },
-            caption: imprpg,
-            footer: "✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟-MD",
-            buttons: [
-              {
-                buttonId: `${prefix}decentes Imp/Sudeste`,
-                buttonText: { displayText: "Comfimar." },
-                type: 1,
-              },
-              {
-                buttonId: `${prefix} rançarpg`,
-                buttonText: { displayText: "Escolher outra raça." },
-                type: 1,
-              },
-            ],
-          },
-          { quoted: mek }
-        );
-        break;
-
-      //FIM RPG
-      //FRASES
-
-      case "canada":
-      case "canadá":
-        if (isMito && !isDono) return env("você não é o Canadá");
-        array = ["canada.webp", "canada2.webp"];
-        archive = array[Math.floor(Math.random() * array.length)];
-        if (type == "extendedTextMessage") {
-          MessageKey = {
-            key: {
-              participant: info.extendedTextMessage.contextInfo.participant,
-              id: info.extendedTextMessage.contextInfo.stanzaId,
-            },
-            message: info.extendedTextMessage.contextInfo.quotedMessage,
-          };
-          conn.sendMessage(
-            from,
-            { sticker: { url: `./complement/sticker/${archive}` } },
-            { quoted: MessageKey }
-          );
-        } else {
-          conn.sendMessage(
-            from,
-            { sticker: { url: `./complement/sticker/${archive}` } },
-            { quoted: mek }
-          );
-        }
-        break;
-      //FIM
       //ATIVOS
 
       case "game":
@@ -3220,34 +2445,6 @@ Como uma das corridas leves, os Imps são capazes de usar a habilidade Run Wall,
           fs.writeFileSync("./db/json/game.json", JSON.stringify(welkom));
           env(
             `Modo *${command} desabilitado!* 🔴\n\nOs jogos foram bloqueados, para jogar é preciso que o ADM libere.`
-          );
-        } else {
-          env(`${p + command} 1 para ligar ou ${p + command} 0 para desligar`);
-        }
-        break;
-
-      case "nsfw":
-        if (!isMemberAdmin && !isDono) return env(mensagem[0].admin);
-        if (!isBotAdm) return env(mensagem[0].botadmin);
-        if (!isGroup) return env(mensagem[0].grupo);
-        if (Number(args[0]) === 1) {
-          if (isNsfw) return env(`${command} já está habilitado!`);
-          nsfw.push(from);
-          fs.writeFileSync("./db/json/nsfw.json", JSON.stringify(nsfw));
-          env(
-            `Modo *${command} habilitado* 🟢\n\nConteúdo +18 foi liberado neste grupo (somente usuário VIP pode ter acesso)!`
-          );
-        } else if (Number(args[0]) === 0) {
-          if (!isNsfw) return env(`${command} já está desabilitado!`);
-          pesquisar = from;
-          processo = nsfw.indexOf(pesquisar);
-          while (processo >= 0) {
-            nsfw.splice(processo, 1);
-            processo = welkom.indexOf(pesquisar);
-          }
-          fs.writeFileSync("./db/json/nsfw.json", JSON.stringify(nsfw));
-          env(
-            `Modo *${command} desabilitado!* 🔴\n\nO conteúdo +18 foi restringido.`
           );
         } else {
           env(`${p + command} 1 para ligar ou ${p + command} 0 para desligar`);
@@ -4097,6 +3294,78 @@ https://wa.me/554497433716`;
        conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
         break
+        //by hyakkimaru
+case 'figualeatoria':
+  but = [
+  {title: "escolha uma das opções abaixo",
+  rows: [
+  {title: "1 Figurinha", rowId: `${prefix}figu1`, description: "Toki MD"},
+  {title: "5 Figurinhas", rowId: `${prefix}figu5`, description: "Toki MD"},
+  {title: "10 Figurinhas", rowId: `${prefix}figu10`, description: "Toki MD"}]
+  }]
+  sendlist(from, `Opções de figurinha aleatória`, `✟🔥⃢⃟𝙏𝙊𝙆𝙄 𝘽𝙊⃟𝙏🔥✟`, "", "Opcões disponiveis", but)
+  break
+  //by hyakkimaru
+  case 'figu1':
+  if (isGroup) env("enviei uma figurinha pra vc :)")
+  bla1 = await getBuffer(`https://supra-api.herokuapp.com/api/stickera?apikey=supraz`)
+  fig_enviar = await createSticker(bla1, descFig)
+  conn.sendMessage(sender, {sticker: fig_enviar}, {quoted: mek})
+  break
+  //by hyakkimaru
+  case 'figu5':
+  if (isGroup) env("enviei 5 figurinhas pra vc :)")
+  bla1 = await getBuffer(`https://supra-api.herokuapp.com/api/stickera?apikey=supraz`)
+  fig_enviar1 = await createSticker(bla1, descFig)
+  bla2 = await getBuffer(`https://supra-api.herokuapp.com/api/stickera?apikey=supraz`)
+  fig_enviar2 = await createSticker(bla2, descFig)
+  bla3 = await getBuffer(`https://supra-api.herokuapp.com/api/stickera?apikey=supraz`)
+  fig_enviar3 = await createSticker(bla3, descFig)
+  bla4 = await getBuffer(`https://supra-api.herokuapp.com/api/stickera?apikey=supraz`)
+  fig_enviar4 = await createSticker(bla4, descFig)
+  bla5 = await getBuffer(`https://supra-api.herokuapp.com/api/stickera?apikey=supraz`)
+  fig_enviar5 = await createSticker(bla5, descFig)
+  conn.sendMessage(sender, {sticker: fig_enviar1}, {quoted: mek})
+  conn.sendMessage(sender, {sticker: fig_enviar2}, {quoted: mek})
+  conn.sendMessage(sender, {sticker: fig_enviar3}, {quoted: mek})
+  conn.sendMessage(sender, {sticker: fig_enviar4}, {quoted: mek})
+  conn.sendMessage(sender, {sticker: fig_enviar5}, {quoted: mek})
+  break
+  //by hyakkimaru
+  case 'figu10':
+  if (isGroup) env("enviei 10 figurinhas pra vc :)")
+  bla1 = await getBuffer(`https://supra-api.herokuapp.com/api/stickera?apikey=supraz`)
+  fig_enviar1 = await createSticker(bla1, descFig)
+  bla2 = await getBuffer(`https://supra-api.herokuapp.com/api/stickera?apikey=supraz`)
+  fig_enviar2 = await createSticker(bla2, descFig)
+  bla3 = await getBuffer(`https://supra-api.herokuapp.com/api/stickera?apikey=supraz`)
+  fig_enviar3 = await createSticker(bla3, descFig)
+  bla4 = await getBuffer(`https://supra-api.herokuapp.com/api/stickera?apikey=supraz`)
+  fig_enviar4 = await createSticker(bla4, descFig)
+  bla5 = await getBuffer(`https://supra-api.herokuapp.com/api/stickera?apikey=supraz`)
+  fig_enviar5 = await createSticker(bla5, descFig)
+  bla6 = await getBuffer(`https://supra-api.herokuapp.com/api/stickera?apikey=supraz`)
+  fig_enviar6 = await createSticker(bla6, descFig)
+  bla7 = await getBuffer(`https://supra-api.herokuapp.com/api/stickera?apikey=supraz`)
+  fig_enviar7 = await createSticker(bla7, descFig)
+  bla8 = await getBuffer(`https://supra-api.herokuapp.com/api/stickera?apikey=supraz`)
+  fig_enviar8 = await createSticker(bla8, descFig)
+  bla9 = await getBuffer(`https://supra-api.herokuapp.com/api/stickera?apikey=supraz`)
+  fig_enviar9 = await createSticker(bla9, descFig)
+  bla10 = await getBuffer(`https://supra-api.herokuapp.com/api/stickera?apikey=supraz`)
+  fig_enviar10 = await createSticker(bla10, descFig)
+  conn.sendMessage(sender, {sticker: fig_enviar1}, {quoted: mek})
+  conn.sendMessage(sender, {sticker: fig_enviar2}, {quoted: mek})
+  conn.sendMessage(sender, {sticker: fig_enviar3}, {quoted: mek})
+  conn.sendMessage(sender, {sticker: fig_enviar4}, {quoted: mek})
+  conn.sendMessage(sender, {sticker: fig_enviar5}, {quoted: mek})
+  conn.sendMessage(sender, {sticker: fig_enviar6}, {quoted: mek})
+  conn.sendMessage(sender, {sticker: fig_enviar7}, {quoted: mek})
+  conn.sendMessage(sender, {sticker: fig_enviar8}, {quoted: mek})
+  conn.sendMessage(sender, {sticker: fig_enviar9}, {quoted: mek})
+  conn.sendMessage(sender, {sticker: fig_enviar10}, {quoted: mek})
+  break
+  //by hyakkimaru
       case "packsfigu":
       case "packfigu":
       case "figupack":
@@ -5002,144 +4271,6 @@ NÃO GARANTIMOS SALDO!.
         break;
 
       //FIM
-      //+18
-
-      case "utaka":
-        if (!isNsfw) return env(mensagem[0].nsfw);
-        if (!isPremium && isDono) return env("vc nn e Premium;-;");
-        res = await fetchJson(
-          "https://slazinnn.herokuapp.com/api/nsfw/cosplay&token=slazinnnn"
-        );
-        env(mensagem[0].espere);
-        conn.sendMessage(
-          from,
-          {
-            image: { url: res[0].result },
-            caption: "先輩🥵",
-            buttons: [
-              {
-                buttonId: `${prefix + command}`,
-                buttonText: { displayText: "Próxima imagem" },
-                type: 1,
-              },
-            ],
-            headerType: 4,
-          },
-          { quoted: whatsapp }
-        );
-        break;
-
-      case "pussy":
-        if (!isPremium && isDono) return env("vc nn e Premium;-;");
-        if (!isNsfw) return env(mensagem[0].nsfw);
-        const pussy = await fetchJson(
-          "https://slazinnn.herokuapp.com/api/nsfw/pussy&token=slazinnnn"
-        );
-        n = JSON.parse(JSON.stringify(pussy));
-        nimek = n[Math.floor(Math.random() * n.length)];
-        pussyf = await getBuffer(nimek.result);
-        env(mensagem[0].espere);
-        conn.sendMessage(
-          from,
-          {
-            image: pussyf,
-            caption: "Pussy!",
-            buttons: [
-              {
-                buttonId: `${prefix + command}`,
-                buttonText: { displayText: "Próxima imagem" },
-                type: 1,
-              },
-            ],
-            headerType: 4,
-          },
-          { quoted: mek }
-        );
-        break;
-
-      case "mia":
-      case "khalifa":
-        if (!isPremium && isDono) return env("vc nn e Premium;-;");
-        if (!isNsfw) return env(mensagem[0].nsfw);
-        const miaa = await fetchJson("https://pastebin.com/raw/Th48gbKg");
-        n = JSON.parse(JSON.stringify(miaa));
-        miao = n[Math.floor(Math.random() * n.length)];
-        miap = await getBuffer(miao.result);
-        env(mensagem[0].espere);
-        conn.sendMessage(
-          from,
-          {
-            image: miap,
-            caption: "Mia Khalifa",
-            buttons: [
-              {
-                buttonId: `${prefix + command}`,
-                buttonText: { displayText: "Próxima imagem" },
-                type: 1,
-              },
-            ],
-            headerType: 4,
-          },
-          { quoted: whatsapp }
-        );
-        break;
-
-      case "malkova":
-        if (!isPremium && isDono) return env("vc nn e Premium;-;");
-        if (!isNsfw) return env(mensagem[0].nsfw);
-        const malkova = await fetchJson(
-          "https://slazinnn.herokuapp.com/api/nsfw/miamalkova&token=slazinnnn"
-        );
-        n = JSON.parse(JSON.stringify(malkova));
-        miao = n[Math.floor(Math.random() * n.length)];
-        malkovap = await getBuffer(miao.result);
-        env(mensagem[0].espere);
-        conn.sendMessage(
-          from,
-          {
-            image: malkovap,
-            caption: "Mia Malkova",
-            buttons: [
-              {
-                buttonId: `${prefix + command}`,
-                buttonText: { displayText: "Próxima imagem" },
-                type: 1,
-              },
-            ],
-            headerType: 4,
-          },
-          { quoted: whatsapp }
-        );
-        break;
-
-      case "belle":
-      case "delphine":
-        if (!isPremium && isDono) return env("vc nn e Premium;-;");
-        if (!isNsfw) return env(mensagem[0].nsfw);
-        const belle = await fetchJson(
-          "https://slazinnn.herokuapp.com/api/nsfw/belle&token=slazinnnn"
-        );
-        n = JSON.parse(JSON.stringify(belle));
-        miao = n[Math.floor(Math.random() * n.length)];
-        bellep = await getBuffer(miao.result);
-        env(mensagem[0].espere);
-        conn.sendMessage(
-          from,
-          {
-            image: bellep,
-            caption: "Belle Delphine",
-            buttons: [
-              {
-                buttonId: `${prefix + command}`,
-                buttonText: { displayText: "Próxima imagem" },
-                type: 1,
-              },
-            ],
-            headerType: 4,
-          },
-          { quoted: whatsapp }
-        );
-        break;
       //PESQUISAR
 
       case "jogo":
@@ -6963,114 +6094,6 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
         }
         break;
       //FIM
-      //PLAQUINHA
-      case "plaquinha":
-        if (!isNsfw) return env(mensagem[0].nsfw);
-        if (!texto)
-          return env(
-            `Coloque o nome da plaquinha na frente do comando\nExemplo de como se usar: ${
-              prefix + command
-            } Toki`
-          );
-        var sections = [
-          {
-            title: "Plaquinha",
-            rows: [
-              {
-                title: `Plaquinha  com o nome "${texto}" no peito`,
-                rowId: `${prefix}plaqui ${texto}`,
-              },
-              {
-                title: `Plaquinha2 com o nome "${texto}" na bunda`,
-                rowId: `${prefix}plaqui2 ${texto}`,
-              },
-              {
-                title: `Plaquinha3 com o nome "${texto}" na bunda`,
-                rowId: `${prefix}plaqui3 ${texto}`,
-              },
-              {
-                title: `Plaquinha4 com o nome "${texto}" na bunda`,
-                rowId: `${prefix}plaqui4 ${texto}`,
-              },
-            ],
-          },
-        ];
-        var listMessage = {
-          text: "Escolha um tema para sua plaquinha.",
-          footer: "Selecione o tema abaixo",
-          buttonText: "Escolha o tema da sua plaquinha",
-          sections,
-        };
-        const sendMsg = await conn.sendMessage(from, listMessage);
-        break;
-      case "plaqui":
-        if (!isNsfw) return env(mensagem[0].nsfw);
-        if (args.length < 1)
-          return env(
-            `Digite seu nome/nick na frente do comando\nExemplo de como se usar: ${
-              prefix + command
-            } Joazin`
-          );
-        teks = body.slice(8);
-        env(mensagem[0].espere);
-        conn.sendMessage(from, {
-          image: {
-            url: `https://ubbornag.sirv.com/Screenshot_20210513-151821.png?text.0.text=${teks}&text.0.position.x=-40%25&text.0.position.y=-65%25&text.0.size=30&text.0.color=000000&text.0.opacity=53&text.0.font.family=Shadows%20Into%20Light%20Two&text.0.outline.blur=15`,
-          },
-          caption: "✓",
-        });
-        break;
-      case "plaqui2":
-        if (!isNsfw) return env(mensagem[0].nsfw);
-        if (args.length < 1)
-          return env(
-            `Digite seu nome/nick na frente do comando\nExemplo de como se usar: ${
-              prefix + command
-            } Joazin`
-          );
-        teks = body.slice(9);
-        env(mensagem[0].espere);
-        conn.sendMessage(from, {
-          image: {
-            url: `https://ubbornag.sirv.com/Screenshot_20210513-151821.png?text.0.text=${teks}&text.0.position.x=-40%25&text.0.position.y=-65%25&text.0.size=30&text.0.color=000000&text.0.opacity=53&text.0.font.family=Shadows%20Into%20Light%20Two&text.0.outline.blur=15`,
-          },
-          caption: "✓",
-        });
-        break;
-      case "plaqui3":
-        if (!isNsfw) return env(mensagem[0].nsfw);
-        if (args.length < 1)
-          return env(
-            `Digite seu nome/nick na frente do comando\nExemplo de como se usar: ${
-              prefix + command
-            } Joazin`
-          );
-        teks = body.slice(9);
-        env(mensagem[0].espere);
-        conn.sendMessage(from, {
-          image: {
-            url: `https://clutamac.sirv.com/1011b781-bab1-49e3-89db-ee2c064868fa%20(1).jpg?text.0.text=${teks}&text.0.position.gravity=northwest&text.0.position.x=22%25&text.0.position.y=60%25&text.0.size=18&text.0.color=000000&text.0.opacity=47&text.0.font.family=Roboto%20Mono&text.0.font.style=italic`,
-          },
-          caption: "✓",
-        });
-        break;
-      case "plaqui4":
-        if (!isNsfw) return env(mensagem[0].nsfw);
-        if (args.length < 1)
-          return env(
-            `Digite seu nome/nick na frente do comando\nExemplo de como se usar: ${
-              prefix + command
-            } Joazin`
-          );
-        teks = body.slice(9);
-        env(mensagem[0].espere);
-        conn.sendMessage(from, {
-          image: {
-            url: `https://rsymenti.sirv.com/IMG-20210724-WA0303.jpg?text.0.text=${teks}&text.0.position.x=-20%25&text.0.position.y=-38%25&text.0.size=30&text.0.color=000000&text.0.opacity=93&text.0.font.family=Rock%20Salt&text.0.outline.color=ff0000&text.0.outline.blur=6&text.0.outline.opacity=73`,
-          },
-          caption: "✓",
-        });
-        break;
       //FERRAMENTAS
       case "parimp":
       case "imppar":
@@ -7116,7 +6139,7 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
         imagee =
           info.extendedTextMessage.contextInfo.quotedMessage.imageMessage;
         imagee.fileLength = `${giguin}000000000`;
-        imagee.caption = "sexo kkk";
+        imagee.caption = "ta ai";
         conn.relayMessage(
           from,
           { imageMessage: imagee },
@@ -7287,7 +6310,7 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
           buttonText: "Escolha um Personagem",
           sections,
         };
-        const pesquisin = await conn.sendMessage(from, listMessage);
+       await conn.sendMessage(from, listMessage);
         break;
       case "semoji":
         if (!texto) return env("Qual emoji?");
