@@ -1,6 +1,5 @@
 const fs = require("fs");
-
-/////////-----------JSONS-----------/////////
+const axios = require('axios');
 exports.bemvindo2 = JSON.parse(fs.readFileSync("./db/json/bemvindo2.json"));
 exports._level = JSON.parse(fs.readFileSync("./db/json/level.json"));
 exports.simipv = JSON.parse(fs.readFileSync("./db/json/simipv.json"));
@@ -25,4 +24,22 @@ exports.antiviewonce = JSON.parse(fs.readFileSync("./db/json/antiviewonce.json")
 exports.game = JSON.parse(fs.readFileSync("./db/json/game.json"));
 exports.nsfw = JSON.parse(fs.readFileSync("./db/json/nsfw.json"));
 exports.antipala = JSON.parse(fs.readFileSync("./db/json/antipala.json"));
-/////////-----------QUOTEDS-----------/////////
+exports.getBuffer = async (url, opcoes) => {
+    try {
+    opcoes ? opcoes : {}
+    const post = await axios({
+    method: "get",
+    url,
+    headers: {
+    'user-agent': 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36', 
+        'DNT': 1,
+        'Upgrade-Insecure-Request': 1
+    },
+    ...opcoes,
+    responseType: 'arraybuffer'
+    })
+    return post.data
+    } catch (erro) {
+    console.log(`Erro identificado: ${erro}`)
+    }
+}
