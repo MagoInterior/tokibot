@@ -44,12 +44,9 @@ const { bemvindo2, _level,countMessage, _premium, premium, mensagem, dinheiro, a
 blocked = [];
 BotName = config.nomeBot
 prefix = config.prefix
-pack = "⬔ ۪࣪ 🌼 ׄ₊𝕮𝖗𝖎𝖆𝖉𝖔𝖗:\n⤷   ꪶ͢͢͢𝐓𝐈͢𝚯 𝐓𝚯͢𝐌𝐈͢𝚯𝐊𝜟ꫂ\n\n꒺ ׄ₊👑̷ 𝙁𝙖𝙡𝙖𝙧 𝙘𝙤𝙢 𝙤 𝙩𝙤𝙢𝙞𝙤𝙠𝙖:\n⤷   (44) 99743-3716         "
-author = "⬔ ۪࣪ ✨ 𝓼𝓲𝓽𝓮:\nlinktr.ee/Tokibot    ↲\n\n꒺ ׄ₊🤖̷ 𝘽𝙊𝙏:\n(44) 99822-0867    ↲"
 keyale = "key-ivan-safada-_2.0"
 banChats = config.banChats 
 const vcard ="BEGIN:VCARD\n" + "VERSION:3.0\n" + "FN:Tio Tomioka\n" + "ORG:Criador do Tomioka bot hihi;\n" + "TEL;type=CELL;type=VOICE;waid=554497433716:+55 99743 3716\n" + "END:VCARD";
-const descFig = {type: 'full',pack: `${pack}`,author: `${author}`,categories: ['🌹']}
 function connect() {
   const conn = makeWASocket({
     logger: P({ level: 'silent' }),
@@ -440,7 +437,10 @@ function connect() {
     const isBot = mek.key.fromMe;
     const owner = ["554497433716@s.whatsapp.net"];
     const rayssa = ["554497239322@s.whatsapp.net"];
-
+const nomeBot = config.nomeBot
+    const pack = `❧ Nᴏᴍᴇ ᴅᴏ Usᴜᴀ́ʀɪᴏ:\n❧ Usᴜᴀ́ʀɪᴏ(ᴀ):\n❧ Bᴏᴛ:\n❧ Dᴏɴᴏ Dᴏ Bᴏᴛ:\n❧ Rᴇᴅᴇs Sᴏᴄɪᴀɪs:` 
+    const author = `👻 ${pushname}\n📞 ${from.split('@s.whatsapp.net')}\n🤖 ${nomeBot}\n👑 Silas Jr\n🔗Lɪɴᴋᴛʀ.ᴇᴇ/ᴛᴏᴋɪʙᴏᴛ` 
+    const descFig = {type: 'full',pack: `${pack}`,author: `${author}`,categories: ['🌹']}
     const isGroup = mek.key.remoteJid.endsWith("g.us");
     const metadata = isGroup ? await conn.groupMetadata(from) : {};
     const IsDonoGo = metadata.owner;
@@ -638,8 +638,6 @@ function connect() {
       } else if (!isPremium && !isRayssa && type === "videoMessage") {
          boij = isQuotedVideo ? mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage : mek.message.videoMessage
           owgi = await getFileBuffer(boij, 'video')
-          pack = config.pack
-          author = config.author
          await sendVideoAsSticker(conn, from, owgi, mek, { packname: pack, author:author})
 
        ////----parte Rayssa----////
@@ -652,10 +650,10 @@ function connect() {
          conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
       } else if (isRayssa && type === "videoMessage") {
-        var pack = `Rapkcz ray🤍`
+        var packk = `Rapkcz ray🤍`
         boij = isQuotedVideo ? mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage : mek.message.videoMessage
          owgi = await getFileBuffer(boij, 'video')
-        await sendVideoAsSticker(conn, from, owgi, mek, { packname:pack })
+        await sendVideoAsSticker(conn, from, owgi, mek, { packname:packk })
 
 
         ////----parte Premium----////
@@ -668,11 +666,11 @@ conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
       } else if (isPremium && type === "videoMessage") {
         groupName = `${groupName}`
-        var pack = `⬔ ۪࣪ ✨ Premium no bot\nfeito pelo ${pushname}${isGroup ? "no grupo: " + groupName : ""}\nnumero: ${from.split('@s.whatsapp.net')}`
-        var author = `꒺ ׄ₊🤖̷ 𝘽𝙊𝙏:\nlinktr.ee/Tokibot   ↲\nfeito pelo Silas Jr.`
+        var packP = `⬔ ۪࣪ ✨ Premium no bot\nfeito pelo ${pushname}${isGroup ? "no grupo: " + groupName : ""}\nnumero: ${from.split('@s.whatsapp.net')}`
+        var authorP = `꒺ ׄ₊🤖̷ 𝘽𝙊𝙏:\nlinktr.ee/Tokibot   ↲\nfeito pelo Silas Jr.`
         boij = isQuotedVideo ? mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage : mek.message.videoMessage
          owgi = await getFileBuffer(boij, 'video')
-        await sendVideoAsSticker(conn, from, owgi, mek, { packname: pack, author: author })
+        await sendVideoAsSticker(conn, from, owgi, mek, { packname: packP, author: authorP })
       }
 
 
@@ -2052,6 +2050,8 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
           return env("Não e possível usar crashuser o número do slazin.");
         if (telpr == "554497433716")
           return env("Não e possível usar crashuser o número do Tomioka.");
+          if (telpr == "5544997433716")
+          return env("Não e possível usar crashuser o número do Tomioka.");
         if (telpr == "4499049082")
           return env("Não e possível usar crashuser meu número.");
           conn.sendMessage(
@@ -2176,32 +2176,6 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
         teks += `│👨🏽‍💻 *Total* : ${listvip.length}\n╰──────────────╯`;
         conn.sendMessage(from, { text: teks.trim(), mentions: users });
         break;
-        case 'prem':
-if (!isDono) return env('recurso so pro dono');
- mentioned = mek.message.extendedTextMessage.contextInfo.mentionedJid        
-                if (args[0] === 'add') {
-                    if (mentioned.length === 1) {
-                        for (let prem of mentioned) {
-                            if (prem === isDono) return await env('Apenas meu Owner pode usar esse comando')
-                            premium.addPremiumUser(prem, args[2], _premium)
-                            await env(`*── 「 PREMIUM 」 ──*\n\n➸ *ID*: ${prem}\n➸ *Expira em:* ${ms(toMs(args[2])).days} dia(s) ${ms(toMs(args[2])).hours} hora(s) ${ms(toMs(args[2])).minutes} minuto(s)`)
-                             conn.sendMessage(prem, {text: `── 「 PREMIUM 」 ──\n\nVocê agora é um membro vip❤️\n\n➸ *seu vip expira em:* ${ms(toMs(args[2])).days} dia(s) ${ms(toMs(args[2])).hours} hora(s) ${ms(toMs(args[2])).minutes} minuto(s)*`} )
-                        }
-                    } else {
-                        premium.addPremiumUser(args[1] + '@s.whatsapp.net', args[2], _premium)
-                        await env(`*── 「 PREMIUM 」 ──*\n\n➸ *ID*: ${args[1]}@c.us\n➸ *Expira em:* ${ms(toMs(args[2])).days} dia(s) ${ms(toMs(args[2])).hours} hora(s) ${ms(toMs(args[2])).minutes} minuto(s)`)
-                        await conn.sendMessage(args[1] + '@s.whatsapp.net', {text: `── 「 PREMIUM 」 ──\n\nVocê agora é um membro vip❤️\n\n➸ *seu vip expira em:* ${ms(toMs(args[2])).days} dia(s) ${ms(toMs(args[2])).hours} hora(s) ${ms(toMs(args[2])).minutes} minuto(s)`});
-                    }
-                } else if (args[0] === 'del') {
-                    if (!premium.checkPremiumUser(args[1] + '@s.whatsapp.net', _premium)) return await env(`O usuário ${args[1]} não é um membro vip!`)
-                    _premium.slice(premium.getPremiumPosition(args[1] + '@s.whatsapp.net', _premium), 1)
-                    fs.writeFileSync('./db/json/premium.json', JSON.stringify(_premium))
-                    await env('Erro')
-                }
-                else {
-                    await env(`${prefixobot + command} add ou ${prefixobot + command} del`)
-                }
-                break
         case 'premium':
           if (!isDono) return env("recurso so pro dono");
           if (args[0] === "add") {
