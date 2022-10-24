@@ -1944,13 +1944,8 @@
     "numbers": [
       {
         "jid": "554497433716@s.whatsapp.net",
-<<<<<<< HEAD
-        "messages": 229,
-        "cmd_messages": 72
-=======
-        "messages": 234,
+        "messages": 235,
         "cmd_messages": 79
->>>>>>> 626fd13327e016b24373ccc3487d9be51c1f2df5
       },
       {
         "jid": "554497239322@s.whatsapp.net",
