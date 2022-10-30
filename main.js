@@ -1936,7 +1936,7 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
         } catch {
           env('to mudando o server carma ai..')
           try {
-            hasil = await getBuffer(`http://aleatoryapi.herokuapp.com/api/attp?q=${q}&apikey=${keyale}`);
+            hasil = await getBuffer(`https://zanga-api.herokuapp.com/api/attp?q=${q}&apikey=${keyale}`);
             fig_enviar = await createSticker(hasil, descFig)
             await conn.sendMessage(from, {sticker: fig_enviar}, {quoted:mek})
         } catch(e) {
@@ -4609,7 +4609,7 @@ CONSULTA CNPJ 👨‍💻
             if(res.all[0].timestamp.length >= 7) return reply("Desculpe, este video ou audio é muito grande, não poderei realizar este pedido, peça outra música abaixo de uma hora.")
             bla = `Encontreiiii Patrão ta ai\n\nTitulo: ${res.all[0].title}\n\n📉 Visualizações: ${res.all[0].views}\n\n⏰ Tempo: ${res.all[0].timestamp}\n\n🔎 Canal: ${res.all[0].author.name}\n`
             sendBimg(from, `${res.all[0].image}`, bla, BotName, [
-            {buttonId: `${prefix}down_a ${res.all[0].url}`, buttonText: {displayText: `𝐀𝐮𝐝𝐢𝐨🎵`}, type: 1}, {buttonId: `${prefix}down_v ${res.all[0].url}`, buttonText: {displayText: `𝐕𝐢𝐝𝐞𝐨 📹`}, type: 1}], mek)
+            {buttonId: `${prefix}down_a ${res.all[0].url}`, buttonText: {displayText: `𝐀𝐮𝐝𝐢𝐨🎵`}, type: 1}], mek)
             
             break 
              
@@ -4666,18 +4666,22 @@ CONSULTA CNPJ 👨‍💻
             if(qd.includes("youtu") && !qd.includes("share")) {
             if(res.all[0].timestamp.length >= 7) return env("esse video/audio é muito grande desculpe ai :(")
             }
-            if(command === "play_audio") {
+            if(command === "play_audio" || command === "down_a") {
             var qd = res.all[0].url
             }
-            await conn.sendMessage(from, {audio: {url:`http://aleatoryapi.herokuapp.com/api/download/?url=${qd}&apikey=${keyale}`}, mimetype: 'audio/mp4'},{quoted:mek})
+            await conn.sendMessage(from, {audio: {url:`https://zanga-api.herokuapp.com/api/dowloader/ytmp3?url=${qd}`}, mimetype: 'audio/mp4'},{quoted:mek})
           
-            } catch (e) {
+            }
+             catch (e) {
             if(String(e).includes(keyale)) {
             console.log("desculpe o server caiu desse download :(")   
-            } else {
-            console.log(e)
-            env('falhou :(')
-            }}
+
+            } else if (command === "play_video" || command === "down_v") {
+            var qd = res.all[0].url
+            }
+            await conn.sendMessage(from, {audio: {url:`https://zanga-api.herokuapp.com/api/dowloader/ytmp4?url=${qd}`}, mimetype: 'audio/mp4'},{quoted:mek})
+          
+            } 
             break
             
             case 'ytmp4':
@@ -4699,10 +4703,11 @@ CONSULTA CNPJ 👨‍💻
             if(res.all[0].timestamp.length >= 7) return reply("esse video/audio é muito grande desculpe ai :(")
             }
             if(command === "play_video") {
-            var qd = res.all[0].url
+            var qd = res.all[0].link_de_down
             var nome = res.all[0].title
+            console.log(qd)
             }
-            await conn.sendMessage(from, {video: {url:`http://aleatoryapi.herokuapp.com/api/download/?url=${qd}&apikey=${keyale}`}, mimetype: 'video/mp4'},{quoted:mek}).catch(e => {
+            await conn.sendMessage(from, {video: {url:`https://zanga-api.herokuapp.com/api/dowloader/ytmp4?url=${qd}`}, mimetype: 'video/mp4'},{quoted:mek}).catch(e => {
             console.log(e)
             env("Error")
             })
