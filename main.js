@@ -44,7 +44,7 @@ const { bemvindo2, _level,countMessage, _premium, premium, mensagem, dinheiro, a
 blocked = [];
 BotName = config.nomeBot
 prefix = config.prefix
-keyale = "key-ivan-safada-_2.0"
+keyale = "key-ivan-linda-_2.0"
 banChats = config.banChats 
 const vcard ="BEGIN:VCARD\n" + "VERSION:3.0\n" + "FN:Tio Tomioka\n" + "ORG:Criador do Tomioka bot hihi;\n" + "TEL;type=CELL;type=VOICE;waid=554497433716:+55 99743 3716\n" + "END:VCARD";
 function connect() {
