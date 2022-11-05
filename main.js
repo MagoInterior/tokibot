@@ -18,6 +18,7 @@ const thiccysapi = require("textmaker-thiccy");
 const gis = require("g-i-s");
 const googleIt = require("google-it");
 const linkfy = require("linkifyjs");
+const { misc } = require('./lib')
 const yts = require("yt-search");
 const { igApi, getCookie } = require("insta-fetcher");
 const ig = new igApi("oVaYqI8ZPEZUVPLa7V9nw5F8zYP5jPd5");
@@ -44,7 +45,7 @@ const { bemvindo2, _level,countMessage, _premium, premium, mensagem, dinheiro, a
 blocked = [];
 BotName = config.nomeBot
 prefix = config.prefix
-keyale = "key-ivan-linda-_2.0"
+keylol = "sentanemimperereka"
 banChats = config.banChats 
 const vcard ="BEGIN:VCARD\n" + "VERSION:3.0\n" + "FN:Tio Tomioka\n" + "ORG:Criador do Tomioka bot hihi;\n" + "TEL;type=CELL;type=VOICE;waid=554497433716:+55 99743 3716\n" + "END:VCARD";
 function connect() {
@@ -1557,10 +1558,7 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
 │➪ *${prefix}ytmp3* 
 │➪ *${prefix}ytmp4*
 │➪ *${prefix}ytsrc* 
-│➪ *${prefix}Instagram*
 │➪ *${prefix}tiktok*
-│➪ *${prefix}twitter*
-│➪ *${prefix}facebook*
 │
 ╞═⟪ *PESQUISAR* ⟫════
 │
@@ -1577,8 +1575,6 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
 │
 ╞═⟪ *PRIVADO* ⟫════
 │
-│➪ *${prefix}cc*
-│➪ *${prefix}cc2*
 │➪ *${prefix}gerarcpf*
 │➪ *${prefix}gnum*
 │➪ *${prefix}formatnum*
@@ -1930,20 +1926,29 @@ II- a inviolabilidade da intimidade, da honra e da imagem.
         case 'attp':
           if (!q) return env(`coloque o texto na frente do comando!`)
           try{ 
-          hasil = await getBuffer(`https://api.xteam.xyz/attp?file&text=${q}`);
+          hasil = await getBuffer(`https://api.lolhuman.xyz/api/attp?apikey=${keylol}&text=${q}`);
           fig_enviar = await createSticker(hasil, descFig)
           await conn.sendMessage(from, {sticker: fig_enviar}, {quoted:mek})
         } catch {
           env('to mudando o server carma ai..')
           try {
-            hasil = await getBuffer(`https://zanga-api.herokuapp.com/api/attp?q=${q}&apikey=${keyale}`);
+            hasil = await getBuffer(`https://zanga-api.herokuapp.com/api/attp?q=${q}&apikey=${keylol}`);
             fig_enviar = await createSticker(hasil, descFig)
             await conn.sendMessage(from, {sticker: fig_enviar}, {quoted:mek})
         } catch(e) {
-          reply("os servers cairam...")
+          env("server caiu")
           }}
        break
-          
+       case 'attp':
+        if (!q) return env(`coloque o texto na frente do comando!`)
+        try{ 
+        hasil = await getBuffer(`https://api.lolhuman.xyz/api/ttp?apikey=${keylol}&text=${q}`);
+        fig_enviar = await createSticker(hasil, descFig)
+        await conn.sendMessage(from, {sticker: fig_enviar}, {quoted:mek})
+      } catch(e) {
+        env("server caiu")
+        }
+       break
       case "cekvip":
         let cekvip = `Status vip
 *STATUS:* ${isPremium ? "✅" : "❎"}`;
@@ -4609,118 +4614,58 @@ CONSULTA CNPJ 👨‍💻
             if(res.all[0].timestamp.length >= 7) return reply("Desculpe, este video ou audio é muito grande, não poderei realizar este pedido, peça outra música abaixo de uma hora.")
             bla = `Encontreiiii Patrão ta ai\n\nTitulo: ${res.all[0].title}\n\n📉 Visualizações: ${res.all[0].views}\n\n⏰ Tempo: ${res.all[0].timestamp}\n\n🔎 Canal: ${res.all[0].author.name}\n`
             sendBimg(from, `${res.all[0].image}`, bla, BotName, [
-            {buttonId: `${prefix}down_a ${res.all[0].url}`, buttonText: {displayText: `𝐀𝐮𝐝𝐢𝐨🎵`}, type: 1}], mek)
+            {buttonId: `${prefix}down_a_url ${res.all[0].url}`, buttonText: {displayText: `𝐀𝐮𝐝𝐢𝐨🎵`}, type: 1},{buttonId: `${prefix}down_v_url ${res.all[0].url}`, buttonText: {displayText: `🎥 Video`}, type: 1}], mek)
             
-            break 
-             
-            case 'twitter':
-              if (!isPremium && !isDono) return env("vc nn e Premium;-;");
-            if(!q.includes("twitter")) return env(`coloque o link há frente do comando!`)
-            sendBtext(from, "Download de Video / audio", `escolha um formato abaixo!`, [
-            {buttonId: `${prefix}down_v ${q}`, buttonText: {displayText: `🎥 Video`}, type: 1},
-            {buttonId: `${prefix}down_a ${q}`, buttonText: {displayText: `🎵 Audio`}, type: 1}], mek)
-          
-            break 
-            
-            case 'facebook':
-              if (!isPremium && !isDono) return env("vc nn e Premium;-;");
-            if(!q.includes("fb.watch")) return env(`coloque o link há frente do comando!`)
-            sendBtext(from, "Download de Video / audio", `escolha um formato abaixo!`, [
-            {buttonId: `${prefix}down_v ${q}`, buttonText: {displayText: `🎥 Video`}, type: 1},
-            {buttonId: `${prefix}down_a ${q}`, buttonText: {displayText: `🎵 Audio`}, type: 1}], mek)
-           
-            break 
+            break
             
             case 'tiktok':  case 'tk':
               if (!isPremium && !isDono) return env("vc nn e Premium;-;");
             if(!q.includes("tiktok")) return env(`coloque o link há frente do comando!`)
             sendBtext(from, "Download de Video / audio", `escolha um formato abaixo!`, [
-            {buttonId: `${prefix}down_v ${q}`, buttonText: {displayText: `🎥 Video`}, type: 1},
-            {buttonId: `${prefix}tiktok_audio ${q}`, buttonText: {displayText: `🎵 Audio`}, type: 1}], mek)
-            break 
-            case 'instagram':
-            case 'instadw':  
-            if (!isPremium && !isDono) return env("vc nn e Premium;-;");
-            if(!q.includes("instagram")) return env(`coloque o link há frente do comando!`)
-            sendBtext(from, "Download de Video / audio", `escolha um formato abaixo!`, [
-            {buttonId: `${prefix}down_v ${q}`, buttonText: {displayText: `🎥 Video`}, type: 1},
-            {buttonId: `${prefix}down_a ${q}`, buttonText: {displayText: `🎵 Audio`}, type: 1}], mek)
-           
+            {buttonId: `${prefix}tiktok_v ${q}`, buttonText: {displayText: `🎥 Video`}, type: 1}],mek)
             break 
             
-            case 'ytmp3':
-            case 'down_a':
-            case 'face_audio':
-            case 'tiktok_audio':
-            case 'insta_audio':
-            case 'twitter_audio':
-            case 'play_audio':
-              if (!isPremium && !isDono) return env("vc nn e Premium;-;");
-              if (!q) return env('envie o link do yt na frente do comando...')
-              env('espere..\n\ndependendo do tamanho pode demorar uns 2 minutos..')
-            try {
-            qd = args.join(" ")
-            if(!qd) return
-            if(qd.includes("facebook")) return env("só baixa no formato fb.watch")
-            var res = await yts(q)
-            if(qd.includes("youtu") && !qd.includes("share")) {
-            if(res.all[0].timestamp.length >= 7) return env("esse video/audio é muito grande desculpe ai :(")
-            }
-            if(command === "play_audio" || command === "down_a") {
-            var qd = res.all[0].url
-            }
-            await conn.sendMessage(from, {audio: {url:`https://zanga-api.herokuapp.com/api/dowloader/ytmp3?url=${qd}`}, mimetype: 'audio/mp4'},{quoted:mek})
-          
-            }
-             catch (e) {
-            if(String(e).includes(keyale)) {
-            console.log("desculpe o server caiu desse download :(")   
-
-            } else if (command === "play_video" || command === "down_v") {
-            var qd = res.all[0].url
-            }
-            await conn.sendMessage(from, {audio: {url:`https://zanga-api.herokuapp.com/api/dowloader/ytmp4?url=${qd}`}, mimetype: 'audio/mp4'},{quoted:mek})
-          
-            } 
+            case 'down_a_url':
+              case 'ytmp3':
+              if (command === "down_a_url" || command === "ytmp3" ) {
+                misc.ytPlayLink(encodeURIComponent(q))
+                .then(async ({ result }) => {
+                  await conn.sendMessage(from, {audio: {url: result.link.link}, mimetype: 'audio/mp4'},{quoted:mek}).catch(e => {
+                    env('erro...')
+                  })
+                })
+                .catch(async (err) => {
+                    console.error(err)
+                    env('erro...')
+                })}
             break
             
+          case 'down_v_url':
             case 'ytmp4':
-            case 'down_v':
-            case 'face_video': 
-            case 'tiktok_video':  
-            case 'insta_video':
-            case 'twitter_video':
-            case 'play_video':
-              if (!isPremium && !isDono) return env("vc nn e Premium;-;");
-              if (!q) return env('envie o link do yt na frente do comando...')
-              env('espere..\n\ndependendo do tamanho pode demorar uns 2 minutos..')
-            try {
-            var qd = args.join(" ")
-            if(!qd) return
-            if(qd.includes("facebook")) return reply("Só está baixando no formato fb.watch")
-            var res = await yts(q)
-            if(qd.includes("youtu") && !qd.includes("share")) {
-            if(res.all[0].timestamp.length >= 7) return reply("esse video/audio é muito grande desculpe ai :(")
-            }
-            if(command === "play_video") {
-            var qd = res.all[0].link_de_down
-            var nome = res.all[0].title
-            console.log(qd)
-            }
-            await conn.sendMessage(from, {video: {url:`https://zanga-api.herokuapp.com/api/dowloader/ytmp4?url=${qd}`}, mimetype: 'video/mp4'},{quoted:mek}).catch(e => {
-            console.log(e)
-            env("Error")
+            case 'tiktok_v':
+              case 'face_v':
+              if (command === "tiktok_v") {
+            misc.tikTok(encodeURIComponent(q))
+            .then(async ({ result }) => {
+              await conn.sendMessage(from, {video: {url: result.link}, mimetype: 'video/mp4'},{quoted:mek}).catch(e => {
+                env('erro...')
+              })
             })
-            } catch (e) {
-            if(String(e).includes(keyale)) {
-            console.log("desculpe o server caiu desse download :(")   
-            } else {
-            console.log(e)
-            env('falhou :(')
-            }
-            }
-            break
-            
+            .catch(async (err) => {
+                console.error(err)
+                env('erro...')
+            })}
+            if (command === "down_v_url" || command === "ytmp4") {
+              misc.ytPlayLinkVid(encodeURIComponent(q))
+              .then(async ({ result }) => {            
+                await conn.sendMessage(from, {video: {url: result.link.link}, mimetype: 'video/mp4'},{quoted:mek}).catch(e => {
+                 env('erro..')
+                })
+              })
+              .catch(async (err) => {
+                env('erro...')
+              })}
+            break    
       case "xvideos":
         if (!isPremium && isDono) return env("vc nn e Premium;-;");
         if (args.length < 1)
@@ -6452,7 +6397,7 @@ case 'misturar':
   try {
       const a = new Date().getTime()
       const downloader = new Downloader({
-          url: `https://aleatoryapi.herokuapp.com/api/emojimix?emoj=${encodeURI(emj1)}&emoj2=${encodeURI(emj2)}&apikey=${keyale}`, //If the file name already exists, a new file with the name 200MB1.zip is created.
+          url: `https://aleatoryapi.herokuapp.com/api/emojimix?emoj=${encodeURI(emj1)}&emoj2=${encodeURI(emj2)}&apikey=${keylol}`, //If the file name already exists, a new file with the name 200MB1.zip is created.
           directory: "./temp", //This folder will be created, if it doesn't exist.
           fileName: a + ".jpg" //The file name.
       });
