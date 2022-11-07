@@ -1442,7 +1442,7 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
 │░ BEM VINDO AO MENU░
 ╞─────╮ ▽ ╭─────╯
 │
-│Toki-Beta MD
+│TokiBot MD
 │Seu dispositivo: ${adivinha}
 │Reportar erro *${prefix}reporte <erro>
 ╞═⟪ *STICKER* ⟫════
