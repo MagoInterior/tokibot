@@ -1,1 +1,1 @@
-node: sh start.sh
+worker: sh start.sh

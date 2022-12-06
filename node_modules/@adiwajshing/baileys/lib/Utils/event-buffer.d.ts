@@ -1,5 +1,5 @@
 import { Logger } from 'pino';
-import { AuthenticationCreds, BaileysEventEmitter, BaileysEventMap } from '../Types';
+import { BaileysEventEmitter, BaileysEventMap } from '../Types';
 /**
  * A map that contains a list of all events that have been triggered
  *
@@ -7,7 +7,7 @@ import { AuthenticationCreds, BaileysEventEmitter, BaileysEventMap } from '../Ty
  * this can make processing events extremely efficient -- since everything
  * can be done in a single transaction
  */
-declare type BaileysEventData = Partial<BaileysEventMap<AuthenticationCreds>>;
+declare type BaileysEventData = Partial<BaileysEventMap>;
 declare type BaileysBufferableEventEmitter = BaileysEventEmitter & {
     /** Use to process events in a batch */
     process(handler: (events: BaileysEventData) => void | Promise<void>): (() => void);
@@ -22,6 +22,8 @@ declare type BaileysBufferableEventEmitter = BaileysEventEmitter & {
     flush(): Promise<void>;
     /** waits for the task to complete, before releasing the buffer */
     processInBuffer(task: Promise<any>): any;
+    /** is there an ongoing buffer */
+    isBuffering(): boolean;
 };
 /**
  * The event buffer logically consolidates different events into a single event
