@@ -1,0 +1,5 @@
+[1206/124023.421:INFO:CONSOLE(1)] "Uncaught (in promise) TypeError: Failed to execute 'put' on 'Cache': Partial response (status code 206) is unsupported", source: https://web.whatsapp.com/serviceworker.js (1)
+[1206/124023.856:INFO:CONSOLE(1)] "Uncaught (in promise) TypeError: Failed to execute 'put' on 'Cache': Partial response (status code 206) is unsupported", source: https://web.whatsapp.com/serviceworker.js (1)
+[1206/124023.862:INFO:CONSOLE(1)] "Uncaught (in promise) TypeError: Failed to execute 'put' on 'Cache': Partial response (status code 206) is unsupported", source: https://web.whatsapp.com/serviceworker.js (1)
+[1206/124025.912:INFO:CONSOLE(27)] "Error: MsgKey error: don't have a matching constructor", source: https://web.whatsapp.com/vendor1~app.58a51d93a250f83ab555.js (27)
+[1206/124026.005:INFO:CONSOLE(27)] "Error: MsgKey error: don't have a matching constructor", source: https://web.whatsapp.com/vendor1~app.58a51d93a250f83ab555.js (27)

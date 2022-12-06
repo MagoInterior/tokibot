@@ -1,0 +1,12 @@
+2022/12/06-12:40:12.826 4229c Reusing MANIFEST C:\Users\silasjr\Downloads\tokibot\.wwebjs_auth\session-TokiBot\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2022/12/06-12:40:12.827 4229c Recovering log #6
+2022/12/06-12:40:12.908 4229c Reusing old log C:\Users\silasjr\Downloads\tokibot\.wwebjs_auth\session-TokiBot\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000006.log 
+2022/12/06-12:40:13.020 4229c Level-0 table #11: started
+2022/12/06-12:40:13.062 4229c Level-0 table #11: 1512919 bytes OK
+2022/12/06-12:40:13.064 4229c Delete type=0 #6
+2022/12/06-12:40:13.879 42368 Compacting 1@1 + 1@2 files
+2022/12/06-12:40:13.945 42368 Generated table #12@1: 22847 keys, 989541 bytes
+2022/12/06-12:40:13.945 42368 Compacted 1@1 + 1@2 files => 989541 bytes
+2022/12/06-12:40:13.947 42368 compacted to: files[ 0 0 1 0 0 0 0 ]
+2022/12/06-12:40:13.947 42368 Delete type=2 #8
+2022/12/06-12:40:13.947 42368 Delete type=2 #11

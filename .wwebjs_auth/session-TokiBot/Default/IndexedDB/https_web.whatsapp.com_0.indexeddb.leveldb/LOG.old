@@ -1,0 +1,15 @@
+2022/12/06-12:33:15.823 3e914 Creating DB C:\Users\silasjr\Downloads\tokibot\.wwebjs_auth\session-TokiBot\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb since it was missing.
+2022/12/06-12:33:15.828 3e914 Reusing MANIFEST C:\Users\silasjr\Downloads\tokibot\.wwebjs_auth\session-TokiBot\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2022/12/06-12:33:15.880 3e93c Level-0 table #5: started
+2022/12/06-12:33:15.883 3e93c Level-0 table #5: 6971 bytes OK
+2022/12/06-12:33:15.885 3e93c Delete type=0 #3
+2022/12/06-12:33:15.885 3e93c Manual compaction at level-0 from '\x00\x01\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x02\x00\x00\x00' @ 0 : 0; will stop at (end)
+2022/12/06-12:33:31.222 3e93c Level-0 table #7: started
+2022/12/06-12:33:31.263 3e93c Level-0 table #7: 1145744 bytes OK
+2022/12/06-12:33:31.266 3e93c Delete type=0 #4
+2022/12/06-12:36:48.489 40450 Compacting 1@1 + 1@2 files
+2022/12/06-12:36:48.511 40450 Generated table #8@1: 13094 keys, 584955 bytes
+2022/12/06-12:36:48.511 40450 Compacted 1@1 + 1@2 files => 584955 bytes
+2022/12/06-12:36:48.513 40450 compacted to: files[ 0 0 1 0 0 0 0 ]
+2022/12/06-12:36:48.513 40450 Delete type=2 #5
+2022/12/06-12:36:48.513 40450 Delete type=2 #7
