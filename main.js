@@ -1535,22 +1535,13 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
 │➪ *${prefix}papel* 
 │➪ *${prefix}plaquinha*
 │
-╞═⟪ *HENTA LITE* ⟫════
-│
-│➪ *${prefix}waifu*
-│➪ *${prefix}shinobu*
-│➪ *${prefix}thighs*
 │
 ╞═⟪ *IMAGEM* ⟫════
 │
-│➪ *${prefix}placas*
 │➪ *${prefix}coffee*
 │➪ *${prefix}personagem
 │➪ *${prefix}metadinha*
 │
-╞═⟪ *VÍDEO* ⟫════
-│
-│➪ *${prefix}saycat*
 │
 ╞═⟪ *DONWLOADS* ⟫════
 │
@@ -1571,7 +1562,6 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
 │➪ *${prefix}pinterest*
 │➪ *${prefix}cep*
 │➪ *${prefix}ddd*
-│➪ *${prefix}cep*
 │
 ╞═⟪ *PRIVADO* ⟫════
 │
@@ -6354,41 +6344,29 @@ _[ ${argss[1]} ] Use *『S』* para aceitar ou *『N』* para não aceitar..._
         if (!q) return env(`Exemplo: ${prefix}emoji ☹️/whatsapp`);
         emot = q.split("/")[0];
         jemot = q.split("/")[1];
-        if (jemot == "apple") {
-          idemot = 0;
-        } else if (jemot == "google") {
-          idemot = 1;
-        } else if (jemot == "samsung") {
-          idemot = 2;
-        } else if (jemot == "microsoft") {
-          idemot = 3;
-        } else if (jemot == "whatsapp") {
-          idemot = 4;
-        } else if (jemot == "twitter") {
-          idemot = 5;
-        } else if (jemot == "facebook") {
-          idemot = 6;
-        } else if (jemot == "skype") {
-          idemot = 7;
-        } else if (jemot == "joypixels") {
-          idemot = 8;
-        } else if (jemot == "openmoji") {
-          idemot = 9;
-        } else if (jemot == "notoemoji") {
-          idemot = 10;
-        } else if (jemot == "Emojipedia") {
-          idemot = 11;
-        } else if (jemot == "lg") {
-          idemot = 12;
-        } else {
-          return env(`....`);
-        }
-        env("perai");
-        if (idemot == undefined) return;
-        emoji.get(emot).then((emoji) => {
-          console.log(emoji.images[idemot]);
-          sendStickerFromUrl(from, emoji.images[idemot].url, mek);
-        });
+        try {
+          const a = new Date().getTime()
+          const downloader = new Downloader({
+              url: `https://zanga-api.herokuapp.com/api/emoji/${jemot}?emoji=${emot}`,
+              directory: "./temp", //This folder will be created, if it doesn't exist.
+              fileName: a + ".png" //The file name.
+          });
+          try {
+              await downloader.download();
+              const fig_enviar = await createSticker(`./temp/${a}.png`, descFig)
+              conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
+              fs.unlink(`./temp/${a}.png`, () => { })
+          }  
+          catch (error) {
+              conn.sendMessage(from, "esse não tem desculpe..", {quoted: mek});
+              fs.unlink(`./temp/${a}.png`, () => { })
+          }
+      } catch (err) {
+         env('erro geral do código contate urgente o dono do bot')
+      } 
+
+
+        
         break;
 case 'misturar':
   if(!q.includes("+")) return env(`trem ta faltando esse (+), vou te dar um exemplo..\nExemplo: ${prefix+command} 😒+😁`)
@@ -6397,7 +6375,8 @@ case 'misturar':
   try {
       const a = new Date().getTime()
       const downloader = new Downloader({
-          url: `https://aleatoryapi.herokuapp.com/api/emojimix?emoj=${encodeURI(emj1)}&emoj2=${encodeURI(emj2)}&apikey=${keylol}`, //If the file name already exists, a new file with the name 200MB1.zip is created.
+        
+          url: `https://zanga-api.herokuapp.com/api/maker/emojimix?emoji1=${encodeURI(emj1)}&emoji2=${encodeURI(emj2)}`, //If the file name already exists, a new file with the name 200MB1.zip is created.
           directory: "./temp", //This folder will be created, if it doesn't exist.
           fileName: a + ".jpg" //The file name.
       });
