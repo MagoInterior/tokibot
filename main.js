@@ -3,6 +3,10 @@ const {default: makeWASocket,DisconnectReason,useSingleFileAuthState,delay,downl
 //MÚDULOS
 const fs = require("fs");
 const config = require('./config.json')
+const mercadopago = require('mercadopago');
+mercadopago.configure({
+    access_token: 'APP_USR-8895319040567583-110716-ba84244846dc7b983e2810ed5ce7229e-1050433356'
+});
 const P = require("pino");
 const fetch = require("node-fetch");
 const mimetype = require("mime-types");
@@ -1431,6 +1435,45 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
             },
           ],
         });
+        break
+        case "pix20":
+          var payment = {
+            transaction_amount: 0.01,
+            description: 'Open Tech Vpn',
+            payment_method_id: 'pix',
+            payer: {
+              email: 'test@test.com',
+              first_name: 'Test',
+              last_name: 'User',
+              identification: {
+                  type: 'CPF',
+                  number: '19119119100'
+              },
+              address:  {
+                  zip_code: '06233200',
+                  street_name: 'Av. das Nações Unidas',
+                  street_number: '3003',
+                  neighborhood: 'Bonfim',
+                  city: 'Osasco',
+                  federal_unit: 'SP'
+              }
+            }
+          };
+          env('vou te dar um codigo se quiser pagar por "pix copia e cola" ou o qr code...')
+          //°==========GERAR O PAGAMENTO==========\\
+           mercadopago.payment.create(payment).then(function (data) {
+             
+            let pix = (data.response.point_of_interaction.transaction_data.qr_code);
+            let id = (data.response.id)
+           
+            url = encodeURI(`https://chart.apis.google.com/chart?cht=qr&chl=${pix}&chs=300x300`)
+             conn.sendMessage(from, {image: {url: url}, caption: `✅ PIX R$ ${payment.transaction_amount} GERADO
+          
+          ⥬ ID de pagamento ${id}`})
+          env(`${pix}`)
+          console.log(data.status)
+           })
+         
         break;
 
       case "menu":
