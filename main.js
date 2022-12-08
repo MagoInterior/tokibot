@@ -1436,9 +1436,9 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
           ],
         });
         break
-        case "pix20":
+        case "pix":
           var payment = {
-            transaction_amount: 0.01,
+            transaction_amount: 20.00,
             description: 'Open Tech Vpn',
             payment_method_id: 'pix',
             payer: {
@@ -1472,8 +1472,7 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
           ⥬ ID de pagamento ${id}`})
           env(`${pix}`)
           console.log(data.status)
-           })
-         
+           })  
         break;
 
       case "menu":
@@ -1557,12 +1556,6 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
 │➪ *${prefix}pau*
 │➪ *${prefix}gado* [@]
 │➪ *${prefix}morte*
-│
-╞═⟪ *BANCO RUBY* ⟫════
-│
-│➪ *${prefix}saldo*
-│➪ *${prefix}pix*
-│➪ *${prefix}profissao*
 │
 ╞═⟪ *LOGOS* ⟫════
 │
@@ -5360,61 +5353,6 @@ A chance disso acontece e: ${kkll}%`;
           },
           { quoted: mek }
         );
-        break;
-      case "pix":
-        if (args.length < 1)
-          return env(`Modo certo de se usar ${prefix}transferir @ | valor`);
-        buttons = [
-          {
-            buttonId: `${prefix}saldo`,
-            buttonText: { displayText: "Meu Saldo" },
-            type: 1,
-          },
-        ];
-        if (!q.includes("|"))
-          return env(
-            `Faltou por o valor... exemplo de como se usar: ${prefix}transferir @ | 2500\n não esqueça de usar o |`
-          );
-        const tujuan = q.substring(0, q.indexOf("|") - 1);
-        const jumblah = q.substring(q.lastIndexOf("|") + 1);
-        if (isNaN(jumblah))
-          return await env("O valor precisa está em números...");
-        if (jumblah < 50) return env(`transfrência mínima e de 50 rubys`);
-        if (checkATMuser(sender) < jumblah)
-          return env(
-            `Você não tem rubins suficiente para fazer uma transferência, você precisa ter no minímo 1000 de rubi`
-          );
-        const tujuantf = `${tujuan.replace("@", "")}@s.whatsapp.net`;
-        fee = 0.0 * jumblah; //IMPOSTO CADA 1 DE DINHERO, ALMENTA E CAI NA SUA CONTA, TODA VEZ QUÊ ALGUÉM FAZER TRANSFERENCIA
-        hasiltf = jumblah - fee;
-        addKoinUser(tujuantf, hasiltf);
-        confirmATM(sender, jumblah);
-        addKoinUser("554497433716@s.whatsapp.net", fee);
-        pingaa = `*TRANSFERÊNCIA CONCLUÍDA*
-Origem: *${sender.split("@")[0]}*
-Destinatário: *${tujuan}*
-Valor transferêrido: *${jumblah}*
-Instituição: *RubyBank*
-Tarifa sobre: *0,00*`;
-        conn.sendMessage(
-          from,
-          {
-            text: pingaa,
-            footer: `Deseja vê seu saldo atualizado?`,
-            buttons: [
-              {
-                buttonId: `${prefix}saldo`,
-                buttonText: { displayText: "CONSULTA SALDO" },
-                type: 1,
-              },
-            ],
-          },
-          { quoted: mek }
-        );
-        break;
-      case "helptransf":
-        pingu = `Para fazer uma transferência de rubins para outra pessoa faça o seguinte, exemplo de como se usar: ${prefix}pix @ | 1000\n não esqueça de usar o |`;
-        conn.sendMessage(from, { text: pingu }, { quoted: mek });
         break;
       //JOGOS
       case "minerar":
