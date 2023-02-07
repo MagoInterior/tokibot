@@ -559,7 +559,7 @@ const nomeBot = config.nomeBot
     const isLevelingOn = isGroup ? _level.includes(from) : false;
     const isAntiLink = isGroup ? antilink.includes(from) : false;
     const isCmd = prefix.indexOf(body.slice(0, 1)) > -1;
-    const isComum = bemvindo2.includes(sender) ? type === 'videoMessage' || type === 'imageMessage' : true
+    const isComum = bemvindo2.includes(sender) 
     const mentions = (teks, memberr, id) => {
       id == null || id == undefined || id == false
         ? conn.sendMessage(from, { text: teks.trim(), mentions: memberr })
@@ -678,11 +678,43 @@ conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
         await sendVideoAsSticker(conn, from, owgi, mek, { packname: packP, author: authorP })
       }
 
+ 
 
 
-    if(!isGroup && banChats === true && !isDono && !isPremium && !isComum) return env('só membros premium podem usar o bot lamento...\nse quiser ter comprar o acesso fale com o dono do bot\n\nwa.me/554497433716')
-     bemvindo2.push(sender) 
-     fs.writeFileSync("./db/json/bemvindo2.json", JSON.stringify(bemvindo2));
+    if(!isGroup && banChats === true && !isPremium && !isComum) {
+     
+     const menuboavinda = `Aprenda a ganhar dinheiro com o dropshipping com nosso conteúdo gratuito!\n\nO dropshipping é uma maneira cada vez mais popular de ganhar dinheiro online, permitindo que você venda produtos sem ter que se preocupar com estoque ou logística. No entanto, como em qualquer negócio, há desafios e problemas a serem superados.\n\nNeste conteúdo gratuito, vamos mostrar como você pode iniciar e expandir seu negócio de dropshipping, desde a seleção de fornecedores confiáveis até a gerenciamento eficiente de sua loja e acompanhamento das tendências do mercado. Também vamos fornecer dicas para superar desafios e lidar com problemas comuns, além de recursos adicionais para ajudá-lo a começar.`
+      conn.sendMessage(
+        from,
+        {
+          image: { url: `./complement/menus/rendaextra.png` },
+          caption: menuboavinda,
+          footer: `${BotName}`,
+          buttons: [
+            {
+              buttonId: `${prefix}gratis`,
+              buttonText: { displayText: "ensino Gratuito! 📖" },
+              type: 1,
+            },
+            {
+              buttonId: `${prefix}completo`,
+              buttonText: { displayText: "Ebook Completo! 🤩" },
+              type: 1,
+            }
+          ],
+        },
+        { quoted: mek }
+      );
+      bemvindo2.push(sender) 
+      fs.writeFileSync("./db/json/bemvindo2.json", JSON.stringify(bemvindo2));
+    }
+   /** 
+    * {
+              buttonId: `${prefix}outros`,
+              buttonText: { displayText: "Outras Opções 💸" },
+              type: 1,
+            },
+ */ 
     
     const atibot = mek.isBaileys
       if (atibot === true) return 
@@ -1475,269 +1507,263 @@ ${matrix[2][0]}  ${matrix[2][1]}  ${matrix[2][2]}
            })  
         break;
 
-      case "menu":
-      case "help":
-      case "comandos":
-        let menuft = `${Math.floor(Math.random() * 12)}`;
+      case "gratis":
+      setTimeout(() => { env('belezaaa, aguarde um pouquinho que vou preparar pra vc esse conteudo maravilhoso que separei aqui ');}, 5000) 
+      setTimeout(() => { env(`Introdução:\n\nSe você está procurando uma maneira de ganhar dinheiro online, o dropshipping pode ser a opção perfeita para você. Com o dropshipping, você pode vender produtos sem se preocupar com estoque ou logística, tornando-o uma opção atraente para quem quer começar um negócio online.\n\nNo entanto, como em qualquer negócio, há desafios e problemas a serem superados. É por isso que criamos este guia gratuito para ajudá-lo a iniciar e expandir seu negócio de dropshipping. Neste guia, vamos mostrar como você pode selecionar fornecedores confiáveis, gerenciar sua loja de maneira eficiente e se manter atualizado com as tendências do mercado. Também vamos fornecer dicas para superar desafios e lidar com problemas comuns, além de recursos adicionais para ajudá-lo a começar.\n\nPorém, este guia gratuito só lhe dará uma visão geral dos aspectos fundamentais do dropshipping. Para obter acesso completo a todas as estratégias e dicas para maximizar seus lucros e minimizar seus riscos, você pode adquirir nosso livro completo "Como ganhar dinheiro com o dropshipping`);}, 30000)
+       setTimeout(() => { env(`Capitulo 1: Como selecionar fornecedores confiáveis\n\nA seleção de fornecedores confiáveis é fundamental para o sucesso do seu negócio de dropshipping. Neste capítulo, vamos mostrar como você pode encontrar fornecedores confiáveis, verificar sua reputação e estabelecer contratos claros. Também vamos fornecer dicas para evitar fraudes e problemas comuns com fornecedores.`)},45000)
+      setTimeout(() => { env(`Capitulo 2: Como gerenciar sua loja de maneira eficiente\n\nGerenciar sua loja de maneira eficiente é crucial para o sucesso do seu negócio de dropshipping. Neste capítulo, vamos mostrar como você pode gerenciar seu estoque, preços e marketing de maneira eficiente. Também vamos fornecer dicas para automatizar tarefas e gerenciar sua equipe.`)},60000) 
+       setTimeout(() => { env(`Capitulo 3: Como se manter atualizado com as tendências do mercado\n\nManter-se atualizado com as tendências do mercado é importante para o sucesso do seu negócio de dropshipping. Neste capítulo, vamos mostrar como você pode ficar por dentro das tendências, pesquisar seus concorrentes e experimentar novas ideias para melhorar o desempenho de sua loja e atrair mais clientes. Também vamos fornecer dicas para se preparar para mudanças no mercado e identificar novas oportunidades.`)},80000)
+      let compraragr = `Capitulo 4: Como superar desafios e lidar com problemas
 
-        var menuzin = `╭──────────────╮
-│░ BEM VINDO AO MENU░
-╞─────╮ ▽ ╭─────╯
-│
-│TokiBot MD
-│Seu dispositivo: ${adivinha}
-│Reportar erro *${prefix}reporte <erro>
-╞═⟪ *STICKER* ⟫════
-│
-│➪ *${prefix}figupacks*
-│➪ *${prefix}attp*
-│➪ *${prefix}toimg*
-│➪ *${prefix}togif*
-│
-╞═⟪ *ADMINISTRAÇÃO* ⟫════
-│
-│➪ *${prefix}rankgm*
-│➪ *${prefix}setnome*
-│➪ *${prefix}setdesc*
-│➪ *${prefix}notreleaseconfig*
-│➪ *${prefix}releaseconfig*
-│➪ *${prefix}closed*
-│➪ *${prefix}open*
-│➪ *${prefix}notif*
-│➪ *${prefix}promote*
-│➪ *${prefix}ban*
-│➪ *${prefix}demote*
-│➪ *${prefix}add*
-│➪ *${prefix}rstlink*
-│➪ *${prefix}leave*
-│
-╞═⟪ *ADMINISTRAÇÃO* ⟫════
-│
-│➪ *${prefix}antilink [1/0]*
-│➪ *${prefix}antifake [1/0]*
-│➪ *${prefix}game [1/]*
-│➪ *${prefix}nsfw [1/]*
-│➪ *${prefix}antipala [1/]*
-│
-╞═⟪ *AKINATOR* ⟫════
-│
-│➪ *${prefix}akinator* 
-│➪ *${prefix}resetaki*
-│
-╞═⟪ *JOGOS* ⟫════
-│
-│➪ *${prefix}diga*
-│
-╞═⟪ *JOGOS* ⟫════
-│
-│➪ *${prefix}tac*
-│➪ *${prefix}euja*
-│➪ *${prefix}rr*
-│➪ *${prefix}round6*
-│➪ *${prefix}slot*
-│➪ *${prefix}slot2*
-│
-╞═⟪ *ENTRETENIMENTO* ⟫════
-│
-│➪ *${prefix}rankbaiano*
-│➪ *${prefix}ranklindo*
-│➪ *${prefix}ranknazista*
-│➪ *${prefix}rankgostoso*
-│➪ *${prefix}rankfeio*
-│➪ *${prefix}rankmacaco*
-│➪ *${prefix}rankgay*
-│➪ *${prefix}rankcorno*
-│➪ *${prefix}perfil*
-│➪ *${prefix}abraçar*
-│➪ *${prefix}beijar*
-│➪ *${prefix}tapa*
-│➪ *${prefix}chance* 
-│➪ *${prefix}gay* [@]
-│➪ *${prefix}pau*
-│➪ *${prefix}gado* [@]
-│➪ *${prefix}morte*
-│
-╞═⟪ *LOGOS* ⟫════
-│
-│➪ *${prefix}logos* nome
-│➪ *${prefix}loli
-│
-╞═⟪ *ESCRITAS* ⟫════
-│
-│➪ *${prefix}liza*
-│➪ *${prefix}bart*
-│➪ *${prefix}monica*
-│➪ *${prefix}bolsonaro*
-│➪ *${prefix}papel* 
-│➪ *${prefix}plaquinha*
-│
-│
-╞═⟪ *IMAGEM* ⟫════
-│
-│➪ *${prefix}coffee*
-│➪ *${prefix}personagem
-│➪ *${prefix}metadinha*
-│
-│
-╞═⟪ *DONWLOADS* ⟫════
-│
-│➪ *${prefix}play*
-│➪ *${prefix}ytmp3* 
-│➪ *${prefix}ytmp4*
-│➪ *${prefix}ytsrc* 
-│➪ *${prefix}tiktok*
-│
-╞═⟪ *PESQUISAR* ⟫════
-│
-│➪ *${prefix}jogo*
-│➪ *${prefix}google*
-│➪ *${prefix}achar*
-│➪ *${prefix}wallpaper*
-│➪ *${prefix}celular*
-│➪ *${prefix}wikipedia*
-│➪ *${prefix}pinterest*
-│➪ *${prefix}cep*
-│➪ *${prefix}ddd*
-│
-╞═⟪ *PRIVADO* ⟫════
-│
-│➪ *${prefix}gerarcpf*
-│➪ *${prefix}gnum*
-│➪ *${prefix}formatnum*
-│➪ *${prefix}tempmail*
-│
-╞═⟪ *FERRAMENTAS* ⟫════
-│
-│➪ *${prefix}tomp3* 
-│➪ *${prefix}parimp* 
-│➪ *${prefix}fotogb*
-│➪ *${prefix}admins* 
-│➪ *${prefix}infogp* 
-│➪ *${prefix}calcular*
-│➪ *${prefix}misturar* 
-│➪ *${prefix}semoji* 
-│
-╞═⟪ *DONO* ⟫════
-│
-│➪ *${prefix}criarlista*
-│➪ *${prefix}prem*
-│➪ *${prefix}tmprem*
-│➪ *${prefix}gtoken*
-│➪ *${prefix}crashuser*
-│➪ *${prefix}idchat*
-│➪ *${prefix}joingroup*
-│➪ *${prefix}unblock*
-│➪ *${prefix}block*
-│➪ *${prefix}eval*
-│➪ *${prefix}exec*
-│➪ *${prefix}mek*
-│➪ *${prefix}ping*
-│➪ *${prefix}bug*
-│
-╰──────────────╯`;
-        conn.sendMessage(
-          from,
-          {
-            image: { url: `./complement/menus/${menuft}.jpg` },
-            caption: menuzin,
-            footer: `${BotName}`,
-            buttons: [
-              {
-                buttonId: `${prefix}menu`,
-                buttonText: { displayText: "MENU PRINCIPAL 📖" },
-                type: 1,
-              },
-              {
-                buttonId: `${prefix}menufigu`,
-                buttonText: { displayText: "MENU FIGURINHA 🧩" },
-                type: 1,
-              },
-              {
-                buttonId: `${prefix}dono`,
-                buttonText: { displayText: "DONO 👑" },
-                type: 1,
-              },
-            ],
-          },
-          { quoted: mek }
-        );
-        break;
+      Superar desafios e lidar com problemas é importante para garantir que seu negócio de dropshipping esteja operando de maneira eficiente e rentável. Neste capítulo, vamos mostrar como você pode gerenciar conflitos com fornecedores, lidar com problemas de logística e se preparar para situações de crise. Também vamos fornecer dicas para lidar com perdas financeiras e garantir a continuidade de sua loja.
+      
+      Este guia gratuito lhe dará uma visão geral dos aspectos fundamentais do dropshipping, mas para obter acesso completo a todas as estratégias e dicas para maximizar seus lucros e minimizar seus riscos, você pode adquirir nosso livro completo "Como ganhar dinheiro com o dropshipping" .`;
 
-      /*case 'menu2':
-      let { imageMessage: image } = await require('@adiwajshing/baileys').prepareWAMessageMedia({image: {url: './sla.jpg'}}, {upload: conn.waUploadToServer});
+    setTimeout(() => {
+      conn.sendMessage(
+        from,
+        {
+          text: compraragr,
+          footer: "escolha uma das opções",
+          buttons: [
+            {
+              buttonId: `${prefix}compraragr`,
+              buttonText: { displayText: "Adquirir" },
+              type: 1,
+            },
+            {
+              buttonId: `${prefix}afiliar`,
+              buttonText: { displayText: "quero vender esse ebook também" },
+              type: 1,
+            },
+          ],
+        },
+        { quoted: mek }
+      );
+    }, 90000);
      
-     image.fileLength.low = 1073741824;
-     image.caption = `${menuzin}`;
-     image.contextInfo = {
-      mentionedJid: [],
-      stanzaId: mek.key.id,
-      participant: sender,
-      quotedMessage: info
-     };
-     
-     conn.relayMessage(from, {imageMessage: image}, {messageId: require('@adiwajshing/baileys').generateMessageID(), additionalAttributes: {}});
-     break
-     */
-      //COMANDOS OWNER
+      
+break
+      case "compraragr":
+        env("esse é o link para adquirir o Ebook completo!\n\nhttps://pay.kiwify.com.br/Q2Ja0dc");
+        break;
+      case "afiliar":
+        env("esse é o link para vender como afiliado o ebook campeão!\n\nhttps://dashboard.kiwify.com.br/join/affiliate/yVMAcp5t");
+        break;
+        case "completo":
+          env(`Agradecemos sinceramente por sua atenção e interesse em nosso livro sobre como ganhar dinheiro com dropshipping. Acreditamos que as informações contidas nele podem ser de grande valor para você e sua jornada empreendedora. Não perca mais tempo e adquira agora mesmo o nosso ebook, onde você encontrará todas as informações e ferramentas necessárias para começar a lucrar com o dropshipping. Não deixe essa oportunidade passar e comece a alcançar seus objetivos financeiros hoje. Clique no link abaixo para adquirir o livro\n\n https://pay.kiwify.com.br/Q2Ja0dc`)
+          break
 
-      case "aluguel":
-      case "alugar": 
-      case "vip":
-        let alugarr = `╭──────────────╮
-│                PREÇOS 
-╞─────╮ ▽ ╭─────╯
-│
-│➪ 💰Método de pagamento: *PIX*
-│
-│
-│➪ *💵R$ 4,00* = VIP (por 7 dias)
-│➥ poderá add o bot em 3 grupos
-│
-│➪ *💵R$ 6,99* = VIP (por 15 dias)
-│➥ poderá add o bot em 3
-│
-│➪ *💵R$ 15,00* = VIP (por 30 dias)
-│➥ poderá add o bot em 5 grupos
-│
-│➪ *💵R$ 90,00* = VIP (vip anual)
-│➥ poderá add o bot em 7 grupos
-│
-│➪ *💵R$ 200,00* = VIP (Permanente)
-│➥ poderá add o bot em 7 grupos
-│
-╞═⟪ *│✅VANTAGENS│✅* ⟫════
-│
-│🔸️Adicionar o bot em grupos
-│🔸️Acesso a conteúdo +18
-│🔸️Gerenciamento de grupos.
-│🔸️Administração do grupo
-│🔸️Acesso a mini games exclusivos.
-│🔸️Acesso a comandos/menus exclusivos.
-╰──────────────╯`;
-        conn.sendMessage(
-          from,
-          {
-            text: alugarr,
-            footer: "Escolha um formato de contato abaixo",
-            buttons: [
-              {
-                buttonId: `${prefix}dono`,
-                buttonText: { displayText: "Contato" },
-                type: 1,
-              },
-              {
-                buttonId: `${prefix}linkdono`,
-                buttonText: { displayText: "link" },
-                type: 1,
-              },
-            ],
-          },
-          { quoted: mek }
-        );
-        break;
-      case "linkdono":
-        env("wa.me/5544997433716");
-        break;
+          case "menu":
+            case "help":
+            case "comandos":
+              let menuft = `${Math.floor(Math.random() * 12)}`;
+      
+              var menuzin = `╭──────────────╮
+      │░ BEM VINDO AO MENU░
+      ╞─────╮ ▽ ╭─────╯
+      │
+      │Toki-Beta MD
+      │Seu dispositivo: ${adivinha}
+      │Reportar erro *${prefix}reporte <erro>
+      ╞═⟪ *STICKER* ⟫════
+      │
+      │➪ *${prefix}figupacks*
+      │➪ *${prefix}attp*
+      │➪ *${prefix}toimg*
+      │➪ *${prefix}togif*
+      │
+      ╞═⟪ *ADMINISTRAÇÃO* ⟫════
+      │
+      │➪ *${prefix}rankgm*
+      │➪ *${prefix}setnome*
+      │➪ *${prefix}setdesc*
+      │➪ *${prefix}notreleaseconfig*
+      │➪ *${prefix}releaseconfig*
+      │➪ *${prefix}closed*
+      │➪ *${prefix}open*
+      │➪ *${prefix}notif*
+      │➪ *${prefix}promote*
+      │➪ *${prefix}ban*
+      │➪ *${prefix}demote*
+      │➪ *${prefix}add*
+      │➪ *${prefix}rstlink*
+      │➪ *${prefix}leave*
+      │
+      ╞═⟪ *ADMINISTRAÇÃO* ⟫════
+      │
+      │➪ *${prefix}antilink [1/0]*
+      │➪ *${prefix}antifake [1/0]*
+      │➪ *${prefix}game [1/]*
+      │➪ *${prefix}nsfw [1/]*
+      │➪ *${prefix}antipala [1/]*
+      │
+      ╞═⟪ *AKINATOR* ⟫════
+      │
+      │➪ *${prefix}akinator* 
+      │➪ *${prefix}resetaki*
+      │
+      ╞═⟪ *JOGOS* ⟫════
+      │
+      │➪ *${prefix}diga*
+      │
+      ╞═⟪ *JOGOS* ⟫════
+      │
+      │➪ *${prefix}tac*
+      │➪ *${prefix}euja*
+      │➪ *${prefix}rr*
+      │➪ *${prefix}round6*
+      │➪ *${prefix}slot*
+      │➪ *${prefix}slot2*
+      │
+      ╞═⟪ *ENTRETENIMENTO* ⟫════
+      │
+      │➪ *${prefix}rankbaiano*
+      │➪ *${prefix}ranklindo*
+      │➪ *${prefix}ranknazista*
+      │➪ *${prefix}rankgostoso*
+      │➪ *${prefix}rankfeio*
+      │➪ *${prefix}rankmacaco*
+      │➪ *${prefix}rankgay*
+      │➪ *${prefix}rankcorno*
+      │➪ *${prefix}perfil*
+      │➪ *${prefix}abraçar*
+      │➪ *${prefix}beijar*
+      │➪ *${prefix}tapa*
+      │➪ *${prefix}chance* 
+      │➪ *${prefix}gay* [@]
+      │➪ *${prefix}pau*
+      │➪ *${prefix}gado* [@]
+      │➪ *${prefix}morte*
+      │
+      ╞═⟪ *BANCO RUBY* ⟫════
+      │
+      │➪ *${prefix}saldo*
+      │➪ *${prefix}pix*
+      │➪ *${prefix}profissao*
+      │
+      ╞═⟪ *LOGOS* ⟫════
+      │
+      │➪ *${prefix}logos* nome
+      │➪ *${prefix}loli
+      │
+      ╞═⟪ *ESCRITAS* ⟫════
+      │
+      │➪ *${prefix}liza*
+      │➪ *${prefix}bart*
+      │➪ *${prefix}monica*
+      │➪ *${prefix}bolsonaro*
+      │➪ *${prefix}papel* 
+      │➪ *${prefix}plaquinha*
+      │
+      ╞═⟪ *HENTA LITE* ⟫════
+      │
+      │➪ *${prefix}waifu*
+      │➪ *${prefix}shinobu*
+      │➪ *${prefix}thighs*
+      │
+      ╞═⟪ *IMAGEM* ⟫════
+      │
+      │➪ *${prefix}placas*
+      │➪ *${prefix}coffee*
+      │➪ *${prefix}personagem
+      │➪ *${prefix}metadinha*
+      │
+      ╞═⟪ *VÍDEO* ⟫════
+      │
+      │➪ *${prefix}saycat*
+      │
+      ╞═⟪ *DONWLOADS* ⟫════
+      │
+      │➪ *${prefix}play*
+      │➪ *${prefix}ytmp3* 
+      │➪ *${prefix}ytmp4*
+      │➪ *${prefix}ytsrc* 
+      │➪ *${prefix}Instagram*
+      │➪ *${prefix}tiktok*
+      │➪ *${prefix}twitter*
+      │➪ *${prefix}facebook*
+      │
+      ╞═⟪ *PESQUISAR* ⟫════
+      │
+      │➪ *${prefix}jogo*
+      │➪ *${prefix}google*
+      │➪ *${prefix}achar*
+      │➪ *${prefix}wallpaper*
+      │➪ *${prefix}celular*
+      │➪ *${prefix}wikipedia*
+      │➪ *${prefix}pinterest*
+      │➪ *${prefix}cep*
+      │➪ *${prefix}ddd*
+      │➪ *${prefix}cep*
+      │
+      ╞═⟪ *PRIVADO* ⟫════
+      │
+      │➪ *${prefix}cc*
+      │➪ *${prefix}cc2*
+      │➪ *${prefix}gerarcpf*
+      │➪ *${prefix}gnum*
+      │➪ *${prefix}formatnum*
+      │➪ *${prefix}tempmail*
+      │
+      ╞═⟪ *FERRAMENTAS* ⟫════
+      │
+      │➪ *${prefix}tomp3* 
+      │➪ *${prefix}parimp* 
+      │➪ *${prefix}fotogb*
+      │➪ *${prefix}admins* 
+      │➪ *${prefix}infogp* 
+      │➪ *${prefix}calcular*
+      │➪ *${prefix}misturar* 
+      │➪ *${prefix}semoji* 
+      │
+      ╞═⟪ *DONO* ⟫════
+      │
+      │➪ *${prefix}criarlista*
+      │➪ *${prefix}prem*
+      │➪ *${prefix}tmprem*
+      │➪ *${prefix}gtoken*
+      │➪ *${prefix}crashuser*
+      │➪ *${prefix}idchat*
+      │➪ *${prefix}joingroup*
+      │➪ *${prefix}unblock*
+      │➪ *${prefix}block*
+      │➪ *${prefix}eval*
+      │➪ *${prefix}exec*
+      │➪ *${prefix}mek*
+      │➪ *${prefix}ping*
+      │➪ *${prefix}bug*
+      │
+      ╰──────────────╯`;
+              conn.sendMessage(
+                from,
+                {
+                  image: { url: `./complement/menus/${menuft}.jpg` },
+                  caption: menuzin,
+                  footer: `${BotName}`,
+                  buttons: [
+                    {
+                      buttonId: `${prefix}menu`,
+                      buttonText: { displayText: "MENU PRINCIPAL 📖" },
+                      type: 1,
+                    },
+                    {
+                      buttonId: `${prefix}menufigu`,
+                      buttonText: { displayText: "MENU FIGURINHA 🧩" },
+                      type: 1,
+                    },
+                    {
+                      buttonId: `${prefix}dono`,
+                      buttonText: { displayText: "DONO 👑" },
+                      type: 1,
+                    },
+                  ],
+                },
+                { quoted: mek }
+              );
+              break;
+
+
       /*case 'doar':
       exec('cd pix && php index.php', (err, msg) => {
        if (err) return env(err.message);
