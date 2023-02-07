@@ -41,6 +41,7 @@ const { getRandom, runtime, formatp } = require("./lib/myfunc");
 const { getAdmins, getMembers } = require("./lib/utils");
 const { data, data2, hora } = require("./lib/functions.js");
 const { sendVideoAsSticker } = require('./lib/rename.js');
+
 //ARQUIVOS JSON
 const { state, saveState } = useSingleFileAuthState(`./TOMIOKA_QR.json`)
 //tope
@@ -674,7 +675,8 @@ conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
         var authorP = `꒺ ׄ₊🤖̷ 𝘽𝙊𝙏:\nlinktr.ee/Tokibot   ↲\nfeito pelo Silas Jr.`
         boij = isQuotedVideo ? mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage : mek.message.videoMessage
          owgi = await getFileBuffer(boij, 'video')
-        await sendVideoAsSticker(conn, from, owgi, mek, { packname: packP, author: authorP })
+         const { sendVideoAsSticker2 } = require('./lib/sticker/rename2.js');
+        await sendVideoAsSticker2(conn, from, owgi, mek, { packname: packP, author: authorP })
       }
 
  
