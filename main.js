@@ -665,13 +665,12 @@ const nomeBot = config.nomeBot
       } else if (isPremium && type === "imageMessage") {
         rane = getRandom('.'+'webp')
       buffimg = await getFileBuffer(mek.message.imageMessage, 'image')
-    const premFig = {type: 'full',pack: `⬔ ۪࣪ ✨ Premium no bot\nfeito pelo ${pushname}${isGroup ? "no grupo: " + groupName : ""}\nnumero: ${from.split('@s.whatsapp.net')}`,author: `꒺ ׄ₊🤖̷ 𝘽𝙊𝙏:\nlinktr.ee/Tokibot   ↲\nfeito pelo Silas Jr.`,categories: ['🌹']}
+    const premFig = {type: 'full',pack: `⬔ ۪࣪ ✨ Premium no bot\nfeito pelo ${pushname}`,author: `꒺ ׄ₊🤖̷ 𝘽𝙊𝙏:\nlinktr.ee/Tokibot   ↲\nfeito pelo Silas Jr.`,categories: ['🌹']}
 const fig_enviar = await createSticker(buffimg, premFig)
 conn.sendMessage(from, {sticker: fig_enviar}, {quoted: mek})
 
       } else if (isPremium && type === "videoMessage") {
-        groupName = `${groupName}`
-        var packP = `⬔ ۪࣪ ✨ Premium no bot\nfeito pelo ${pushname}${isGroup ? "no grupo: " + groupName : ""}\nnumero: ${from.split('@s.whatsapp.net')}`
+        var packP = `⬔ ۪࣪ ✨ Premium no bot\nfeito pelo ${pushname}`
         var authorP = `꒺ ׄ₊🤖̷ 𝘽𝙊𝙏:\nlinktr.ee/Tokibot   ↲\nfeito pelo Silas Jr.`
         boij = isQuotedVideo ? mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage : mek.message.videoMessage
          owgi = await getFileBuffer(boij, 'video')
