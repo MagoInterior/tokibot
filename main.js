@@ -1,5 +1,7 @@
 const {default: makeWASocket,DisconnectReason,useSingleFileAuthState,delay,downloadContentFromMessage, MessageRetryMap, useMultiFileAuthState} = require("@adiwajshing/baileys");
-
+const ffmpeg = require("fluent-ffmpeg");
+const pathToFfmpeg = require("ffmpeg-static");
+ffmpeg.setFfmpegPath(pathToFfmpeg);
 //MÚDULOS
 const fs = require("fs");
 const config = require('./config.json')
